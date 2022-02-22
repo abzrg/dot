@@ -50,6 +50,18 @@ gitsigns.setup {
     word_diff = false,
 }
 
-
-
+-- Highlight Groups
 vim.cmd([[ hi GitSignsCurrentLineBlame guifg = #666666 ]])
+vim.cmd([[ hi GitSignsAddLn guifg=Green ]])
+vim.cmd([[ hi GitSignsChangeLn guifg=Yellow ]])
+vim.cmd([[ hi GitSignsDeleteLn guifg=Red ]])
+
+vim.cmd([[ hi GitSignsChange        guifg=Yellow  ]])
+vim.cmd([[ hi GitSignsAdd           guifg=Green  ]])
+vim.cmd([[ hi GitSignsDelete        guifg=Red  ]])
+vim.cmd([[ hi GitSignsAddInline     guifg=DarkGreen  ]])
+vim.cmd([[ hi GitSignsDeleteInline  guifg=DarkRed  ]])
+vim.cmd([[ hi GitSignsChangeInline  guifg=DarkYellow  ]])
+vim.cmd([[ hi GitSignsAddLnVirtLn   guifg=LightGreen  ]])
+vim.cmd([[ hi GitSignsChangeVirtLn  guifg=LightYellow  ]])
+vim.cmd([[ hi GitSignsDeleteVirtLn  guifg=LightRed  ]])

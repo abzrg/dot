@@ -85,6 +85,9 @@ return packer.startup({function(use)
     use { 'tpope/vim-dispatch', opt = true, cmd = { 'Dispatch', 'Make', 'Focus', 'Start' } }
     -- use { 'tpope/vim-flagship', config = [[ vim.cmd('let g:tablabel=""') ]] }
 
+    -- Themes
+    use { "morhetz/gruvbox" }
+
     -- misc
     use { 'dbmrq/vim-chalk' }
     use { 'panozzaj/vim-autocorrect', config = [[
@@ -107,6 +110,7 @@ return packer.startup({function(use)
       run = function() vim.fn['mkdp#util#install']() end, ft = { 'markdown' }
     }
     use { "folke/zen-mode.nvim", config = function() require("zen-mode").setup { } end }
+    use { "ThePrimeagen/harpoon" }
 end,
 
 config = {
