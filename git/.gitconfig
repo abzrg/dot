@@ -1,0 +1,62 @@
+[user]
+    name = Ali Bozorgzadeh
+    email = aliiiib95@gmail.com
+[github]
+    user = connermcd
+[color]
+    branch = auto
+    diff = auto
+    interactive = auto
+    pager = true
+    status = auto
+    ui = true
+    grep = auto
+[color "status"]
+    added = green
+    changed = red
+    untracked = red
+[http]
+    postBuffer = 1048576000
+[core]
+    compression = 0
+    autocrlf = input
+    pager = less -FRSX
+    editor = nvim
+; [init]
+;   templatedir = ~/.git_template
+; [interactive]
+;   singlekey = true
+[help]
+    autocorrect = 10
+[diff]
+  tool = vimdiff
+[merge]
+    summary = true
+    tool = fugitive
+[mergetool "fugitive"]
+    cmd = nvim -f -c \"Gdiff\" \"$MERGED\"
+    keepBackup = false
+[pull]
+    rebase = true
+; [push]
+;   default = tracking
+[rebase]
+    autosquash = true
+[alias]
+    b = branch
+    cf = !git config --global --edit
+    ci = commit
+    co = checkout
+    cb = checkout -b
+    di = diff
+    dc = diff --cached
+    ff = merge --ff-only
+    noff = merge --no-ff
+    pom = push origin master
+    st = status -sb
+    l = log --simplify-merges --graph --pretty="tformat:%C(yellow)%h%Creset\\ %Cgreen(%ar)%Creset\\ %C(blue)<%an>%Creset\\ %C(red)%d%Creset\\ %s"
+    one = show -s --pretty='format:%h (%s)'
+    summary = log --abbrev-commit --pretty=oneline --author="Ali.Bozorgzadeh" --since=last.mon --reverse
+    clone = clone --progress --verbose
+    cat = cat-file -p # pretty print git objects
+    index = ls-files -s # print the contents of the staging area or index
