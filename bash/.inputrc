@@ -1,0 +1,77 @@
+# Carries over site-wide readline configuration to the user
+# configuration. Usually /etc/inputrc includes some goodies.
+$include /etc/inputrc
+
+# emacs, vi
+set editing-mode vi
+
+$if mode=vi
+    # mapping i to enter insert mode and jj to get back to normal mode
+    set keymap vi-command
+    "i": vi-insertion-mode
+    set keymap vi-command
+    "gu": upcase-word
+    set keymap vi-command
+    "gl": downcase-word
+    set keymap vi-command
+    "gc": capitalize-word
+    set keymap vi-command
+    "gt": transpose-chars
+    set keymap vi-command
+    "gT": transpose-words
+    set keymap vi-insert
+    # "jj": vi-movement-mode
+
+    # # cursor shape. normal mode: block, insert mode: pipe
+    # set show-mode-in-prompt on
+    # set vi-cmd-mode-string "\1\e[2 q\2"
+    # set vi-ins-mode-string "\1\e[6 q\2"
+
+    # Some emacs mode functionality
+    "\e.": yank-last-arg
+    "\e_": yank-last-arg
+    "\C-a": beginning-of-line
+    "\C-e": end-of-line
+    "\C-l": clear-screen
+    # "\C-n": next-history
+    # "\C-p": previous-history
+    "\C-w": unix-word-rubout
+    "\C-x": alias-expand-line
+    "\C-b": backward-char
+    "\C-f": forward-char
+    "\C-k": kill-line
+$endif
+
+# Terminate cycling completion by Esc
+set isearch-terminators on
+set print-completions-horizontally on
+set bell-style visible
+set skip-completed-text on
+set completion-ignore-case On
+set completion-map-case on
+set completion-prefix-display-length 3
+set mark-symlinked-directories On
+set show-all-if-ambiguous On
+set show-all-if-unmodified On
+set visible-stats On
+# Enable Readline not waiting for additional input when a key is pressed.
+# Needed for the mappings below.
+set keyseq-timeout 0
+
+# \C: ctrl
+"\C-p": history-search-backward
+"\C-n": history-search-forward
+
+# Change up/down arrow key behaviour to navigate only similar commands
+"\e[A": history-search-backward
+"\e[B": history-search-forward
+
+"\ew": copy-backward-word
+
+"\e]": character-search
+"\e[": character-search-backward
+
+# Magic space
+$if Bash
+  Space: magic-space
+$endif
