@@ -16,7 +16,8 @@
     changed = red
     untracked = red
 [http]
-    postBuffer = 1048576000
+	postBuffer = 524288000
+
 [core]
     compression = 0
     autocrlf = input
