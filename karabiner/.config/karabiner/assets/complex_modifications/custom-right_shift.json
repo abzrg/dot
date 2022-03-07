@@ -1,0 +1,32 @@
+{
+  "title": "Change right_shift to \\ and right shift",
+  "rules": [
+	{
+	  "description": "Post \\ if right_shift is tapped, right_shift if held.",
+	  "manipulators": [
+    {
+    "type": "basic",
+    "from": {
+        "key_code": "right_shift",
+        "modifiers": {
+            "optional": [
+                "any"
+            ]
+        }
+    },
+    "to": [
+        {
+            "key_code": "right_shift",
+            "lazy": true
+        }
+    ],
+    "to_if_alone": [
+        {
+            "key_code": "backslash"
+        }
+    ]
+}
+	  ]
+	}
+  ]
+}

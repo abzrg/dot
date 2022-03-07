@@ -1,0 +1,65 @@
+{
+  "title": "Change caps_lock to Esc and Control",
+  "rules": [
+	{
+	  "description": "Post Esc if Caps is tapped, Control if held.",
+	  "manipulators": [
+        {
+    "type": "basic",
+    "from": {
+        "key_code": "left_control",
+        "modifiers": {
+            "optional": [
+                "any"
+            ]
+        }
+    },
+    "to": [
+        {
+            "key_code": "left_control",
+            "lazy": true
+        }
+    ],
+    "to_if_alone": [
+        {
+            "key_code": "escape"
+        }
+    ]
+}
+	  ]
+	}
+  ]
+},
+
+{
+  "title": "Change right_shift to \ and right shift",
+  "rules": [
+	{
+	  "description": "Post \ if right_shift is tapped, right_shift if held.",
+	  "manipulators": [
+        {
+    "type": "basic",
+    "from": {
+        "key_code": "backslash",
+        "modifiers": {
+            "optional": [
+                "any"
+            ]
+        }
+    },
+    "to": [
+        {
+            "key_code": "backslash",
+            "lazy": true
+        }
+    ],
+    "to_if_alone": [
+        {
+            "key_code": "right_shift"
+        }
+    ]
+}
+	  ]
+	}
+  ]
+}
