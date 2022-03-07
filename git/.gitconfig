@@ -22,8 +22,8 @@
     autocrlf = input
     pager = less -FRSX
     editor = nvim
-; [init]
-;   templatedir = ~/.git_template
+[init]
+    templatedir = ~/.git_template
 ; [interactive]
 ;   singlekey = true
 [help]
@@ -60,3 +60,4 @@
     clone = clone --progress --verbose
     cat = cat-file -p # pretty print git objects
     index = ls-files -s # print the contents of the staging area or index
+    ctags = !.git/hooks/ctags
