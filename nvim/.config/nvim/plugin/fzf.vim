@@ -8,8 +8,8 @@ let g:fzf_layout = {
                 \ 'height': 0.8,
                 \ 'yoffset':0.5,
                 \ 'xoffset': 0.5,
-                \ 'highlight': 'Todo',
-                \ 'border': 'sharp'}}
+                \ 'highlight': 'Todo', }}
+                " \ 'border': 'sharp'}}
 
 " let g:fzf_layout = { 'down': '~40%' }
 
@@ -29,6 +29,7 @@ nnoremap <expr> ;f (<SID>IsGitRepo() == 0) ? ':GitFiles<cr>' : ':Files<cr>'
 " nnoremap ;;  :Helptags<CR>
 " nnoremap ;n  :Files ~/Documents/Notes/<CR>
 " nnoremap ;c  :FZFDotFiles<CR>
+nnoremap <leader>l :Tags!<CR>
 
 " Fix linger/delay exiting with ESC
 autocmd! FileType fzf tnoremap <buffer> <Esc> <C-c>

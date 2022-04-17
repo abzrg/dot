@@ -55,6 +55,7 @@ au FileType yaml setlocal shiftwidth=2 tabstop=2
 
 --  Better help
 vim.cmd([[
+
 " Open help in a new tab instead of a split
 augroup HelpInTabs
 autocmd!
@@ -69,19 +70,6 @@ if &buftype == 'help'
   endfunction
 ]])
 
--- openfoam
-vim.cmd([[
-
-augroup OpenFoam
-autocmd!
-autocmd BufEnter,BufReadPost,BufRead *.C :setlocal path+=~/OpenFOAM/OpenFOAM-7/**
-autocmd BufEnter,BufReadPost,BufRead *.H :setlocal path+=~/OpenFOAM/OpenFOAM-7/**
-autocmd BufEnter,BufReadPost,BufRead,BufNewFile $HOME/OpenFOAM/** :LspStop
-augroup END
-
-]])
-
-vim.cmd('autocmd Filetype text set commentstring="%s')
 
 vim.cmd([[
 
@@ -89,3 +77,6 @@ autocmd BufEnter,BufReadPost,BufRead *.tsv :setfiletype tsv
 autocmd BufEnter,BufReadPost,BufRead *.csv :setfiletype csv
 
 ]])
+
+-- Gnu plot comment string
+vim.cmd('autocmd Filetype gnuplot set commentstring=#%s')

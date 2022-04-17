@@ -1,3 +1,14 @@
+vim.cmd [[
+augroup MyAutocmds
+autocmd!
+augroup END
+augroup! MyAutocmds
+augroup MyAutocolor
+autocmd!
+augroup END
+augroup! MyAutocolor
+]]
+
 require("zen-mode").setup {
     window = {
         backdrop = 0.95, -- shade the backdrop of the Zen window. Set to 1 to keep the same as Normal
@@ -5,7 +16,7 @@ require("zen-mode").setup {
         -- * an absolute number of cells when > 1
         -- * a percentage of the width / height of the editor when <= 1
         -- * a function that returns the width or the height
-        width = 120, -- width of the Zen window
+        width = 80, -- width of the Zen window
         height = 1, -- height of the Zen window
         -- by default, no options are changed for the Zen window
         -- uncomment any of the options below, or add other vim.wo options you want to apply
@@ -16,8 +27,8 @@ require("zen-mode").setup {
             -- cursorline = false, -- disable cursorline
             -- cursorcolumn = false, -- disable cursor column
             -- foldcolumn = "0", -- disable fold column
-            -- list = false, -- disable whitespace characters
-            colorcolumn = ""
+            list = false, -- disable whitespace characters
+            colorcolumn = "",
         },
     },
     plugins = {
@@ -27,18 +38,19 @@ require("zen-mode").setup {
             enabled = true,
             ruler = false, -- disables the ruler text in the cmd line area
             showcmd = false, -- disables the command in the last line of the screen
+            -- eventignore = "all"
         },
-        twilight = { enabled = true }, -- enable to start Twilight when zen mode opens
+        twilight = { enabled = false }, -- enable to start Twilight when zen mode opens
         gitsigns = { enabled = false }, -- disables git signs
-        tmux = { enabled = false }, -- disables the tmux statusline
+        tmux = { enabled = true }, -- disables the tmux statusline
         -- this will change the font size on kitty when in zen mode
         -- to make this work, you need to set the following kitty options:
         -- - allow_remote_control socket-only
         -- - listen_on unix:/tmp/kitty
-        kitty = {
-            enabled = false,
-            font = "+4", -- font size increment
-        },
+        -- kitty = {
+        --     enabled = false,
+        --     font = "+4", -- font size increment
+        -- },
     },
     -- callback where you can add custom code when the Zen window opens
     on_open = function(win)

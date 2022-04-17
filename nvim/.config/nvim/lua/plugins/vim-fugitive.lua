@@ -13,3 +13,5 @@ vim.api.nvim_set_keymap('n', '<leader>gl', ':diffget //3<CR>', { noremap = true 
 -- get diff from the left window (a)
 vim.api.nvim_set_keymap('n', '<leader>gh', ':diffget //2<CR>', { noremap = true })
 -- do 'CTRL-w O' to jump back after the diff page
+
+vim.api.nvim_set_keymap('n', '<M-g>', ':0G<CR>', { noremap = true })

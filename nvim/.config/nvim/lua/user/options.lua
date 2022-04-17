@@ -1,7 +1,7 @@
 vim.opt.autoread        = true
-vim.opt.number          = true        -- show line numbers
-vim.opt.relativenumber  = true        -- show relative numbers
-vim.opt.cursorline      = true        -- highlight current line
+vim.opt.number          = false        -- show line numbers
+vim.opt.relativenumber  = false        -- show relative numbers
+vim.opt.cursorline      = false        -- highlight current line
 vim.opt.hidden          = true        -- allows you to hide buffers with unsaved changes without being prompted
 vim.opt.hlsearch        = true        -- highlight search items
 vim.opt.ignorecase      = true        -- case insensitive search
@@ -19,65 +19,24 @@ vim.opt.writebackup     = false
 vim.opt.smartcase       = true
 vim.opt.splitbelow      = true        -- open horizontall splits to the below of the current window
 vim.opt.splitright      = true        -- open verticall splits to the right of the current window
-vim.opt.termguicolors   = true
+vim.opt.termguicolors   = false
 vim.opt.title           = true
 vim.opt.virtualedit     = 'block'     -- allow cursor to move where there is no text in visual block mode
-vim.opt.signcolumn      = 'auto'
+vim.opt.signcolumn      = 'no'
 vim.opt.inccommand      = 'split'     -- live preview of :s results
 vim.opt.mouse           = 'a'         -- enable mouse
 vim.opt.scrolloff       = 3           -- start scroll 3 lines before edge of the viewport
 vim.opt.sidescrolloff   = 3
-vim.opt.pumblend        = 0          -- pseudo-transparency for pop-up menu
-vim.opt.laststatus      = 2           -- always show status line
-vim.opt.cmdheight       = 2
-vim.opt.updatetime      = 500        -- CursorHold interval
+vim.opt.pumblend        = 0           -- pseudo-transparency for pop-up menu
+vim.opt.laststatus      = 0           -- always show status line
+vim.opt.cmdheight       = 1
+vim.opt.updatetime      = 500         -- CursorHold interval
 vim.opt.textwidth       = 80          -- automatically hard wrap at 80 columns
 -- vim.opt.pumheight       = 10          -- Makes pop up-menu smaller
 -- vim.opt.pumwidth        = 10          -- Makes pop up-menu smaller
 
 -- Help nvim+fugitive be a faster experience
-vim.opt.shell = "/bin/sh"
-
--- Highlight up to 255 columns (this is the current Vim max) beyond 'textwidth'
-vim.opt_local.colorcolumn = '+' .. vim.fn.join(vim.fn.range(0,254), ',+')
-
-local old_is_focused = require'lualine.utils.utils'.is_focused
-require'lualine.utils.utils'.is_focused = function()
-  if _G.ForceLualineFocus ~= nil then
-    return _G.ForceLualineFocus
-  end
-  return old_is_focused()
-end
-
--- Fix syntax highlighting
-vim.cmd([[
-augroup BgHighlight
-autocmd!
-
-" Tree-sitter
-autocmd BufEnter,FocusGained,VimEnter,WinEnter * TSBufEnable highlight
-autocmd FocusLost,WinLeave * TSBufDisable highlight
-autocmd BufEnter,FocusGained,VimEnter,WinEnter * TSBufEnable rainbow
-autocmd FocusLost,WinLeave * TSBufDisable rainbow
-
-" Indent blank line
-"autocmd FocusLost,WinLeave * IndentBlanklineDisable
-"autocmd BufEnter,FocusGained,VimEnter,WinEnter * IndentBlanklineEnable
-"autocmd FocusLost,WinLeave * IndentBlanklineDisable
-"autocmd BufEnter,FocusGained,VimEnter,WinEnter * IndentBlanklineEnable
-
-" Nvim syntax highlighting
-autocmd BufEnter,FocusGained,VimEnter,WinEnter * setlocal cursorline | ownsyntax
-autocmd FocusLost,WinLeave * setlocal nocursorline | ownsyntax off
-autocmd BufEnter,FocusGained,VimEnter,WinEnter * let &l:colorcolumn='+' . join(range(0, 254), ',+')
-autocmd FocusLost,WinLeave * let &l:colorcolumn=join(range(1, 255), ',')
-
-" Lualine
-autocmd FocusGained * :lua ForceLualineFocus = nil
-autocmd FocusLost * :lua ForceLualineFocus = false
-
-augroup END
-]])
+vim.opt.shell = "/bin/zsh"
 
 vim.opt.path            = '**'        -- Fuzzy find files like a boss!
 vim.opt.path            = vim.opt.path + vim.fn.expand('~/.config/nvim')
@@ -130,13 +89,16 @@ end
 -- vim.opt.cinoptions      = vim.opt.cinoptions + 'g0' -- do not indent public/private/protected in c++ files
 -- vim.opt.cinoptions      = vim.opt.cinoptions + '#1s' -- actually keep the indentation of # directives in openfoam codes
 vim.cmd([[
+augroup CIndentation
+autocmd!
 autocmd Filetype c,cpp set cindent
 autocmd Filetype c,cpp set cinoptions+=g0
+augroup END
 ]])
 
 vim.opt.fillchars       = {
     diff                  = '∙',       -- BULLET OPERATOR (U+2219, UTF-8: E2 88 99)
-    eob                   = ' ',       -- NO-BREAK SPACE (U+00A0, UTF-8: C2 A0) to suppress ~ at EndOfBuffer
+    -- eob                   = ' ',       -- NO-BREAK SPACE (U+00A0, UTF-8: C2 A0) to suppress ~ at EndOfBuffer
     fold                  = ' ',       -- Space
     vert                  = '┃',       -- BOX DRAWINGS HEAVY VERTICAL (U+2503, UTF-8: E2 94 83)
 }
@@ -149,24 +111,22 @@ vim.opt.listchars = {
     tab                   = '▸ ',      -- BLACK RIGHT-POINTING SMALL TRIANGLE (U+25B8, UTF-8: E2 96 B8)
     trail                 = '•',       -- BULLET (U+2022, UTF-8: E2 80 A2)
 }
-
--- Unfortunately non of these lines work
--- vim.opt.formatoptions = vim.opt.formatoptions + { j = true }       -- remove comment leader when joining comment lines
--- vim.opt.formatoptions = vim.opt.formatoptions + { n = true }       -- smart auto-indenting inside numbered lists
-
--- vim.opt.formatoptions = vim.opt.formatoptions - { o = false }      -- don't start new lines w/ comment leader on pressing 'o'
--- vim.opt.formatoptions = vim.opt.formatoptions - { c = false }      -- don't autowrap comments
--- vim.opt.formatoptions:remove({ 'c', 'o' })
-
--- Fold settings
-vim.opt.foldmethod = 'marker'
 vim.cmd([[
-function! MyFoldText()
-let line = getline(v:foldstart)
-return '• ' . line . ' ▼ '
-endfunction
-set foldtext=MyFoldText()
+augroup HelpNoListChars
+autocmd!
+autocmd FileType help setlocal nolist
+augroup END
 ]])
+
+-- -- Fold settings
+vim.opt.foldmethod = 'marker'
+-- vim.cmd([[
+-- function! MyFoldText()
+-- let line = getline(v:foldstart)
+-- return '• ' . line . ' ▼ '
+-- endfunction
+-- set foldtext=MyFoldText()
+-- ]])
 
 -- VSCode
 if not vim.fn.exists('g:vscode') and vim.fn.has("nvim") then

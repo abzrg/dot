@@ -12,37 +12,53 @@ if not snip_status_ok then
   return
 end
 
---local lspkind = require "lspkind"
---spkind.init()
+local lspkind = require "lspkind"
+lspkind.init()
 
 cmp.setup {
+    view = {
+        entries = 'native'
+    },
+
+    -- window = {
+    --     -- documentation= "native",
+    --     -- completion = cmp.config.window.bordered(),
+    --     -- documentation = cmp.config.window.bordered(),
+    -- },
+
     -- completion = {
     --     autocomplete = true
     -- },
-    mapping = {
-        ["<C-k>"] = cmp.mapping.select_prev_item(),
-        ["<C-j>"] = cmp.mapping.select_next_item(),
-        ["<C-d>"] = cmp.mapping.scroll_docs(-4),
-        ["<C-f>"] = cmp.mapping.scroll_docs(4),
-        ["<C-e>"] = cmp.mapping.close(),
-        ["<CR>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Insert, select = true, },
-        ["<c-q>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = true, },
-        ["<c-space>"] = cmp.mapping.complete(),
-        ["<Tab>"] = cmp.mapping(function(fallback)
+    mapping = cmp.mapping.preset.insert({
+        ['<C-k>'] = cmp.mapping.select_prev_item(),
+        ['<C-j>'] = cmp.mapping.select_next_item(),
+        ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+        ['<C-f>'] = cmp.mapping.scroll_docs(4),
+        ['<C-e>'] = cmp.mapping.abort(),
+
+        -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+        ['<CR>'] = cmp.mapping.confirm({ select = true }),
+        -- ['<CR>'] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Insert, select = true, },
+
+        ['<c-q>'] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = true, },
+        ['<c-space>'] = cmp.mapping.complete(),
+
+        ['<Tab>'] = cmp.mapping(function(fallback)
             if luasnip.expand_or_jumpable() then
                 luasnip.expand_or_jump()
             else
                 fallback()
             end
-        end, { "i", "s" }),
-        ["<S-Tab>"] = cmp.mapping(function(fallback)
+        end, { 'i', 's' }),
+        ['<S-Tab>'] = cmp.mapping(function(fallback)
             if luasnip.jumpable(-1) then
                 luasnip.jump(-1)
             else
                 fallback()
             end
-        end, { "i", "s" }),
-    },
+        end, { 'i', 's' }),
+
+    }),
 
     -- the order of your sources matter (by default). That gives them priority
     -- you can configure:
@@ -89,25 +105,26 @@ cmp.setup {
     },
 
     snippet = {
+        -- specify the snippet engine (required)
         expand = function(args)
             require("luasnip").lsp_expand(args.body)
         end,
     },
 
-    -- formatting = {
-    --     format = lspkind.cmp_format {
-    --         with_text = true,
-    --         maxwidth = 30,
-    --         menu = {
-    --             buffer   = "[buf]",
-    --             nvim_lsp = "[LSP]",
-    --             nvim_lua = "[api]",
-    --             path     = "[path]",
-    --             luasnip  = "[snip]",
-    --             -- gh_issues = "[issues]",
-    --         },
-    --     },
-    -- },
+    formatting = {
+        format = lspkind.cmp_format {
+            with_text = true,
+            maxwidth = 30,
+            menu = {
+                buffer   = "[buf]",
+                nvim_lsp = "[LSP]",
+                nvim_lua = "[api]",
+                path     = "[path]",
+                luasnip  = "[snip]",
+                -- gh_issues = "[issues]",
+            },
+        },
+    },
 
     experimental = {
         -- Let's play with this for a day or two
@@ -118,9 +135,9 @@ cmp.setup {
         }
     },
 
-    documentation = {
-        border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
-    }
+    -- documentation = {
+    --     border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
+    -- }
 }
 
 -- Highlighting gourps

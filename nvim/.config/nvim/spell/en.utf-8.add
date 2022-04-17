@@ -40,3 +40,7 @@ destructor
 unbuffered
 premade
 unstaged
+vscode
+alacritty
+#term2
+iterm2

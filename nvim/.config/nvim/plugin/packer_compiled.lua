@@ -75,62 +75,16 @@ _G.packer_plugins = {
     path = "/Users/ali/.local/share/nvim/site/pack/packer/start/Comment.nvim",
     url = "https://github.com/numToStr/Comment.nvim"
   },
-  LuaSnip = {
-    config = { " require('plugins/luasnip') " },
-    loaded = true,
-    path = "/Users/ali/.local/share/nvim/site/pack/packer/start/LuaSnip",
-    url = "https://github.com/L3MON4D3/LuaSnip"
-  },
   ["clever-f.vim"] = {
     loaded = true,
     path = "/Users/ali/.local/share/nvim/site/pack/packer/start/clever-f.vim",
     url = "https://github.com/rhysd/clever-f.vim"
-  },
-  ["cmp-buffer"] = {
-    loaded = true,
-    path = "/Users/ali/.local/share/nvim/site/pack/packer/start/cmp-buffer",
-    url = "https://github.com/hrsh7th/cmp-buffer"
-  },
-  ["cmp-copilot"] = {
-    loaded = true,
-    path = "/Users/ali/.local/share/nvim/site/pack/packer/start/cmp-copilot",
-    url = "https://github.com/hrsh7th/cmp-copilot"
-  },
-  ["cmp-nvim-lsp"] = {
-    loaded = true,
-    path = "/Users/ali/.local/share/nvim/site/pack/packer/start/cmp-nvim-lsp",
-    url = "https://github.com/hrsh7th/cmp-nvim-lsp"
-  },
-  ["cmp-nvim-lua"] = {
-    loaded = true,
-    path = "/Users/ali/.local/share/nvim/site/pack/packer/start/cmp-nvim-lua",
-    url = "https://github.com/hrsh7th/cmp-nvim-lua"
-  },
-  ["cmp-omni"] = {
-    loaded = true,
-    path = "/Users/ali/.local/share/nvim/site/pack/packer/start/cmp-omni",
-    url = "https://github.com/hrsh7th/cmp-omni"
-  },
-  ["cmp-path"] = {
-    loaded = true,
-    path = "/Users/ali/.local/share/nvim/site/pack/packer/start/cmp-path",
-    url = "https://github.com/hrsh7th/cmp-path"
-  },
-  cmp_luasnip = {
-    loaded = true,
-    path = "/Users/ali/.local/share/nvim/site/pack/packer/start/cmp_luasnip",
-    url = "https://github.com/saadparwaiz1/cmp_luasnip"
   },
   ["committia.vim"] = {
     config = { " require('plugins/committia') " },
     loaded = true,
     path = "/Users/ali/.local/share/nvim/site/pack/packer/start/committia.vim",
     url = "https://github.com/rhysd/committia.vim"
-  },
-  ["friendly-snippets"] = {
-    loaded = true,
-    path = "/Users/ali/.local/share/nvim/site/pack/packer/start/friendly-snippets",
-    url = "https://github.com/rafamadriz/friendly-snippets"
   },
   fzf = {
     loaded = true,
@@ -141,28 +95,6 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/ali/.local/share/nvim/site/pack/packer/start/fzf.vim",
     url = "https://github.com/junegunn/fzf.vim"
-  },
-  ["gitsigns.nvim"] = {
-    config = { " require('plugins/gitsigns') " },
-    loaded = true,
-    path = "/Users/ali/.local/share/nvim/site/pack/packer/start/gitsigns.nvim",
-    url = "https://github.com/lewis6991/gitsigns.nvim"
-  },
-  gruvbox = {
-    loaded = true,
-    path = "/Users/ali/.local/share/nvim/site/pack/packer/start/gruvbox",
-    url = "https://github.com/morhetz/gruvbox"
-  },
-  harpoon = {
-    loaded = true,
-    path = "/Users/ali/.local/share/nvim/site/pack/packer/start/harpoon",
-    url = "https://github.com/ThePrimeagen/harpoon"
-  },
-  ["lualine.nvim"] = {
-    config = { " require('plugins/lualine')" },
-    loaded = true,
-    path = "/Users/ali/.local/share/nvim/site/pack/packer/start/lualine.nvim",
-    url = "https://github.com/nvim-lualine/lualine.nvim"
   },
   ["markdown-preview.nvim"] = {
     commands = { "MarkdownPreview" },
@@ -184,52 +116,10 @@ _G.packer_plugins = {
     path = "/Users/ali/.local/share/nvim/site/pack/packer/start/nvim-autopairs",
     url = "https://github.com/windwp/nvim-autopairs"
   },
-  ["nvim-cmp"] = {
-    config = { " require('plugins/nvim-cmp') " },
-    loaded = true,
-    path = "/Users/ali/.local/share/nvim/site/pack/packer/start/nvim-cmp",
-    url = "https://github.com/hrsh7th/nvim-cmp"
-  },
-  ["nvim-colorizer.lua"] = {
-    config = { " require('plugins/colorizer') " },
-    loaded = true,
-    path = "/Users/ali/.local/share/nvim/site/pack/packer/start/nvim-colorizer.lua",
-    url = "https://github.com/norcalli/nvim-colorizer.lua"
-  },
-  ["nvim-lspconfig"] = {
-    config = { " require('plugins/lspconfig') " },
-    loaded = true,
-    path = "/Users/ali/.local/share/nvim/site/pack/packer/start/nvim-lspconfig",
-    url = "https://github.com/neovim/nvim-lspconfig"
-  },
-  ["nvim-treesitter"] = {
-    config = { " require('plugins/treesitter') " },
-    loaded = true,
-    path = "/Users/ali/.local/share/nvim/site/pack/packer/start/nvim-treesitter",
-    url = "https://github.com/nvim-treesitter/nvim-treesitter"
-  },
-  ["nvim-ts-autotag"] = {
-    config = { " require('plugins/ts-autotag') " },
-    loaded = false,
-    needs_bufread = false,
-    only_cond = false,
-    path = "/Users/ali/.local/share/nvim/site/pack/packer/opt/nvim-ts-autotag",
-    url = "https://github.com/windwp/nvim-ts-autotag"
-  },
-  ["nvim-web-devicons"] = {
-    loaded = true,
-    path = "/Users/ali/.local/share/nvim/site/pack/packer/start/nvim-web-devicons",
-    url = "https://github.com/kyazdani42/nvim-web-devicons"
-  },
   ["packer.nvim"] = {
     loaded = true,
     path = "/Users/ali/.local/share/nvim/site/pack/packer/start/packer.nvim",
     url = "https://github.com/wbthomason/packer.nvim"
-  },
-  playground = {
-    loaded = true,
-    path = "/Users/ali/.local/share/nvim/site/pack/packer/start/playground",
-    url = "https://github.com/nvim-treesitter/playground"
   },
   ["plenary.nvim"] = {
     loaded = true,
@@ -252,6 +142,12 @@ _G.packer_plugins = {
     path = "/Users/ali/.local/share/nvim/site/pack/packer/start/targets.vim",
     url = "https://github.com/wellle/targets.vim"
   },
+  ["telescope-env.nvim"] = {
+    config = { " require('telescope').load_extension('env') " },
+    loaded = true,
+    path = "/Users/ali/.local/share/nvim/site/pack/packer/start/telescope-env.nvim",
+    url = "https://github.com/LinArcX/telescope-env.nvim"
+  },
   ["telescope-file-browser.nvim"] = {
     loaded = true,
     path = "/Users/ali/.local/share/nvim/site/pack/packer/start/telescope-file-browser.nvim",
@@ -263,8 +159,13 @@ _G.packer_plugins = {
     path = "/Users/ali/.local/share/nvim/site/pack/packer/start/telescope.nvim",
     url = "https://github.com/nvim-telescope/telescope.nvim"
   },
+  ["twilight.nvim"] = {
+    loaded = true,
+    path = "/Users/ali/.local/share/nvim/site/pack/packer/start/twilight.nvim",
+    url = "https://github.com/folke/twilight.nvim"
+  },
   ["vim-autocorrect"] = {
-    config = { "        vim.cmd('autocmd BufReadPost ~/Documents/notes/* call AutoCorrect()')\n    " },
+    config = { " vim.cmd('autocmd BufReadPost ~/Documents/notes/* call AutoCorrect()') " },
     loaded = true,
     path = "/Users/ali/.local/share/nvim/site/pack/packer/start/vim-autocorrect",
     url = "https://github.com/panozzaj/vim-autocorrect"
@@ -287,6 +188,11 @@ _G.packer_plugins = {
     path = "/Users/ali/.local/share/nvim/site/pack/packer/opt/vim-dispatch",
     url = "https://github.com/tpope/vim-dispatch"
   },
+  ["vim-endwise"] = {
+    loaded = true,
+    path = "/Users/ali/.local/share/nvim/site/pack/packer/start/vim-endwise",
+    url = "https://github.com/tpope/vim-endwise"
+  },
   ["vim-eunuch"] = {
     loaded = true,
     path = "/Users/ali/.local/share/nvim/site/pack/packer/start/vim-eunuch",
@@ -308,30 +214,25 @@ _G.packer_plugins = {
     path = "/Users/ali/.local/share/nvim/site/pack/packer/start/vim-fugitive",
     url = "https://github.com/tpope/vim-fugitive"
   },
-  ["vim-hier"] = {
+  ["vim-highlight-match-under-cursor"] = {
     loaded = true,
-    path = "/Users/ali/.local/share/nvim/site/pack/packer/start/vim-hier",
-    url = "https://github.com/jceb/vim-hier"
+    path = "/Users/ali/.local/share/nvim/site/pack/packer/start/vim-highlight-match-under-cursor",
+    url = "https://github.com/adamheins/vim-highlight-match-under-cursor"
   },
   ["vim-repeat"] = {
     loaded = true,
     path = "/Users/ali/.local/share/nvim/site/pack/packer/start/vim-repeat",
     url = "https://github.com/tpope/vim-repeat"
   },
-  ["vim-rhubarb"] = {
-    loaded = true,
-    path = "/Users/ali/.local/share/nvim/site/pack/packer/start/vim-rhubarb",
-    url = "https://github.com/tpope/vim-rhubarb"
-  },
   ["vim-rsi"] = {
     loaded = true,
     path = "/Users/ali/.local/share/nvim/site/pack/packer/start/vim-rsi",
     url = "https://github.com/tpope/vim-rsi"
   },
-  ["vim-scriptease"] = {
+  ["vim-speeddating"] = {
     loaded = true,
-    path = "/Users/ali/.local/share/nvim/site/pack/packer/start/vim-scriptease",
-    url = "https://github.com/tpope/vim-scriptease"
+    path = "/Users/ali/.local/share/nvim/site/pack/packer/start/vim-speeddating",
+    url = "https://github.com/tpope/vim-speeddating"
   },
   ["vim-surround"] = {
     loaded = true,
@@ -345,7 +246,7 @@ _G.packer_plugins = {
     url = "https://github.com/christoomey/vim-tmux-navigator"
   },
   ["zen-mode.nvim"] = {
-    config = { "\27LJ\2\n:\0\0\3\0\3\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0004\2\0\0B\0\2\1K\0\1\0\nsetup\rzen-mode\frequire\0" },
+    config = { " require('plugins/zen-mode') " },
     loaded = true,
     path = "/Users/ali/.local/share/nvim/site/pack/packer/start/zen-mode.nvim",
     url = "https://github.com/folke/zen-mode.nvim"
@@ -353,59 +254,38 @@ _G.packer_plugins = {
 }
 
 time([[Defining packer_plugins]], false)
+-- Config for: telescope-env.nvim
+time([[Config for telescope-env.nvim]], true)
+ require('telescope').load_extension('env') 
+time([[Config for telescope-env.nvim]], false)
 -- Config for: nvim-autopairs
 time([[Config for nvim-autopairs]], true)
  require('plugins/autopairs') 
 time([[Config for nvim-autopairs]], false)
--- Config for: nvim-cmp
-time([[Config for nvim-cmp]], true)
- require('plugins/nvim-cmp') 
-time([[Config for nvim-cmp]], false)
--- Config for: LuaSnip
-time([[Config for LuaSnip]], true)
- require('plugins/luasnip') 
-time([[Config for LuaSnip]], false)
--- Config for: nvim-colorizer.lua
-time([[Config for nvim-colorizer.lua]], true)
- require('plugins/colorizer') 
-time([[Config for nvim-colorizer.lua]], false)
--- Config for: telescope.nvim
-time([[Config for telescope.nvim]], true)
- require('plugins/telescope') 
-time([[Config for telescope.nvim]], false)
--- Config for: nvim-lspconfig
-time([[Config for nvim-lspconfig]], true)
- require('plugins/lspconfig') 
-time([[Config for nvim-lspconfig]], false)
--- Config for: vim-autocorrect
-time([[Config for vim-autocorrect]], true)
-        vim.cmd('autocmd BufReadPost ~/Documents/notes/* call AutoCorrect()')
-    
-time([[Config for vim-autocorrect]], false)
--- Config for: gitsigns.nvim
-time([[Config for gitsigns.nvim]], true)
- require('plugins/gitsigns') 
-time([[Config for gitsigns.nvim]], false)
--- Config for: nvim-treesitter
-time([[Config for nvim-treesitter]], true)
- require('plugins/treesitter') 
-time([[Config for nvim-treesitter]], false)
--- Config for: vim-tmux-navigator
-time([[Config for vim-tmux-navigator]], true)
- require("plugins/vim-tmux-navigator") 
-time([[Config for vim-tmux-navigator]], false)
--- Config for: zen-mode.nvim
-time([[Config for zen-mode.nvim]], true)
-try_loadstring("\27LJ\2\n:\0\0\3\0\3\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0004\2\0\0B\0\2\1K\0\1\0\nsetup\rzen-mode\frequire\0", "config", "zen-mode.nvim")
-time([[Config for zen-mode.nvim]], false)
--- Config for: lualine.nvim
-time([[Config for lualine.nvim]], true)
- require('plugins/lualine')
-time([[Config for lualine.nvim]], false)
 -- Config for: vim-fugitive
 time([[Config for vim-fugitive]], true)
  require('plugins/vim-fugitive') 
 time([[Config for vim-fugitive]], false)
+-- Config for: telescope.nvim
+time([[Config for telescope.nvim]], true)
+ require('plugins/telescope') 
+time([[Config for telescope.nvim]], false)
+-- Config for: zen-mode.nvim
+time([[Config for zen-mode.nvim]], true)
+ require('plugins/zen-mode') 
+time([[Config for zen-mode.nvim]], false)
+-- Config for: starlite-nvim
+time([[Config for starlite-nvim]], true)
+ require('plugins/starlite') 
+time([[Config for starlite-nvim]], false)
+-- Config for: vim-tmux-navigator
+time([[Config for vim-tmux-navigator]], true)
+ require("plugins/vim-tmux-navigator") 
+time([[Config for vim-tmux-navigator]], false)
+-- Config for: vim-autocorrect
+time([[Config for vim-autocorrect]], true)
+ vim.cmd('autocmd BufReadPost ~/Documents/notes/* call AutoCorrect()') 
+time([[Config for vim-autocorrect]], false)
 -- Config for: Comment.nvim
 time([[Config for Comment.nvim]], true)
 try_loadstring("\27LJ\2\n5\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\fComment\frequire\0", "config", "Comment.nvim")
@@ -414,10 +294,6 @@ time([[Config for Comment.nvim]], false)
 time([[Config for numb.nvim]], true)
  require('plugins/numb') 
 time([[Config for numb.nvim]], false)
--- Config for: starlite-nvim
-time([[Config for starlite-nvim]], true)
- require('plugins/starlite') 
-time([[Config for starlite-nvim]], false)
 -- Config for: committia.vim
 time([[Config for committia.vim]], true)
  require('plugins/committia') 
@@ -425,11 +301,11 @@ time([[Config for committia.vim]], false)
 
 -- Command lazy-loads
 time([[Defining lazy-load commands]], true)
-pcall(vim.cmd, [[command -nargs=* -range -bang -complete=file Start lua require("packer.load")({'vim-dispatch'}, { cmd = "Start", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args>, mods = "<mods>" }, _G.packer_plugins)]])
-pcall(vim.cmd, [[command -nargs=* -range -bang -complete=file MarkdownPreview lua require("packer.load")({'markdown-preview.nvim'}, { cmd = "MarkdownPreview", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args>, mods = "<mods>" }, _G.packer_plugins)]])
 pcall(vim.cmd, [[command -nargs=* -range -bang -complete=file Dispatch lua require("packer.load")({'vim-dispatch'}, { cmd = "Dispatch", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args>, mods = "<mods>" }, _G.packer_plugins)]])
 pcall(vim.cmd, [[command -nargs=* -range -bang -complete=file Make lua require("packer.load")({'vim-dispatch'}, { cmd = "Make", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args>, mods = "<mods>" }, _G.packer_plugins)]])
 pcall(vim.cmd, [[command -nargs=* -range -bang -complete=file Focus lua require("packer.load")({'vim-dispatch'}, { cmd = "Focus", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args>, mods = "<mods>" }, _G.packer_plugins)]])
+pcall(vim.cmd, [[command -nargs=* -range -bang -complete=file Start lua require("packer.load")({'vim-dispatch'}, { cmd = "Start", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args>, mods = "<mods>" }, _G.packer_plugins)]])
+pcall(vim.cmd, [[command -nargs=* -range -bang -complete=file MarkdownPreview lua require("packer.load")({'markdown-preview.nvim'}, { cmd = "MarkdownPreview", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args>, mods = "<mods>" }, _G.packer_plugins)]])
 time([[Defining lazy-load commands]], false)
 
 vim.cmd [[augroup packer_load_aucmds]]
@@ -438,13 +314,6 @@ vim.cmd [[au!]]
 time([[Defining lazy-load filetype autocommands]], true)
 vim.cmd [[au FileType markdown ++once lua require("packer.load")({'markdown-preview.nvim'}, { ft = "markdown" }, _G.packer_plugins)]]
 time([[Defining lazy-load filetype autocommands]], false)
-  -- Event lazy-loads
-time([[Defining lazy-load event autocommands]], true)
-vim.cmd [[au FileType xml ++once lua require("packer.load")({'nvim-ts-autotag'}, { event = "FileType xml" }, _G.packer_plugins)]]
-vim.cmd [[au FileType html ++once lua require("packer.load")({'nvim-ts-autotag'}, { event = "FileType html" }, _G.packer_plugins)]]
-vim.cmd [[au FileType javascript ++once lua require("packer.load")({'nvim-ts-autotag'}, { event = "FileType javascript" }, _G.packer_plugins)]]
-vim.cmd [[au FileType jsx ++once lua require("packer.load")({'nvim-ts-autotag'}, { event = "FileType jsx" }, _G.packer_plugins)]]
-time([[Defining lazy-load event autocommands]], false)
 vim.cmd("augroup END")
 if should_profile then save_profiles() end
 

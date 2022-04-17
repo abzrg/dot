@@ -2,6 +2,7 @@ local telescope = require('telescope')
 local actions = require('telescope.actions')
 
 telescope.setup {
+
     extensions = {
         file_browser = {
             mappings = {
@@ -72,6 +73,9 @@ vim.api.nvim_set_keymap("n", "<leader>gb",
 -- live-grep
 vim.api.nvim_set_keymap('n', ';r', '<Cmd>Telescope live_grep<CR>', {silent = true, noremap = true})
 
+-- Find files (including hidden) with gitfiles & fallback on find_files
+vim.api.nvim_set_keymap("n", ";f", [[<Cmd>lua Custom_functions.project_files()<CR>]], {noremap = true, silent = true})
+
 -- buffers
 vim.api.nvim_set_keymap('n', '<leader>j', [[<Cmd>lua require'telescope.builtin'.buffers({sort_lastused = true})<CR>]], {noremap = true})
 
@@ -93,29 +97,27 @@ vim.api.nvim_set_keymap("n", ";k", [[<Cmd>lua require'telescope.builtin'.keymaps
 -- marks
 vim.api.nvim_set_keymap("n", ";m", [[<Cmd>lua require'telescope.builtin'.marks()<CR>]], {noremap = true, silent = true})
 
--- Find files (including hidden) with gitfiles & fallback on find_files
-vim.api.nvim_set_keymap("n", ";f", [[<Cmd>lua Custom_functions.project_files()<CR>]], {noremap = true, silent = true})
-
-vim.api.nvim_set_keymap("n", "<leader>nb", [[<Cmd>lua Custom_functions.browse_notes()<CR>]], {noremap = true, silent = true})
-
 -- oldfiles
 vim.api.nvim_set_keymap("n", ";o", [[<Cmd>lua Custom_functions.old_files()<CR>]], {noremap = true, silent = true})
 
--- Find notes files
+-- find notes files
 vim.api.nvim_set_keymap("n", "<leader>nf", [[<Cmd>lua Custom_functions.find_notes()<CR>]], {noremap = true, silent = true})
 
--- Search through notes
+-- browse notes
+vim.api.nvim_set_keymap("n", "<leader>nb", [[<Cmd>lua Custom_functions.browse_notes()<CR>]], {noremap = true, silent = true})
+
+-- search through notes
 vim.api.nvim_set_keymap("n", "<leader>ng", [[<Cmd>lua Custom_functions.grep_notes()<CR>]], {noremap = true, silent = true})
 
--- Find neovim configs
+-- find neovim configs
 vim.api.nvim_set_keymap("n", "<leader>vf", [[<Cmd>lua Custom_functions.find_nvim_config()<CR>]], {noremap = true, silent = true})
 
--- Grep neovim configs
+-- grep neovim configs
 vim.api.nvim_set_keymap("n", "<leader>vg", [[<Cmd>lua Custom_functions.grep_nvim_config()<CR>]], {noremap = true, silent = true})
 
--- Find script files
+-- find script files
 vim.api.nvim_set_keymap('n', ';s', [[<Cmd>lua Custom_functions.find_scripts()<CR>]], {noremap = true, silent = true})
 
--- Find dot files
+-- find dot files
 vim.api.nvim_set_keymap('n', ';d', [[<Cmd>lua Custom_functions.find_dot_files()<CR>]], {noremap = true, silent = true})
 

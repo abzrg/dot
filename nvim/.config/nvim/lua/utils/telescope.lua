@@ -44,7 +44,8 @@ function M.project_files()
         ".woff",
         ".woff2",
         ".ttf",
-        ".otf"
+        ".otf",
+        "tags"
     }
 
     if ret == 0 then

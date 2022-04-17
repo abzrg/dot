@@ -11,8 +11,8 @@ keymap('n', '<BS>', ':nohl<CR>', {noremap = true})
 -- Netrw
 -- keymap('n', '<leader>e', ':30Lexplore<CR>', {silent = true}) -- file manager toggle
 
--- Compiler
-keymap('n', '<leader>c', ':make!<CR>', {noremap = true})
+-- Compiler (mnemonics: m == make)
+keymap('n', '<leader>m', ':make!<CR>', {noremap = true})
 
 -- More Convinience!
 keymap('n', '<leader>q', ':q!<cr>', {noremap = true})
@@ -22,7 +22,7 @@ keymap('n', ';', ':', {noremap = true})
 keymap('v', ';', ':', {noremap = true})
 
 -- Insert Current Time/Date (TODO)
-cmd([[ inoremap <M-t> <C-r>=strftime('%D %l:%M%P')<cr> ]])
+cmd([[ inoremap <M-t> <C-r>=strftime('%b %d, %Y (%a)')<cr> ]])
 cmd([[ inoremap <M-T> <C-r>=strftime('%D')<cr> ]])
 
 -- Open a terminal in a tab
@@ -53,7 +53,7 @@ keymap('n', '<leader>x', ':!xdg-open %<CR><CR>', {noremap = true})
 keymap('n', '<M-i>', [[m`gg=G``zz]], {noremap = true})
 
 -- Notes
-keymap('n', '<leader>n', ':edit ~/Documents/notes/<C-d>', {noremap = true})
+keymap('n', '<leader>nn', ':edit ~/Documents/notes/<C-d>', {noremap = true})
 
 -- Delete current buffer
 keymap('n', '<leader>k', ':bd<CR>', {noremap = true})
@@ -85,11 +85,11 @@ keymap('n', '<M-n>', ':bn<CR>', {noremap = true})
 
 cmd([[nnoremap <Leader>b :buffers<CR>:buffer<Space>]])
 
-
 -- Edit and source this file from anywhere
 keymap('n', '<leader>e', ':e $MYVIMRC<CR>', {noremap = true})
-keymap('n', '<leader>s', ':source $MYVIMRC<CR>', {noremap = true})
-keymap('n', '<leader>i', ':PlugInstall<CR>', {noremap = true})
+
+-- Source current vim script
+keymap('n', '<leader>s', ':source %<CR>', {noremap = true})
 
 -- Sometimes I want to undo without having the cursor moved to have some context
 keymap('n', '<leader>u', 'u<C-o>', {noremap = true})
@@ -100,9 +100,6 @@ keymap('n', '<C-i>', '<C-i>zz', {noremap = true, silent = true})
 
 -- Switch quickly between the .h and corresponding .c/.cpp file
 keymap('n', '<M-Tab>', ':e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<CR>', {noremap = true, silent = true})
-
--- if this is a normal buffer use <CR> to toggle folding
-keymap('n', '<CR>', 'za', {noremap = true, silent = true})
 
 -- Add space bellow or above without leaving normal mode
 keymap('n', '[<space>', ':<c-u>put!=repeat([\'\'],v:count)<bar>\']+1<cr>', {silent = true, noremap = true})
@@ -224,8 +221,9 @@ else
 end
 
 -- Search & Replace (\<\> is word boundary)
-keymap('n', 'S', 'yiw:%s///g<Left><Left><Left><C-r>"<Right>',
-                        {noremap = true})
+-- keymap('n', 'S', 'yiw:%s///g<Left><Left><Left><C-r>"<Right>',
+--                         {noremap = true})
+keymap('n', 'S', ':%s///g<Left><Left><Left><C-r><C-w><Right>', {noremap = true})
 
 -- Search in visually selected area
 keymap('v', '/', '<Esc>/\\%V', {noremap = true})
