@@ -1,0 +1,5 @@
+# Global .gitignore
+# issue command: git config --global core.excludesFile '~/.gitignore'
+
+.DS_Store
+.vscode

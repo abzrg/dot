@@ -1,9 +1,85 @@
+[alias]
+	cf = !git config --global --edit
+
+	amend = commit --amend -v
+	no-edit = commit --amend --no-edit
+	ci = commit -v
+
+	co = checkout
+	cb = checkout -b
+	b = branch
+
+	di = diff
+	dc = diff --cached
+	both = diff HEAD
+
+	grepc = grep --cached --break --heading
+
+	ff = merge --ff-only
+	noff = merge --no-ff
+	pom = push origin master
+	st = status -sb
+	stat  = status --untracked-files=no
+
+	# Like git whatchanged
+	what  = log --raw --no-merges
+
+	l = log --simplify-merges --graph --pretty="tformat:%C(yellow)%h%Creset\\ %Cgreen(%ar)%Creset\\ %C(blue)<%an>%Creset\\ %C(red)%d%Creset\\ %s"
+	summary = log --abbrev-commit --pretty=oneline --author="Ali.Bozorgzadeh" --since=last.mon --reverse
+	one = show -s --pretty='format:%h (%s)'
+
+	clone = clone --progress --verbose
+
+	# pretty print git objects
+	cat = cat-file -p
+	# print the contents of the staging area or index
+	index = ls-files -s
+
+	ctags = !.git/hooks/ctags
+	abbrev = !sh -c 'git rev-parse --short ${1-`echo HEAD`}' -
+	count = !sh -c 'git log --oneline | wc -l'
+
+	# src: https://stackoverflow.com/a/8408640/13041067
+	dupes = !"git ls-tree -r HEAD | cut -c 13- | sort | uniq -D -w 40"
+
+	ff = merge --ff-only
+	fixup = !sh -c 'git commit --fixup=$1 ${@:2}' -
+
+	# Show just the HEAD commit message (no indent) and nothing else
+	message = log -1 --pretty=format:%B
+	msg = message
+
+	no-edit = commit --amend --no-edit
+
+	one = log --pretty=format:'%C(auto)%h%Creset%C(auto)%d%Creset %s %C(magenta bold)(%cr)%Creset %C(cyan)<%aN>%Creset'
+	ten = log -10 --pretty=format:'%C(auto)%h%Creset%C(auto)%d%Creset %s %C(magenta bold)(%cr)%Creset %C(cyan)<%aN>%Creset'
+	oneline = log --pretty=format:'%C(auto)%h%Creset%C(auto)%d%Creset %s %C(magenta bold)(%cr)%Creset %C(cyan)<%aN>%Creset'
+
+	# requires Git 1.5.4 or later
+	p = add -p
+	patch = add -p
+
+	# requires Git 1.7.11.3 or later
+	reword = commit --amend --only -v --
+
+	# requires Git 1.6.2 or later
+	rollback = !sh -c 'git reset --merge HEAD~${1-1}' -
+
+	# "smartlog", although it's not that smart.
+	# Equivalent to `git graph --all --simplify-by-decoration.
+	sl = log --graph --pretty=format:'%C(auto)%h%Creset%C(auto)%d%Creset %s %C(magenta bold)(%cr)%Creset %C(cyan)<%aN>%Creset' --all --simplify-by-decoration
+
+	staged = diff --cached
+
+
 [user]
 	name = Ali Bozorgzadeh
 	email = aliiiib95@gmail.com
 
+
 [github]
-	user = connermcd
+	user = reverseila
+
 
 [color]
 	branch = auto
@@ -14,19 +90,30 @@
 	ui = true
 	grep = auto
 
+
+[color "diff-highlight"]
+	oldHighlight = red bold 238
+	newHighlight = green bold 238
+
+
 [color "status"]
 	added = green
 	changed = red
-	untracked = red
+	untracked = blue
+
 
 [http]
+    # problem with cloning large repos
 	postBuffer = 524288000
+
 
 [core]
 	compression = 0
 	autocrlf = input
 	pager = less -FRSX
 	editor = nvim
+	excludesFile = ~/.gitignore
+
 
 [init]
 	templatedir = ~/.git_template
@@ -34,48 +121,79 @@
 ; [interactive]
 ;	singlekey = true
 
+
 [help]
 	autocorrect = 10
+
 
 [diff]
 	tool = vimdiff
 
+
 [merge]
 	summary = true
 	tool = fugitive
+	conflictStyle = diff3 #?
+	log = 1000 #?
+
 
 [mergetool "fugitive"]
 	cmd = nvim -f -c \"Gdiff\" \"$MERGED\"
 	keepBackup = false
 
+
 ; [pull]
 	; rebase = true
+
 
 ; [push]
 ;	default = tracking
 
+
 [rebase]
 	autosquash = true
 
-[alias]
-	b = branch
-	cf = !git config --global --edit
-	ci = commit
-	co = checkout
-	cb = checkout -b
-	di = diff
-	dc = diff --cached
-	grepc = grep --cached
-	ff = merge --ff-only
-	noff = merge --no-ff
-	pom = push origin master
-	st = status -sb
-	stat  = status --untracked-files=no
-	what  = log --raw --no-merges # Like git whatchanged
-	l = log --simplify-merges --graph --pretty="tformat:%C(yellow)%h%Creset\\ %Cgreen(%ar)%Creset\\ %C(blue)<%an>%Creset\\ %C(red)%d%Creset\\ %s"
-	one = show -s --pretty='format:%h (%s)'
-	summary = log --abbrev-commit --pretty=oneline --author="Ali.Bozorgzadeh" --since=last.mon --reverse
-	clone = clone --progress --verbose
-	cat = cat-file -p # pretty print git objects
-	index = ls-files -s # print the contents of the staging area or index
-	ctags = !.git/hooks/ctags
+[branch]
+	autosetupmerge = always
+	autosetuprebase = local
+
+
+# ignored by Git older than 1.8.2
+[diff]
+	algorithm = histogram
+
+	# Added in Git 2.9.0 (experimental): more readable diffs.
+	compactionHeuristic = true
+
+
+[grep]
+	lineNumber = true
+
+	# requires Git built with PCRE support; ie:
+	#   brew install git --with-pcre (on OS X)
+	patternType = perl
+
+
+[help]
+	autocorrect = 0
+
+
+; [interactive]
+; 	diffFilter = diff-highlight
+
+
+[log]
+	decorate = short
+
+
+[pager] #?
+	show-branch = true
+	status = true
+
+
+; [rebase]
+; 	autosquash = true
+
+
+[status]
+	submodulesummary = true
