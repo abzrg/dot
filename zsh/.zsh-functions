@@ -1,0 +1,155 @@
+#!/bin/sh
+
+# -- git wrapper
+
+    # a git wrapper to implement the idea of getting back to the root of the project
+    # src: Greg Hurrel's video on functions
+    # (https://www.youtube.com/watch?v=C5aRtq-Rtbg)
+    #
+    #   git root            # changes to repo root
+    #   git root COMMAND    # runs arbitrary command from repo root (eg. git root ls)
+    function git() {
+        if [ "$1" = "root" ]; then
+            shift
+            local ROOT="$(command git rev-parse --show-toplevel 2>/dev/null || echo -n .)"
+            if [ $# -eq 0 ]; then
+                cd "$ROOT"
+            else
+                # jump quickly, do sth and get back (happening in a subshell so I
+                # stay wherever I was before)
+                ( cd "$ROOT" && eval "$@" )
+            fi
+        else
+            command git "$@"
+        fi
+    }
+
+
+# -- efficient scratch space --
+
+    # src: Greg Hurrel's video on functions
+    # (https://www.youtube.com/watch?v=C5aRtq-Rtbg)
+    function scratch() {
+        local SCRATCH=$(mktemp -d)
+        echo "Spawning subshell in scratch directory:"
+        echo "  $SCRATCH"
+        (cd $SCRATCH; zsh)
+        echo "Removing scratch directory"
+        rm -rf "$SCRATCH"
+    }
+
+
+# -- http server --
+
+    # Usage: serve [--directory DIRECTORY] [PORT]
+    #
+    # Defaults to port 8000, current directory (ie. will use index.html if present).
+    #
+    # src: Greg Hurrel
+    # (https://github.com/wincent/wincent/blob/master/aspects/dotfiles/files/.zsh/functions)
+    function serve() {
+      if command -v python3 &> /dev/null; then
+        python3 -m http.server "$@"
+      else
+        python -m SimpleHTTPServer "$@" || python -m http.server "$@"
+      fi
+    }
+
+
+# -- subtree --
+    # Print a pruned version of a tree.
+    #
+    # Examples:
+    #
+    #   # Print all "*.js" files in src:
+    #   subtree '*.js' src
+    #
+    #   # Print all "*.js" files in the current directory:
+    #   subtree '*.js'
+    #
+    #   # Print all "*.js" and "*.ts" files in current directory:
+    #   subtree '*.js|*.ts'
+    #
+    # src: Greg Hurrel
+    # (https://github.com/wincent/wincent/blob/master/aspects/dotfiles/files/.zsh/functions)
+    function subtree() {
+      tree -a --prune -P "$@"
+    }
+
+
+# -- dictionary (sdcv) --
+
+    # Data in ~/.local/share/stardict/dic/
+    d() {
+        if [ "$1" = "-z" ]; then
+            shift
+            word="$(cat /usr/share/dict/words | fzf)"
+            [ $(tput cols) -lt 80 ] && local width=$(tput cols)
+            echo -e "[`date`]:  $word" >> $HOME/Documents/notes/dic-words.txt
+            sdcv -n --utf8-output --color "$word" 2>&1 \
+                | sed 's/<br>/\n/g' \
+                | sed 's/<BR>/\n/g' \
+                | sed -e 's/<[^>]*>//g' \
+                | fold -s -w ${width:-80} | less -FRX
+        else
+            [ $(tput cols) -lt 80 ] && local width=$(tput cols)
+            echo -e "[`date`]:  $@" >> $HOME/Documents/notes/dic-words.txt
+            sdcv -n --utf8-output --color "$@" 2>&1 \
+                | sed 's/<br>/\n/g' \
+                | sed 's/<BR>/\n/g' \
+                | sed -e 's/<[^>]*>//g' \
+                | fold -s -w ${width:-80} | less -FRX
+        fi
+    }
+
+
+# -- extract everything --
+
+    # src: derek taylor
+    ex() {
+        # -- ARCHIVE EXTRACTION
+        # usage: ex <file>
+        if [ -f $1 ] ; then
+            case $1 in
+                *.tar.bz2)   tar xjf $1   ;;
+                *.tar.gz)    tar xzf $1   ;;
+                *.bz2)       bunzip2 $1   ;;
+                *.rar)       unrar x $1   ;;
+                *.gz)        gunzip $1    ;;
+                *.tar)       tar xf $1    ;;
+                *.tbz2)      tar xjf $1   ;;
+                *.tgz)       tar xzf $1   ;;
+                *.zip)       unzip $1     ;;
+                *.Z)         uncompress $1;;
+                *.7z)        7z x $1      ;;
+                *.deb)       ar x $1      ;;
+                *.tar.xz)    tar xf $1    ;;
+                *.tar.zst)   unzstd $1    ;;
+                *)           echo "'$1' cannot be extracted via ex()" ;;
+            esac
+        else
+            echo "'$1' is not a valid file"
+        fi
+    }
+
+
+# -- cdjob --
+
+    # go to the directory of a background job
+    # src: https://unix.stackexchange.com/a/82217/419393
+    cdjob () {
+        pid=$(jobs -p $1);
+        d=$(readlink /proc/$pid/cwd);
+        cd "$d"
+    }
+
+
+# -- sci-hub downloader --
+
+    shdl() { curl -O "https://sci-hub.se"$(curl -s https://sci-hub.se/"$@" | grep location.href | grep -o '/.*pdf') ;}
+    shdl-backup() { curl -O $(curl -s https://sci-hub.se/"$@" | grep location.href | grep -o http.*pdf) ;}
+
+
+# -- Create a directory and take me there --
+
+    take() { mkdir $1 && cd $1 ;}

@@ -1,0 +1,175 @@
+#!/bin/sh
+
+# -- saftey first --
+alias \
+    cp='cp -iv'                                                                \
+    mv='mv -iv'                                                                \
+    rm='rm -v'                                                                 \
+    ln='ln -iv'
+
+
+# -- colorize commands --
+alias \
+    grep='grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}'            \
+    egrep='egrep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}'          \
+    fgrep='fgrep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}'          \
+    diff='diff'                                                                \
+
+
+# -- list files --
+if command -v exa >/dev/null
+then
+    alias \
+        ls='exa -bgh -sname --group-directories-first -F'                      \
+        l='exa -bgh -sname --group-directories-first -F'                       \
+        la='ls -a'                                                             \
+        ll='ls -l --git'                                                       \
+        sl='ls'
+else
+    alias \
+        ls='ls -hFG --color=auto'                                              \
+        l='ls'                                                                 \
+        la='ls -A'                                                             \
+        ll='ls -Ali'                                                           \
+        sl='ls'
+fi
+
+
+# -- long commands --
+alias \
+    o='open'                                                                   \
+    f='find . -name'                                                           \
+    h='history'                                                                \
+    g='git'                                                                    \
+    bc='bc -ql'                                                                \
+    df='df -h'                                                                 \
+    v='$EDITOR'                                                                \
+    e='emacs -nw -nbc'                                                         \
+    ec='emacsclient -nw'                                                       \
+    ka='killall'                                                               \
+    type='type -a'                                                             \
+    mkd='mkdir -pv'                                                            \
+    free='free -m'                                                             \
+    chbin='chmod 755'                                                          \
+    rcp='rsync -avh --progress'                                                \
+    chreg='chmod 644'                                                          \
+    wget='wget --hsts-file ~/.cache/wget-hsts'                                 \
+    myip='curl http://myip.dnsomatic.com && echo '''                           \
+    w3m='stty cols 80 && w3m'                                                  \
+    sz='source $HOME/.zshrc'                                                   \
+
+
+# -- navigate to common directories --
+alias \
+    cd..='cd ..'                                                               \
+    cf="cd ${XDG_CONFIG_HOME:-$HOME/.config}"                                  \
+    dl="cd ${XDG_DOWNLOAD_DIR:-$HOME/Downloads}"                               \
+    dt="cd ${XDG_DATA_HOME:-$HOME/.local/share}"                               \
+    bin="cd $HOME/.local/bin"                                                  \
+    doc="cd ${XDG_DOCUMENTS_DIR:-$HOME/Documents}"                             \
+    pic="cd ${XDG_PICTURES_DIR:-$HOME/Pictures}"                               \
+    vid="cd ${XDG_VIDEOS_DIR:-$HOME/Movies}"                                   \
+
+
+# -- open config files faster --
+alias \
+    cfz="$EDITOR $HOME/.zshrc"                                                 \
+    cfzp="$EDITOR $HOME/.zprofile"                                             \
+    cft="$EDITOR $HOME/.tmux.conf"                                             \
+    cfa="$EDITOR ${HOME}/.aliasrc"                                             \
+    cfA="$EDITOR ${XDG_CONFIG_HOME:-$HOME/.config}/alacritty/alacritty.yml"    \
+
+
+# Oops vim
+alias \
+    :e=$EDITOR                                                                 \
+    :qa=exit                                                                   \
+    :sp='test -n "$TMUX" && tmux split-window'                                 \
+    :vs='test -n "$TMUX" && tmux split-window -h'                              \
+    :wq=exit
+
+
+# -- Global aliases --
+
+    # (work at any position within the command line)
+    # (src: https://github.com/wincent/wincent/blob/main/aspects/dotfiles/files/.zsh/aliases)
+
+    # Mnemonic: "[C]lip"
+    if [ `uname -s` = "Darwin" ]
+    then
+        alias -g C="|pbcopy"
+    else
+        alias -g C="|xclip -sel clip"
+    fi
+
+    # Mnemonic: "[D]iff"
+    alias -g D="|diff"
+
+    # Mnemonic: "[G]rep"
+    alias -g G="|grep"
+
+    # Mnemonic: "[H]ead"
+    alias -g H="|head"
+
+    # Pretty-print JSON.
+    # Mnemonic: "[J]SON"
+    alias -g J="|python3 -m json"
+
+    # Mnemonic: "[L]ess"
+    alias -g L="|& less"
+
+    # Mnemonic: "[L]ess"
+    alias -g VV="|& nvim -"
+
+    # Mnemonic: "[R]eset"
+    alias -g R=";clear;test -n "$TMUX" && tmux clear-history;"
+
+    # Mnemonic: "[W]c"
+    alias -g WC='| wc -l'
+
+
+# -- misc. --
+
+    # use `\vim` or `command vim` to get the real vim.
+    command -v nvim >/dev/null && alias                                        \
+        vim=nvim                                                               \
+        vimdiff="nvim -d"                                                      \
+
+    # youtube-dl / yt-dlp
+    alias \
+        yt="yt-dlp --add-metadata -ci \
+        --external-downloader aria2c  \
+        --external-downloader-args '-c -x 5 -k 2M'"                            \
+        yta="yt -x -f bestaudio/best"                                          \
+        ytb="yt -f bestvideo+bestaudio"                                        \
+        yt7="yt -f 'bestvideo[height<=?720]+bestaudio/best' "                  \
+        yts="yt-dlp --all-subs --skip-download"                                \
+        ytas="yt-dlp --skip-download --write-auto-sub --convert-subs=srt"      \
+        yt7pl="yt7 -o '%(playlist_index)s-%(title)s.%(ext)s'"                  \
+        ytbpl="ytb -o '%(playlist_index)s-%(title)s.%(ext)s'"
+
+    # openfoam
+    alias of2112="source ${FOAM_INST_DIR}/OpenFOAM-v2112/etc/bashrc"
+    alias fe41="source ~/OpenFOAM/foam-extend-4.1/etc/bashrc 2>&1"
+
+    # vim and neovim config
+    alias cfv="$EDITOR ${XDG_CONFIG_HOME:-$HOME/.config}/nvim/init.lua"
+
+    # ascii table
+    alias ascii='man ascii | grep -m 1 -A 63 --color=never Oct | less'
+
+    # special regex
+    alias reg_mac='echo ^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$'
+    alias reg_git_hash='echo \b[0-9a-f]{5,40}\b'
+
+    # Pretty print the path
+    alias path='echo $PATH | tr -s ":" "\n"'
+
+
+    # NIT remote
+    [ -e $HOME/.hpc.nit ] && source $HOME/.hpc.nit
+
+    # common lisp interpreter
+    if command -v rlwrap >/dev/null && command -v sbcl >/dev/null; then
+        alias   sbcl='rlwrap sbcl'
+    fi

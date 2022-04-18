@@ -1,0 +1,99 @@
+# -- window title --
+
+    # src: archwiki
+    autoload -Uz add-zsh-hook
+    function xterm_title_precmd () {
+        print -Pn -- '\e]2;%n@%m:%~\a'
+        [[ "$TERM" == 'screen'* ]] && print -Pn -- '\e_\005{g}%n\005{-}@\005{m}%m\005{-} \005{B}%~\005{-}\e\\'
+    }
+
+    function xterm_title_preexec () {
+        print -Pn -- '\e]2;%n@%m:%~ — ' && print -n -- "${(q)1}\a"
+        [[ "$TERM" == 'screen'* ]] && { print -Pn -- '\e_\005{g}%n\005{-}@\005{m}%m\005{-} \005{B}%~\005{-} %# ' && print -n -- "${(q)1}\e\\"; }
+    }
+
+    if [[ "$TERM" == (Eterm*|alacritty*|aterm*|gnome*|konsole*|kterm*|putty*|rxvt*|screen*|tmux*|xterm*|st*) ]]; then
+        add-zsh-hook -Uz precmd xterm_title_precmd
+        add-zsh-hook -Uz preexec xterm_title_preexec
+    fi
+
+
+# -- shlvl --
+
+    # Allow dynamic command prompt (Enable substitution in prompt)
+    setopt prompt_subst
+
+    # show how many subshell is spawned using the number of prompt sign
+    function _shlvl_prompt()
+    {
+        # check if you are in tmux or not
+        # if you are in tmux the shlvl is incremented by one, so it must be
+        # decremented to show that we are in the lowest level in tmux
+        if [ -z $TMUX ]
+        then
+            # not in tmux
+            local level=$(($SHLVL))
+        else
+            # in tmux
+            local level=$(($SHLVL - 1))
+        fi
+
+        # choose prompt sign
+        local prompt_sign='$'
+
+        # the final suffix of the prompt will be the shown w.r.t number of subshells
+        # spawn
+        local suffix=""
+        for i in {1.."${level}"}
+        do
+            suffix="$suffix$prompt_sign"
+        done
+
+        print "$suffix"
+    }
+
+
+# -- git prompt (fast) --
+
+    # src: https://gist.github.com/Ragnoroct/c4c3bf37913afb9469d8fc8cffea5b2f
+    function __fastgit_ps1() {
+        local headfile head branch
+        local dir="$PWD"
+
+        while [ -n "$dir" ]; do
+            if [ -e "$dir/.git/HEAD" ]; then
+                headfile="$dir/.git/HEAD"
+                break
+            fi
+            dir="${dir%/*}"
+        done
+
+        if [ -e "$headfile" ]; then
+            read -r head < "$headfile" || return
+            case "$head" in
+                ref:*) branch="${head##*/}" ;;
+                "") branch="" ;;
+                *) branch="${head:0:7}" ;;  #Detached head. You can change the format for this too.
+            esac
+        fi
+
+        if [ -z "$branch" ]; then
+            return 0
+        fi
+
+        if [ -z "$1" ]; then
+            # Default format
+            printf ":(%s)" "$branch"
+        else
+            # Use passed format string
+            printf "$1" "$branch"
+        fi
+    }
+
+
+# -- zsh prompt --
+
+    PROMPT="%1~"                            # path
+    PROMPT="$PROMPT\$(__fastgit_ps1)%f"     # git prompt
+    PROMPT="$PROMPT\$(_shlvl_prompt)%f "    # shell level
+    export PROMPT
