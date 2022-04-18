@@ -1,0 +1,105 @@
+#!/bin/sh -e
+
+# This script grabs the pronunciation (either uk or us) from
+# <https://dictionary.cambridge.com>.
+#
+# Author: Ali Bozorgzadeh <https://github.com/reverseila>
+#
+# USAGE: $0 word [accent]
+
+# =========================================================================== #
+#                                Variables (global)                           #
+# =========================================================================== #
+
+_word="$(echo $1 | tr ' ' '-')"
+_base_url="https://dictionary.cambridge.org"
+_cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}/pronunciations"
+_default_accent="uk"
+
+
+
+# =========================================================================== #
+#                                Functions                                    #
+# =========================================================================== #
+
+# print usage and exit
+_usage() {
+    printf "\033[33;1mUSAGE\033[0m: `basename $0` word [accent]\n"
+    printf "\033[35;1maccent\033[0m: uk, us\n"
+    exit 1
+}
+
+
+# get the url and output the two (space-separated) fields of urls
+# first field is us accent and the second one is uk version
+_get_url() {
+    printf "$(curl --silent "$_base_url/us/dictionary/english/$1" | grep -o '/us/media/english/u[ks]_pron/.*\.mp3' | head -2)"
+}
+
+
+# play audio file via mpv
+_play() {
+    #@ $1: path to file
+    mpv --no-config --force-window=no "$1" >/dev/null 2>&1
+}
+
+
+
+# =========================================================================== #
+#                                   Main                                      #
+# =========================================================================== #
+
+# If word is not provided, exit
+[ $# -lt 1 -a $# -gt 2 ] \
+    && {
+        printf "\033[31;1mERROR\033[0m: Please provide the word.\n\n"
+        _usage
+    }
+
+
+# check for the correctness of accent
+if [ $# -eq 2 ]; then
+    case  "$2" in
+        "us")
+            _accent="us"
+            _accent_number=1
+            ;;
+        "uk")
+            _accent="uk"
+            _accent_number=2
+            ;;
+        *)
+            printf "\033[31;1mERROR\033[0m: The available accents are: uk and us.\n"
+            exit 1
+    esac
+else
+    # if no accent is provided as an argument
+    _accent="$_default_accent"
+    [ $_accent = "uk" ] && _accent_number=2 || _accent_number=1
+fi
+
+
+# name of the file in cache
+_file="${_cache_dir}/${_accent}_${_word}.mp3"
+
+
+# check if you already have it or not
+if [ -e "$_file" ]; then
+    _play "$_file" && exit 0
+fi
+
+
+# find the urls for us and uk pronunciations
+_urls="$(_get_url "$_word")"
+
+# if url cannot be fuond
+[ -z "$_urls" ] \
+    && printf "Sorry, the pronunciation of \033[0;1m%s\033[0m could not be found.\n" "$_word" \
+    && exit 1
+
+
+# if it doesn't exists, download and play it
+# (don't download html files (--fail))
+wget -c -q --show-progress -O "$_file" \
+    "$_base_url$(echo $_urls | cut -d ' ' -f $_accent_number)"
+_play "$_file"
