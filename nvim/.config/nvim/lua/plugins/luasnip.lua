@@ -10,8 +10,6 @@ luasnip.filetype_extend("latex", {})
 -- lsp specification on snippet syntax:
 -- https://microsoft.github.io/language-server-protocol/specification#snippet_syntax
 
-
-
 -- source: https://github.com/L3MON4D3/LuaSnip/blob/72323c10fe2d91695f7593e572496ab9f004afee/Examples/snippets.lua#L263-L274
 -- Also look at: https://old.reddit.com/r/neovim/comments/qilze2/luasnip_friendly_snippets_configuration/
 

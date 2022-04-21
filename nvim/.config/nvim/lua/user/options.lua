@@ -1,7 +1,7 @@
 vim.opt.autoread        = true
-vim.opt.number          = false        -- show line numbers
-vim.opt.relativenumber  = false        -- show relative numbers
-vim.opt.cursorline      = false        -- highlight current line
+vim.opt.number          = false       -- show line numbers
+vim.opt.relativenumber  = false       -- show relative numbers
+vim.opt.cursorline      = false       -- highlight current line
 vim.opt.hidden          = true        -- allows you to hide buffers with unsaved changes without being prompted
 vim.opt.hlsearch        = true        -- highlight search items
 vim.opt.ignorecase      = true        -- case insensitive search
@@ -19,21 +19,25 @@ vim.opt.writebackup     = false
 vim.opt.smartcase       = true
 vim.opt.splitbelow      = true        -- open horizontall splits to the below of the current window
 vim.opt.splitright      = true        -- open verticall splits to the right of the current window
-vim.opt.termguicolors   = false
+vim.opt.termguicolors   = true
 vim.opt.title           = true
 vim.opt.virtualedit     = 'block'     -- allow cursor to move where there is no text in visual block mode
-vim.opt.signcolumn      = 'no'
+vim.opt.signcolumn      = 'auto'
 vim.opt.inccommand      = 'split'     -- live preview of :s results
 vim.opt.mouse           = 'a'         -- enable mouse
 vim.opt.scrolloff       = 3           -- start scroll 3 lines before edge of the viewport
 vim.opt.sidescrolloff   = 3
 vim.opt.pumblend        = 0           -- pseudo-transparency for pop-up menu
-vim.opt.laststatus      = 0           -- always show status line
+vim.opt.laststatus      = 2           -- always show status line
 vim.opt.cmdheight       = 1
 vim.opt.updatetime      = 500         -- CursorHold interval
 vim.opt.textwidth       = 80          -- automatically hard wrap at 80 columns
--- vim.opt.pumheight       = 10          -- Makes pop up-menu smaller
--- vim.opt.pumwidth        = 10          -- Makes pop up-menu smaller
+vim.opt.pumheight       = 10          -- Makes pop up-menu smaller
+vim.opt.pumwidth        = 10          -- Makes pop up-menu smaller
+
+
+vim.g.ruler             = true
+vim.g.rulerformat       = [[ %{fugitive#statusline()}\ %l,%c%V%=%P ]]
 
 -- Help nvim+fugitive be a faster experience
 vim.opt.shell = "/bin/zsh"

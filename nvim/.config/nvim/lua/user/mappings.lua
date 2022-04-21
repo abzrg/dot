@@ -76,7 +76,7 @@ cmd([[cnoremap *** **/*]])
 keymap('n', '-', ':e %:h<CR>', {noremap = true})
 cmd([[ cabbr <expr> %% expand('%:p:h') ]])
 
--- CDC = Change to directory of current file
+-- CD = Change to directory of the current file
 keymap('n', 'cd', ':cd %:p:h<CR>:pwd<CR>', {noremap = true})
 
 -- Easier navigaton between buffers
@@ -86,7 +86,7 @@ keymap('n', '<M-n>', ':bn<CR>', {noremap = true})
 cmd([[nnoremap <Leader>b :buffers<CR>:buffer<Space>]])
 
 -- Edit and source this file from anywhere
-keymap('n', '<leader>e', ':e $MYVIMRC<CR>', {noremap = true})
+keymap('n', '<leader>e', ':e $MYVIMRC <bar> cd %:p:h<CR>:pwd<CR>', {noremap = true})
 
 -- Source current vim script
 keymap('n', '<leader>s', ':source %<CR>', {noremap = true})
