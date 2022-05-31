@@ -7,11 +7,11 @@
 (menu-bar-mode -1)
 
 ;; Font settings
-(set-face-attribute 'default nil :font "MonacoB Nerd Font Mono" :height 170)
-(set-face-attribute 'fixed-pitch nil :font "MonacoB Nerd Font Mono" :height 170)
-(setq default-frame-alist '((font . "MonacoB Nerd Font Mono-17")))
+(set-face-attribute 'default nil :font "Menlo" :height 180)
+(set-face-attribute 'fixed-pitch nil :font "Menlo" :height 180)
+(setq default-frame-alist '((font . "Menlo-18")))
 
-;; Theme settings
+;; ;; Theme settings
 (load-theme 'gruber-darker t)
 (custom-theme-set-faces
  'gruber-darker
@@ -20,7 +20,7 @@
 ;;(add-to-list 'default-frame-alist '(background-color . "honeydew"))
 
 (column-number-mode)
-;;(global-display-line-numbers-mode t)
+(global-display-line-numbers-mode t)
 
 ;; Completely disable alarms
 (setq ring-bell-function 'ignore)
@@ -54,7 +54,7 @@
 (setq use-dialog-box nil)
 
 ;; Remember recently opened files
-;;	M-x recentf-open-file
+;; M-x recentf-open-file
 (recentf-mode 1)
 
 ;; auto close bracket insertion. New in emacs 24
@@ -64,6 +64,45 @@
       '(
         (?\" . ?\")
         (?\{ . ?\})))
+
+
+;;;; whitespace mode
+
+(require 'whitespace)
+(setq whitespace-display-mappings
+      ;; all numbers are Unicode codepoint in decimal. try (insert-char 182 ) to see it
+      '(
+        (space-mark 32 [183] [46]) ; 32 SPACE, 183 MIDDLE DOT 「·」, 46 FULL STOP 「.」
+        (newline-mark 10 [182 10]) ; 10 LINE FEED
+        (tab-mark 9 [187 9] [9655 9] [92 9]) ; 9 TAB, 9655 WHITE RIGHT-POINTING TRIANGLE 「▷」
+        ))
+(setq whitespace-style '(face tabs trailing tab-mark))
+(set-face-attribute 'whitespace-tab nil
+                    :background "grey22"
+                    :foreground "darkgray"
+                    :weight 'bold)
+(set-face-attribute 'whitespace-trailing nil
+                    :background "grey22"
+                    :foreground "darkgray"
+                    :weight 'normal)
+(add-hook 'prog-mode-hook 'whitespace-mode)
+(add-hook 'prog-mode-hook 'whitespace-mode)
+
+;; view whitespace in diff for checking up bad whitespace before
+;; committing
+(add-hook 'diff-mode-hook (lambda ()
+                            (setq-local whitespace-style
+                                        '(face
+                                          tabs
+                                          tab-mark
+                                          spaces
+                                          space-mark
+                                          trailing
+                                          indentation::space
+                                          indentation::tab
+                                          newline
+                                          newline-mark))
+                            (whitespace-mode 1)))
 
 
 ;; ------------------ bindings ------------
@@ -79,6 +118,11 @@
 (global-set-key (kbd "M-[") 'undo-fu-only-undo)
 (global-set-key (kbd "M-]") 'undo-fu-only-redo)
 
+;; better dynamic abbrev
+(global-set-key [remap dabbrev-expand] 'hippie-expand)
+
+;; zap trailing blanks
+(global-set-key (kbd "C-c z") 'delete-trailing-whitespace)
 
 ;; Packages ----------------------------
 ;; Initialize package sources
@@ -99,7 +143,14 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
+;; ---
 
+;; theme
+(use-package vscode-dark-plus-theme
+  :ensure t)
+
+(use-package modus-themes
+  :ensure t)
 ;; Org mode epub export
 (use-package ox-epub
   :ensure t)
@@ -141,8 +192,69 @@
 
 
 ;; multiple cursor
-(use-package iedit
+;;(use-package iedit
+;;  :ensure t)
+
+;; emacs mode for markdown
+(use-package markdown-mode
+  :ensure t
+  :mode ("README\\.md\\'" . gfm-mode)
+  :init (setq markdown-command "multimarkdown"))
+
+
+(use-package lua-mode
   :ensure t)
+
+
+;; (add-hook 'ido-setup-hook
+;;           (lambda ()
+;;             (define-key ido-completion-map [up] 'previous-history-element)))
+;; (setq ido-enable-flex-matching t)
+;; (setq ido-everywhere t)
+;; (ido-mode 1)
+;; ;; Display recent files in the "buffer" part.
+;; (setq ido-use-virtual-buffers t)
+;; (setq ido-create-new-buffer 'always)
+;; (setq ido-file-extensions-order '(".c" ".cpp" ".cc" ".h" ".org" ".txt" ".py" ".emacs" ".xml" ".el" ".ini" ".cfg" ".cnf"))
+
+;; ;; smex completion
+;; (require 'smex) ; Not needed if you use package.el
+;; (smex-initialize) ; Can be omitted. This might cause a (minimal) delay
+;;                                         ; when Smex is auto-initialized on its first run.
+;; (global-set-key (kbd "M-x") 'smex)
+;; (global-set-key (kbd "M-X") 'smex-major-mode-commands)
+;; ;; This is your old M-x.
+;; (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+
+
+
+(use-package vertico
+  :ensure t
+  :init
+  (vertico-mode)
+
+  ;; Different scroll margin
+  ;; (setq vertico-scroll-margin 0)
+
+  ;; Show more candidates
+  ;; (setq vertico-count 20)
+
+  ;; Grow and shrink the Vertico minibuffer
+  ;; (setq vertico-resize t)
+
+  ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
+  (setq vertico-cycle t)
+  :config
+  (vertico-flat-mode)
+)
+
+(use-package ansi-color
+  :config
+  (defun my-colorize-compilation-buffer ()
+    (when (eq major-mode 'compilation-mode)
+      (ansi-color-apply-on-region compilation-filter-start (point-max))))
+  :hook (compilation-filter . my-colorize-compilation-buffer))
+
 
 ;;--------------------------
 
@@ -154,6 +266,24 @@
 (setq-default c-basic-offset 4)
 (setq c-default-style "linux"
       c-basic-offset 4)
+
+;; (global-set-key (kbd "M-[") 'undo-fu-only-undo)
+;; (add-hook 'c-mode-hook
+;;     (lambda ()
+;;         (define-key coffee-mode-map (kbd "C-c c") 'coffee-compile-file)))
+
+
+(setq async-shell-command-display-buffer nil)
+
+(defun clang-foramt ()
+  "Sum argument number and"
+  (interactive)
+  (save-buffer)
+  (async-shell-command (concat "clang-format -i -style=file " (buffer-file-name))))
+
+
+(with-eval-after-load 'c-mode
+  (define-key c-mode-map (kbd "C-c f") 'clang-format))
 
 
 ;; -----------------------------------
@@ -167,3 +297,21 @@ Otherwise, call `backward-kill-word'."
    (if (use-region-p) 'kill-region 'backward-kill-word)))
 
 (global-set-key (kbd "C-w") 'kill-region-or-backward-word)
+
+
+;; -----------------------------------
+
+;; Latex
+
+;; source: https://www.lvguowei.me/post/emacs-orgmode-minted-setup/
+(setq org-latex-listings 'minted
+      org-latex-packages-alist '(("" "minted"))
+      org-latex-pdf-process
+      '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+;; Prevent src block line too long
+(setq org-latex-minted-options '(("breaklines" "true")
+                                 ("breakanywhere" "true")
+                                 ("frame" "single")
+                                 ("linenos=true")))
