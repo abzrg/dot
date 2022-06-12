@@ -6,28 +6,35 @@
 (set-fringe-mode 10)
 (menu-bar-mode -1)
 
+(defun my/disable-scroll-bars (frame)
+  (modify-frame-parameters frame
+                           '((vertical-scroll-bars . nil)
+                             (horizontal-scroll-bars . nil))))
+(add-hook 'after-make-frame-functions 'my/disable-scroll-bars)
+
 ;; Font settings
 (set-face-attribute 'default nil :font "Menlo" :height 180)
 (set-face-attribute 'fixed-pitch nil :font "Menlo" :height 180)
 (setq default-frame-alist '((font . "Menlo-18")))
 
 ;; ;; Theme settings
-(load-theme 'gruber-darker t)
-(custom-theme-set-faces
- 'gruber-darker
- `(org-block ((t (:foreground "#565f73"))))
- `(shadow ((t (:foreground "#565f73")))))
-;;(add-to-list 'default-frame-alist '(background-color . "honeydew"))
+;; (load-theme 'gruber-darker t)
+;; (custom-theme-set-faces
+;;  'gruber-darker
+;;  `(org-block ((t (:foreground "#565f73"))))
+;;  `(shadow ((t (:foreground "#565f73")))))
+;; ;;(add-to-list 'default-frame-alist '(background-color . "honeydew"))
+(load-theme 'modus-operandi t)
 
 (column-number-mode)
-(global-display-line-numbers-mode t)
+;;(global-display-line-numbers-mode t)
+(add-hook 'prog-mode-hook 'display-line-numbers-mode)
 
 ;; Completely disable alarms
 (setq ring-bell-function 'ignore)
 
 ;; start the initial frame maximized
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
-
 ;; start every frame maximized
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
@@ -41,7 +48,6 @@
 
 ;; Remeber minibuffer history
 (setq history-length 25)
-(savehist-mode 1)
 
 ;; Move customization variables to a separate file and load it
 (setq custom-file (locate-user-emacs-file "custom-var.el"))
@@ -66,43 +72,26 @@
         (?\{ . ?\})))
 
 
-;;;; whitespace mode
-
+;; whitespace mode
+;; src: https://www.reddit.com/r/emacs/comments/2keh6u/comment/cll0l03/?utm_source=share&utm_medium=web2x&context=3
 (require 'whitespace)
 (setq whitespace-display-mappings
-      ;; all numbers are Unicode codepoint in decimal. try (insert-char 182 ) to see it
-      '(
-        (space-mark 32 [183] [46]) ; 32 SPACE, 183 MIDDLE DOT 「·」, 46 FULL STOP 「.」
-        (newline-mark 10 [182 10]) ; 10 LINE FEED
-        (tab-mark 9 [187 9] [9655 9] [92 9]) ; 9 TAB, 9655 WHITE RIGHT-POINTING TRIANGLE 「▷」
-        ))
+   ;; all numbers are Unicode codepoint in decimal. try (insert-char 182 ) to see it
+  '(
+    (space-mark 32 [183] [46]) ; 32 SPACE, 183 MIDDLE DOT 「·」, 46 FULL STOP 「.」
+    (newline-mark 10 [182 10]) ; 10 LINE FEED
+    (tab-mark 9 [187 9] [9655 9] [92 9]) ; 9 TAB, 9655 WHITE RIGHT-POINTING TRIANGLE 「▷」
+    ))
 (setq whitespace-style '(face tabs trailing tab-mark))
 (set-face-attribute 'whitespace-tab nil
-                    :background "grey22"
-                    :foreground "darkgray"
+                    :background "#f0f0f0"
+                    :foreground "#00a8a8"
                     :weight 'bold)
 (set-face-attribute 'whitespace-trailing nil
-                    :background "grey22"
-                    :foreground "darkgray"
+                    :background "#e4eeff"
+                    :foreground "#183bc8"
                     :weight 'normal)
 (add-hook 'prog-mode-hook 'whitespace-mode)
-(add-hook 'prog-mode-hook 'whitespace-mode)
-
-;; view whitespace in diff for checking up bad whitespace before
-;; committing
-(add-hook 'diff-mode-hook (lambda ()
-                            (setq-local whitespace-style
-                                        '(face
-                                          tabs
-                                          tab-mark
-                                          spaces
-                                          space-mark
-                                          trailing
-                                          indentation::space
-                                          indentation::tab
-                                          newline
-                                          newline-mark))
-                            (whitespace-mode 1)))
 
 
 ;; ------------------ bindings ------------
@@ -118,11 +107,16 @@
 (global-set-key (kbd "M-[") 'undo-fu-only-undo)
 (global-set-key (kbd "M-]") 'undo-fu-only-redo)
 
-;; better dynamic abbrev
-(global-set-key [remap dabbrev-expand] 'hippie-expand)
+;; use C-w for killing words backward
+;; src: https://stackoverflow.com/a/14047437/13041067
+(defun kill-region-or-backward-word ()
+  "If the region is active and non-empty, call `kill-region'.
+Otherwise, call `backward-kill-word'."
+  (interactive)
+  (call-interactively
+   (if (use-region-p) 'kill-region 'backward-kill-word)))
+(global-set-key (kbd "C-w") 'kill-region-or-backward-word)
 
-;; zap trailing blanks
-(global-set-key (kbd "C-c z") 'delete-trailing-whitespace)
 
 ;; Packages ----------------------------
 ;; Initialize package sources
@@ -143,14 +137,33 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-;; ---
 
-;; theme
-(use-package vscode-dark-plus-theme
-  :ensure t)
+(use-package vertico
+  :ensure t
+  :bind (:map vertico-map
+              ("C-n" . vertico-next)
+              ("C-p" . vertico-previous)
+              ("C-f" . vertico-exit)
+              :map minibuffer-local-map
+              ("M-h" . backward-kill-word))
+  :custom
+  (vertico-cycle t)
+  :init
+  (vertico-mode))
 
-(use-package modus-themes
-  :ensure t)
+(use-package savehist
+  :init
+  (savehist-mode 1))
+
+(use-package marginalia
+  :after vertico
+  :ensure t
+  :custom
+  (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
+  :init
+  (marginalia-mode))
+
+
 ;; Org mode epub export
 (use-package ox-epub
   :ensure t)
@@ -191,127 +204,169 @@
   (add-hook 'c-mode-hook 'my:ac-c-headers-init))
 
 
-;; multiple cursor
-;;(use-package iedit
-;;  :ensure t)
+;; ;; latex package
+;; (use-package auctex
+;;   :ensure t)
+(add-to-list 'load-path "~/.emacs.d/lisp/auctex")
+(load "auctex.el" nil t t)
+(load "preview-latex.el" nil t t)
 
-;; emacs mode for markdown
+;; autocomplete math
+(use-package ac-math
+  :ensure t)
+
+(use-package auto-complete-auctex
+  :ensure t
+  :config
+  (add-to-list 'ac-modes 'latex-mode))
+
+;; clean auto indent mode
+(use-package clean-aindent-mode
+  :ensure t
+  :config
+  (add-hook 'prog-mode-hook 'clean-aindent-mode))
+
+
+;; ws-butler mode (remove trailing whitespace on save)
+(use-package ws-butler
+  :ensure t
+  :config
+  (add-hook 'c-mode-common-hook 'ws-butler-mode))
+
+
+;; markdown mode
 (use-package markdown-mode
   :ensure t
   :mode ("README\\.md\\'" . gfm-mode)
   :init (setq markdown-command "multimarkdown"))
 
-
+;; lua mode
 (use-package lua-mode
   :ensure t)
 
-
-;; (add-hook 'ido-setup-hook
-;;           (lambda ()
-;;             (define-key ido-completion-map [up] 'previous-history-element)))
-;; (setq ido-enable-flex-matching t)
-;; (setq ido-everywhere t)
-;; (ido-mode 1)
-;; ;; Display recent files in the "buffer" part.
-;; (setq ido-use-virtual-buffers t)
-;; (setq ido-create-new-buffer 'always)
-;; (setq ido-file-extensions-order '(".c" ".cpp" ".cc" ".h" ".org" ".txt" ".py" ".emacs" ".xml" ".el" ".ini" ".cfg" ".cnf"))
-
-;; ;; smex completion
-;; (require 'smex) ; Not needed if you use package.el
-;; (smex-initialize) ; Can be omitted. This might cause a (minimal) delay
-;;                                         ; when Smex is auto-initialized on its first run.
-;; (global-set-key (kbd "M-x") 'smex)
-;; (global-set-key (kbd "M-X") 'smex-major-mode-commands)
-;; ;; This is your old M-x.
-;; (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
-
-
-
-(use-package vertico
-  :ensure t
-  :init
-  (vertico-mode)
-
-  ;; Different scroll margin
-  ;; (setq vertico-scroll-margin 0)
-
-  ;; Show more candidates
-  ;; (setq vertico-count 20)
-
-  ;; Grow and shrink the Vertico minibuffer
-  ;; (setq vertico-resize t)
-
-  ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
-  (setq vertico-cycle t)
-  :config
-  (vertico-flat-mode)
-)
-
-(use-package ansi-color
-  :config
-  (defun my-colorize-compilation-buffer ()
-    (when (eq major-mode 'compilation-mode)
-      (ansi-color-apply-on-region compilation-filter-start (point-max))))
-  :hook (compilation-filter . my-colorize-compilation-buffer))
 
 
 ;;--------------------------
 
 ;; C/C++
 
+;; article on setting up emacs for c/c++
+;; https://tuhdo.github.io/c-ide.html
+
+
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 4)
 (setq indent-line-function 'insert-tab)
 (setq-default c-basic-offset 4)
-(setq c-default-style "linux"
-      c-basic-offset 4)
 
-;; (global-set-key (kbd "M-[") 'undo-fu-only-undo)
-;; (add-hook 'c-mode-hook
-;;     (lambda ()
-;;         (define-key coffee-mode-map (kbd "C-c c") 'coffee-compile-file)))
+;; Braces on the newline and not indented
+(setq c-default-style "bsd")
+
+;; Turn this:
+;;
+;; int i[] =
+;;     {
+;;         1, 2, 3, 4, 5
+;;     }
+;;
+;; To:
+;;
+;; int i[] =
+;; {
+;;     1, 2, 3, 4, 5
+;; }
+;;
+;; use: M-x c-show-syntactic-information
+(require 'cc-mode)
+(add-to-list 'c-offsets-alist '(statement-cont . 0))
 
 
-(setq async-shell-command-display-buffer nil)
+;; better gdb layout
+(setq
+ ;; use gdb-many-windows by default
+ gdb-many-windows t
 
-(defun clang-foramt ()
-  "Sum argument number and"
+ ;; Non-nil means display source file containing the main routine at startup
+ gdb-show-main t)
+
+
+;; If there is no output for an async shell command don't bother
+;; popping up
+(add-to-list 'display-buffer-alist '("*Async Shell Command*" display-buffer-no-window (nil)))
+
+;; clang-format
+(defun clang-format ()
   (interactive)
   (save-buffer)
-  (async-shell-command (concat "clang-format -i -style=file " (buffer-file-name))))
+  (async-shell-command
+   (concat "clang-format -style=file -i "
+           (buffer-file-name)))
+  (revert-buffer-quick))
+
+(add-hook 'c-mode-hook
+          (lambda ()
+            (define-key c-mode-map (kbd "C-c f")
+                        'clang-format)))
 
 
-(with-eval-after-load 'c-mode
-  (define-key c-mode-map (kbd "C-c f") 'clang-format))
-
-
-;; -----------------------------------
-;; use C-w for killing words backward
-;; source: https://stackoverflow.com/a/14047437/13041067
-(defun kill-region-or-backward-word ()
-  "If the region is active and non-empty, call `kill-region'.
-Otherwise, call `backward-kill-word'."
-  (interactive)
-  (call-interactively
-   (if (use-region-p) 'kill-region 'backward-kill-word)))
-
-(global-set-key (kbd "C-w") 'kill-region-or-backward-word)
-
-
-;; -----------------------------------
-
+;; ---------------------------------
 ;; Latex
 
-;; source: https://www.lvguowei.me/post/emacs-orgmode-minted-setup/
-(setq org-latex-listings 'minted
-      org-latex-packages-alist '(("" "minted"))
-      org-latex-pdf-process
-      '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-        "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-        "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
-;; Prevent src block line too long
-(setq org-latex-minted-options '(("breaklines" "true")
-                                 ("breakanywhere" "true")
-                                 ("frame" "single")
-                                 ("linenos=true")))
+
+(defun my-ac-latex-mode () ; add ac-sources for latex
+   (setq ac-sources
+         (append '(ac-source-math-unicode
+           ac-source-math-latex
+           ac-source-latex-commands)
+                 ac-sources)))
+(add-hook 'LaTeX-mode-hook 'my-ac-latex-mode)
+
+
+
+;; ---------------------------------
+;; Python
+
+(use-package jedi
+  :ensure t
+  :config
+  (add-hook 'python-mode-hook 'jedi:setup)
+  ;; optional
+  (setq jedi:complete-on-dot t))
+
+
+
+
+;; ---------------------------------
+;; Terminal
+
+;; terminal with unique name
+(defun terminal ()
+  (interactive)
+  (term "/opt/homebrew/bin/zsh")
+  (rename-uniquely))
+
+(global-set-key "\C-z" 'terminal)
+
+;; Kill terminal buffer upon exit
+;; src: https://emacs.stackexchange.com/a/64855/30552
+(defun terminal-handle-exit (&optional process-name msg)
+  (message "%s | %s" process-name msg)
+  (kill-buffer (current-buffer)))
+(advice-add 'term-handle-exit :after 'terminal-handle-exit)
+
+
+;; ---------------------------------
+;; Coloize compilation buffer
+;;;; colorize output in compile buffer
+(require 'ansi-color)
+(defun colorize-compilation-buffer ()
+  (ansi-color-apply-on-region compilation-filter-start (point-max)))
+(add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
+
+
+
+;; ---------------------------------
+;; emacsclient not loading setting
+(defun load-confg-fully ()
+  (interactive)
+  (load "~/.emacs.d/init.el"))
