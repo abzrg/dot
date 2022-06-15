@@ -55,7 +55,6 @@ au FileType yaml setlocal shiftwidth=2 tabstop=2
 
 --  Better help
 vim.cmd([[
-
 " Open help in a new tab instead of a split
 augroup HelpInTabs
 autocmd!

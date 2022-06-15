@@ -1,8 +1,7 @@
 local status, nvim_lsp = pcall(require, "lspconfig")
 if (not status) then return end
-
-local cmp_lsp = require 'cmp_nvim_lsp'
 local util = require('lspconfig/util')
+
 
 -- Mappings.
     -- See `:help vim.diagnostic.*` for documentation on any of the below functions
@@ -15,11 +14,18 @@ local util = require('lspconfig/util')
 -- CursorHold
     local function lsp_highlight_document(client)
         -- Set autocommands conditional on server_capabilities
-        if client.resolved_capabilities.document_highlight then
+        if client.server_capabilities.document_highlight then
             vim.api.nvim_exec([[
-            "hi LspReferenceRead cterm=bold ctermbg=red guibg=#343A40
-            "hi LspReferenceText cterm=bold ctermbg=red guibg=#343A40
-            "hi LspReferenceWrite cterm=bold ctermbg=red guibg=#343A40
+            " vscode dark
+            hi LspReferenceRead cterm=none ctermbg=darkgrey ctermfg=none
+            hi LspReferenceText cterm=none ctermbg=darkgrey ctermfg=none
+            hi LspReferenceWrite cterm=none ctermbg=darkgrey ctermfg=none
+
+            " vscode light
+            "hi LspReferenceRead cterm=bold ctermbg=red guibg=#d4d4d4
+            "hi LspReferenceText cterm=bold ctermbg=red guibg=#d4d4d4
+            "hi LspReferenceWrite cterm=bold ctermbg=red guibg=#d4d4d4
+
             augroup lsp_document_highlight
             autocmd! * <buffer>
             autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
@@ -42,7 +48,7 @@ local util = require('lspconfig/util')
         -- See `:help vim.lsp.*` for documentation on any of the below functions
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+        -- vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
         -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
@@ -56,14 +62,16 @@ local util = require('lspconfig/util')
     end
 
 
+
 --  Enable (broadcasting) snippet capability for completion
+local cmp_lsp = require 'cmp_nvim_lsp'
 local capabilities = cmp_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
 capabilities = cmp_lsp.update_capabilities(capabilities)
 
 
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
-    local servers = { 'pyright', 'clangd', 'sumneko_lua', 'bashls', 'texlab' }
+    local servers = { 'pyright', 'clangd', 'sumneko_lua', 'texlab', 'gopls' }
     for _, lsp in pairs(servers) do
         require('lspconfig')[lsp].setup {
             on_attach = on_attach,
@@ -129,6 +137,8 @@ table.insert(runtime_path, "lua/?.lua")
 table.insert(runtime_path, "lua/?/init.lua")
 
 require'lspconfig'.sumneko_lua.setup {
+    on_attach = on_attach,
+    capabilities = capabilities,
     cmd = {sumneko_binary_path, "-E", sumneko_root_path .. "/main.lua"};
     settings = {
         Lua = {
@@ -214,11 +224,11 @@ require'lspconfig'.sumneko_lua.setup {
 -- https://github.com/bash-lsp/bash-language-server
 -- # npm i -g bash-language-server
 
-require'lspconfig'.bashls.setup {
-    cmd = {"bash-language-server", "start"},
-    cmd_env = {GLOB_PATTERN = "*@(.sh|.inc|.bash|.command)"},
-    filetypes = {"sh"}
-}
+-- require'lspconfig'.bashls.setup {
+--     cmd = {"bash-language-server", "start"},
+--     cmd_env = {GLOB_PATTERN = "*@(.sh|.inc|.bash|.command)"},
+--     filetypes = {"sh"}
+-- }
 
 
 ------------------------------{ CLANGD }---------------------------------------
@@ -234,11 +244,13 @@ require'lspconfig'.clangd.setup {
     on_attach = on_attach,
     cmd = {"clangd", "--background-index"},
     filetypes = {"c", "cpp", "objc", "objcpp"},
-    -- on_init = function to handle changing offsetEncoding
-    -- root_dir = root_pattern("compile_commands.json", "compile_flags.txt", ".git") or
-    -- function()
-    --     return vim.loop.cwd()
-    -- end
+    -- on_init = function to handle changing offsetEncoding,
+    root_dir =
+            util.root_pattern("compile_commands.json", "compile_flags.txt", ".git")
+        or
+            function()
+                return vim.loop.cwd()
+            end
 }
 
 
@@ -305,6 +317,7 @@ require'lspconfig'.pyright.setup {
 
 require'lspconfig'.texlab.setup{
     cmd = { "texlab" },
+    -- on_attach = on_attach,
     capabilities = capabilities,
     filetypes = { "tex", "bib" },
     -- root_dir = vim's starting directory
@@ -334,4 +347,48 @@ require'lspconfig'.texlab.setup{
         }
     },
     single_file_support = true
+}
+
+
+
+-----------------------------------{ GO }---------------------------------------------
+
+require'lspconfig'.gopls.setup{
+    on_attach = on_attach,
+    capabilities = capabilities,
+    cmd = { "gopls" },
+    filetype = { "go", "gomod", "gotmpl" },
+    root_dir = util.root_pattern("go.mod", ".git"),
+    single_file_support = true
+}
+
+
+----------------------------------{ VIM }---------------------------------------------
+
+require'lspconfig'.vimls.setup{
+    on_attach = on_attach,
+    capabilities = capabilities,
+    cmd = { "vim-language-server", "--stdio" },
+    filetypes = { "vim" },
+    init_options = {
+        diagnostic = {
+            enable = true
+        },
+        indexes = {
+            count = 3,
+            gap = 100,
+            projectRootPatterns = { "runtime", "nvim", ".git", "autoload", "plugin" },
+            runtimepath = true
+        },
+        isNeovim = true,
+        iskeyword = "@,48-57,_,192-255,-#",
+        runtimepath = "",
+        suggest = {
+            fromRuntimepath = true,
+            fromVimruntime = true
+        },
+        vimruntime = ""
+    },
+    -- root_dir = ???,
+    single_file_support = true,
 }

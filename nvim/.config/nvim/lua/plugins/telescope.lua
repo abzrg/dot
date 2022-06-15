@@ -95,7 +95,7 @@ vim.api.nvim_set_keymap('n', '<leader>f', '<Cmd>Telescope find_files<CR>', {sile
 vim.api.nvim_set_keymap("n", ";k", [[<Cmd>lua require'telescope.builtin'.keymaps()<CR>]], {noremap = true, silent = true})
 
 -- marks
-vim.api.nvim_set_keymap("n", ";m", [[<Cmd>lua require'telescope.builtin'.marks()<CR>]], {noremap = true, silent = true})
+-- vim.api.nvim_set_keymap("n", ";m", [[<Cmd>lua require'telescope.builtin'.marks()<CR>]], {noremap = true, silent = true})
 
 -- oldfiles
 vim.api.nvim_set_keymap("n", ";o", [[<Cmd>lua Custom_functions.old_files()<CR>]], {noremap = true, silent = true})

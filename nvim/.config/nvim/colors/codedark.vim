@@ -142,7 +142,7 @@ call <sid>hi('CursorColumn', {}, s:cdCursorDarkDark, 'none', {})
 call <sid>hi('Directory', s:cdBlue, s:cdBack, 'none', {})
 call <sid>hi('DiffAdd', {}, s:cdDiffGreenLight, 'none', {})
 call <sid>hi('DiffChange', {}, s:cdDiffRedDark, 'none', {})
-call <sid>hi('DiffDelete', {}, s:cdDiffRedLight, 'none', {})
+call <sid>hi('DiffDelete', s:cdFront, s:cdDiffRedLight, 'none', {})
 call <sid>hi('DiffText', {}, s:cdDiffRedLight, 'none', {})
 call <sid>hi('EndOfBuffer', s:cdLineNumber, s:cdBack, 'none', {})
 call <sid>hi('ErrorMsg', s:cdRed, s:cdBack, 'none', {})
@@ -615,24 +615,25 @@ call <sid>hi('CmpItemKindUnit', s:cdFront, {}, 'none', {})
 
 " gitsigns
 hi GitSignsCurrentLineBlame guifg = #666666
-hi GitSignsAddLn guifg=Green
-hi GitSignsChangeLn guifg=Yellow
-hi GitSignsDeleteLn guifg=Red
-hi GitSignsChange        guifg=Yellow
-hi GitSignsAdd           guifg=Green
-hi GitSignsDelete        guifg=Red
-hi GitSignsAddInline     guifg=DarkGreen
-hi GitSignsDeleteInline  guifg=DarkRed
-hi GitSignsChangeInline  guifg=DarkYellow
-hi GitSignsAddLnVirtLn   guifg=LightGreen
-hi GitSignsChangeVirtLn  guifg=LightYellow
-hi GitSignsDeleteVirtLn  guifg=LightRed
+hi GitSignsAddLn            guibg=#1e1e1e guifg=Green
+hi GitSignsChangeLn         guibg=#1e1e1e guifg=Yellow
+hi GitSignsDeleteLn         guibg=#1e1e1e guifg=Red
+hi GitSignsChange           guibg=#1e1e1e guifg=Yellow
+hi GitSignsAdd              guibg=#1e1e1e guifg=Green
+hi GitSignsDelete           guibg=#1e1e1e guifg=Red
+hi GitSignsAddInline        guibg=#1e1e1e guifg=DarkGreen
+hi GitSignsDeleteInline     guibg=#1e1e1e guifg=DarkRed
+hi GitSignsChangeInline     guibg=#1e1e1e guifg=DarkYellow
+hi GitSignsAddLnVirtLn      guibg=#1e1e1e guifg=LightGreen
+hi GitSignsChangeVirtLn     guibg=#1e1e1e guifg=LightYellow
+hi GitSignsDeleteVirtLn     guibg=#1e1e1e guifg=LightRed
 
 " my config
 hi Normal guibg=None
 hi EndOfBuffer guibg=None
-hi SignColumn guibg=None
+" hi SignColumn guibg=None
 hi NonText guibg=None
+hi Folded guifg=#777777 gui=none
 
 " lua statusline
 
@@ -658,6 +659,7 @@ local highlights = {
   {'Filetype', { bg = '#373737', fg = '#D4D4D4' }},
   {'Filetype', { bg = '#373737', fg = '#D4D4D4' }},
   {'Filename', { bg = '#373737', fg = '#D4D4D4', gui='bold' }},
+  {'Filestat', { bg = '#373737', fg = '#D4D4D4', gui='none' }},
   {'ModeAlt', { bg = '#373737', fg = '#D4D4D4' }},
   {'GitAlt', { bg = '#373737', fg = '#D4D4D4' }},
   {'LineColAlt', { bg = '#373737', fg = '#D4D4D4' }},

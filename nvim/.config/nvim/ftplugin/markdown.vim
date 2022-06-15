@@ -1,6 +1,7 @@
 setlocal spell
-setlocal tabstop=2
-setlocal shiftwidth=2
+setlocal tabstop=4
+setlocal shiftwidth=4
+setlocal expandtab
 
 let g:markdown_fenced_languages = [
 \   'html',
@@ -8,7 +9,8 @@ let g:markdown_fenced_languages = [
 \   'tex',
 \   'cpp',
 \   'c',
-\   'python'
+\   'python',
+\   'lua'
 \]
 
 " Syntax highlight is synchronized in 50 lines. It may cause collapsed

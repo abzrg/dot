@@ -1,7 +1,8 @@
 vim.opt.autoread        = true
-vim.opt.number          = false       -- show line numbers
-vim.opt.relativenumber  = false       -- show relative numbers
-vim.opt.cursorline      = false       -- highlight current line
+vim.opt.number          = true       -- show line numbers
+vim.opt.relativenumber  = true       -- show relative numbers
+vim.opt.cursorline      = true       -- highlight current line
+vim.opt.cursorcolumn    = false
 vim.opt.hidden          = true        -- allows you to hide buffers with unsaved changes without being prompted
 vim.opt.hlsearch        = true        -- highlight search items
 vim.opt.ignorecase      = true        -- case insensitive search
@@ -13,7 +14,7 @@ vim.opt.showmatch       = false
 vim.opt.showmode        = false
 vim.opt.swapfile        = false       -- don't create swap file
 vim.opt.emoji           = false       -- don't assume all emoji are double width
-vim.opt.lazyredraw      = true        -- don't bother updating screen during macro playback
+vim.opt.lazyredraw      = false        -- don't bother updating screen during macro playback
 vim.opt.wrap            = false
 vim.opt.writebackup     = false
 vim.opt.smartcase       = true
@@ -22,22 +23,22 @@ vim.opt.splitright      = true        -- open verticall splits to the right of t
 vim.opt.termguicolors   = true
 vim.opt.title           = true
 vim.opt.virtualedit     = 'block'     -- allow cursor to move where there is no text in visual block mode
-vim.opt.signcolumn      = 'auto'
+vim.opt.signcolumn      = 'number'
 vim.opt.inccommand      = 'split'     -- live preview of :s results
 vim.opt.mouse           = 'a'         -- enable mouse
 vim.opt.scrolloff       = 3           -- start scroll 3 lines before edge of the viewport
 vim.opt.sidescrolloff   = 3
 vim.opt.pumblend        = 0           -- pseudo-transparency for pop-up menu
-vim.opt.laststatus      = 2           -- always show status line
+vim.opt.laststatus      = 3           -- always show status line
 vim.opt.cmdheight       = 1
 vim.opt.updatetime      = 500         -- CursorHold interval
-vim.opt.textwidth       = 80          -- automatically hard wrap at 80 columns
-vim.opt.pumheight       = 10          -- Makes pop up-menu smaller
-vim.opt.pumwidth        = 10          -- Makes pop up-menu smaller
+vim.opt.textwidth       = 80          -- automatically hard wrap at 120 columns
+-- vim.opt.pumheight       = 10          -- Makes pop up-menu smaller
+-- vim.opt.pumwidth        = 10          -- Makes pop up-menu smaller
 
 
 vim.g.ruler             = true
-vim.g.rulerformat       = [[ %{fugitive#statusline()}\ %l,%c%V%=%P ]]
+vim.g.rulerformat       = [[ %m%=%l,%c%V%=%P ]]
 
 -- Help nvim+fugitive be a faster experience
 vim.opt.shell = "/bin/zsh"
@@ -124,13 +125,13 @@ augroup END
 
 -- -- Fold settings
 vim.opt.foldmethod = 'marker'
--- vim.cmd([[
--- function! MyFoldText()
--- let line = getline(v:foldstart)
--- return '• ' . line . ' ▼ '
--- endfunction
--- set foldtext=MyFoldText()
--- ]])
+vim.cmd([[
+function! MyFoldText()
+let line = getline(v:foldstart)
+return line . ' ▼ '
+endfunction
+set foldtext=MyFoldText()
+]])
 
 -- VSCode
 if not vim.fn.exists('g:vscode') and vim.fn.has("nvim") then

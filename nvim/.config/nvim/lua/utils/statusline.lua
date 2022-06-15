@@ -1,7 +1,3 @@
--- thanks to: https://elianiva.my.id/post/neovim-lua-statusline
-
--- usage: require('utils.statusline')
-
 local fn = vim.fn
 local api = vim.api
 
@@ -22,21 +18,17 @@ M.colors = {
   active        = '%#StatusLine#',
   inactive      = '%#StatuslineNC#',
   mode          = '%#Mode#',
-  mode_alt      = '%#ModeAlt#',
   git           = '%#Git#',
-  git_alt       = '%#GitAlt#',
-  filename      = '%#Filename#',
-  filename_alt  = '%#FilenameAlt#',
-  filetype      = '%#Filetype#',
-  filetype_alt  = '%#FiletypeAlt#',
+  filename      = '%#FileName#',
+  filetype      = '%#FileType#',
   line_col      = '%#LineCol#',
-  line_col_alt  = '%#LineColAlt#',
 }
 
 M.trunc_width = setmetatable({
   mode       = 80,
   git_status = 90,
   filename   = 140,
+  filedir   = 140,
   line_col   = 60,
 }, {
   __index = function()
@@ -49,51 +41,36 @@ M.is_truncated = function(_, width)
   return current_width < width
 end
 
-M.modes = setmetatable({
-  ['n']  = {'Normal', 'N'};
-  ['no'] = {'N·Pending', 'N·P'} ;
-  ['v']  = {'Visual', 'V' };
-  ['V']  = {'V·Line', 'V·L' };
-  [''] = {'V·Block', 'V·B'}; -- this is not ^V, but it's , they're different
-  ['s']  = {'Select', 'S'};
-  ['S']  = {'S·Line', 'S·L'};
-  [''] = {'S·Block', 'S·B'}; -- same with this one, it's not ^S but it's 
-  ['i']  = {'Insert', 'I'};
-  ['ic'] = {'Insert', 'I'};
-  ['R']  = {'Replace', 'R'};
-  ['Rv'] = {'V·Replace', 'V·R'};
-  ['c']  = {'Command', 'C'};
-  ['cv'] = {'Vim·Ex ', 'V·E'};
-  ['ce'] = {'Ex ', 'E'};
-  ['r']  = {'Prompt ', 'P'};
-  ['rm'] = {'More ', 'M'};
-  ['r?'] = {'Confirm ', 'C'};
-  ['!']  = {'Shell ', 'S'};
-  ['t']  = {'Terminal ', 'T'};
-}, {
-  __index = function()
-      return {'Unknown', 'U'} -- handle edge cases
-  end
-})
-
 M.get_git_status = function(self)
   -- use fallback because it doesn't set this variable on the initial `BufEnter`
   local signs = vim.b.gitsigns_status_dict or {head = '', added = 0, changed = 0, removed = 0}
   local is_head_empty = signs.head ~= ''
 
   if self:is_truncated(self.trunc_width.git_status) then
-    return is_head_empty and string.format('  %s ', signs.head or '') or ''
+    return is_head_empty and string.format('  %s ', signs.head or '') or ''
   end
 
   return is_head_empty and string.format(
-    '[(%s) +%s ~%s -%s] -',
-    signs.head, signs.added, signs.changed, signs.removed
+    ' +%s ~%s -%s |  %s |',
+    signs.added, signs.changed, signs.removed, signs.head
   ) or ''
 end
 
-M.get_filename = function(self)
-  return " %<%f%="
+
+
+M.get_filedir = function(self)
+    if vim.fn.bufname() == '' then
+        return ''
+    end
+    if self:is_truncated(self.trunc_width.filedir) then return "" end
+    return "%<%{expand('%:p:h')}/"
 end
+
+M.get_filename = function(self)
+  if self:is_truncated(self.trunc_width.filename) then return " %<%f " end
+  return "%<%t"
+end
+
 
 M.get_filetype = function()
   local file_name, file_ext = fn.expand("%:t"), fn.expand("%:e")
@@ -101,31 +78,27 @@ M.get_filetype = function()
   local filetype = vim.bo.filetype
 
   if filetype == '' then return '' end
-  return string.format(' %s [%s] -', icon, filetype):lower()
+  return string.format(' %s %s  |', icon, filetype):lower()
 end
 
 M.get_line_col = function(self)
   if self:is_truncated(self.trunc_width.line_col) then return ' %l:%c ' end
-  return '%4l,%2c - %P '
+  return ' Ln %4l, Col %4c, %P '
 end
 
 
 M.set_active = function(self)
   local colors = self.colors
-
-  -- local mode = colors.mode .. self:get_current_mode()
-  -- local mode_alt = colors.mode_alt .. self.separators[active_sep][1]
   local git = colors.git .. self:get_git_status()
-  local git_alt = colors.git_alt .. self.separators[active_sep][1]
-  local filename = colors.filename .. self:get_filename()
-  local filetype_alt = colors.filetype_alt .. self.separators[active_sep][2]
+  local filename = colors.active .. self:get_filedir() .. colors.filename .. self:get_filename()
   local filetype = colors.filetype .. self:get_filetype()
   local line_col = colors.line_col .. self:get_line_col()
-  local line_col_alt = colors.line_col_alt .. self.separators[active_sep][2]
 
   return table.concat({
-    colors.active, filename, git, git_alt,
-    filetype_alt, filetype, line_col_alt, line_col
+      colors.active,
+      filename, "%=",
+      git,
+      filetype, line_col
   })
 end
 
@@ -134,7 +107,7 @@ M.set_inactive = function(self)
 end
 
 M.set_explorer = function(self)
-  local title = self.colors.mode .. '  '
+  local title = self.colors.mode .. '   '
   local title_alt = self.colors.mode_alt .. self.separators[active_sep][2]
 
   return table.concat({ self.colors.active, title, title_alt })
@@ -158,3 +131,7 @@ api.nvim_exec([[
   augroup END
 ]], false)
 
+
+-- -- thanks to: https://elianiva.my.id/post/neovim-lua-statusline
+--
+-- -- usage: require('utils.statusline')

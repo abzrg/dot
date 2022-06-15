@@ -21,25 +21,42 @@ return packer.startup({function(use)
     -- packer itself
     use { 'wbthomason/packer.nvim' }
 
+
     -- comment (I like it to be at the top so errors do not affect commenting)
     use { 'numToStr/Comment.nvim', config = function() require('Comment').setup() end }
+
 
     -- telescope
     use { 'nvim-lua/popup.nvim' }
     use { 'nvim-lua/plenary.nvim' }
     use { 'nvim-telescope/telescope.nvim', config = [[ require('plugins/telescope') ]] }
     use { 'nvim-telescope/telescope-file-browser.nvim' }
-    use { 'LinArcX/telescope-env.nvim', config = [[ require('telescope').load_extension('env') ]] }
+    use { 'kyazdani42/nvim-web-devicons' }
+
+
+    -- autocomplete
+    use { 'hrsh7th/nvim-cmp', config = [[ require('plugins/cmp') ]] }
+    use { 'petertriho/cmp-git' }
+    use { 'hrsh7th/cmp-nvim-lsp' }
+    use { 'hrsh7th/cmp-nvim-lua' }
+    use { 'hrsh7th/cmp-buffer' }
+    use { 'hrsh7th/cmp-path' }
+    use { 'hrsh7th/cmp-omni' }
+    use { 'hrsh7th/cmp-copilot' }
+    use { 'github/copilot.vim' }
+
+
+    -- snippet
+    -- use { 'L3MON4D3/LuaSnip', config = [[ require('plugins/luasnip') ]] }
+    -- use { 'saadparwaiz1/cmp_luasnip' }
+    -- use { 'rafamadriz/friendly-snippets' }
+    use { 'SirVer/ultisnips' }
+    use { 'quangnguyen30192/cmp-nvim-ultisnips' }
+    use { 'honza/vim-snippets' }
+
 
     -- autopair
     use { 'windwp/nvim-autopairs', config = [[ require('plugins/autopairs') ]] }
-
-    -- fuzzy finder and ...
-    use { 'junegunn/fzf',
-        dir = '~/.local/share/nvim/site/pack/packer/start/fzf/install',
-        run = './install --all'
-    }
-    use { 'junegunn/fzf.vim'}
 
 
     -- git integration --
@@ -57,7 +74,6 @@ return packer.startup({function(use)
 
 
     -- timpope --
-        -- use { 'tpope/vim-commentary', config = [[ require('plugins/vim-commentary') ]] } -- replaced with comment.nvim
 
         -- readline bindings (C-a, C-e, C-u, C-k) in command/insert mode and
         use { 'tpope/vim-rsi' }
@@ -71,54 +87,27 @@ return packer.startup({function(use)
         -- unix commands in command mode (Delete, Unlink, Move, ...)
         use { 'tpope/vim-eunuch' }
 
-        -- end constructs like for, if, while in languages like ruby, vim, lua, etc
-        use { 'tpope/vim-endwise' }
+        -- -- end constructs like for, if, while in languages like ruby, vim, lua, etc
+        -- use { 'tpope/vim-endwise' }
 
         -- better compilation
         use { 'tpope/vim-dispatch', opt = true, cmd = { 'Dispatch', 'Make', 'Focus', 'Start' } }
 
-        -- -- statusline for vim
-        -- use { 'tpope/vim-flagship', config = [[ vim.cmd('let g:tablabel=""') ]] }
-
-        -- increment date/time intelligently
-        use { 'tpope/vim-speeddating' }
-
 
     -- lsp
         use { 'neovim/nvim-lspconfig', config = [[ require('plugins/lspconfig') ]]}
-        use { 'onsails/lspkind.nvim' }
+        use { 'tami5/lspsaga.nvim', config = [[ require('plugins/lspsaga') ]] }
 
 
-    -- autocomplete
-        use 'hrsh7th/cmp-nvim-lsp'
-        use 'hrsh7th/cmp-buffer'
-        use 'hrsh7th/cmp-path'
-        use 'hrsh7th/cmp-cmdline'
-        use { 'hrsh7th/nvim-cmp', config = [[ require('plugins/cmp') ]] }
-        use 'saadparwaiz1/cmp_luasnip'
-
-
-    -- snippet
-        use { 'L3MON4D3/LuaSnip', config = [[ require('plugins/luasnip') ]] }
-        use { 'rafamadriz/friendly-snippets' }
+    -- treesitter
+        use { 'nvim-treesitter/nvim-treesitter', config = [[ require('plugins/treesitter') ]] }
+        use { 'RRethy/nvim-treesitter-endwise' }
 
 
     -- misc --
 
-        -- easier nested marked folding facility
-        use { 'dbmrq/vim-chalk' }
-
-        -- auto correct misspelling in my notes
-        use { 'panozzaj/vim-autocorrect', config = [[ vim.cmd('autocmd BufReadPost ~/Documents/notes/* call AutoCorrect()') ]] }
-
         -- seamless navigation between tmux panes and vim panes
         use { 'christoomey/vim-tmux-navigator', config = [[ require("plugins/vim-tmux-navigator") ]] }
-
-        -- open files from cli like this: nvim file:linenumber
-        use { 'wsdjeg/vim-fetch' }
-
-        -- change in next brackets while you are not on it. cinn[
-        use { 'wellle/targets.vim' }
 
         -- split screen with details for better commit
         use { 'rhysd/committia.vim', config = [[ require('plugins/committia') ]] }
@@ -132,33 +121,11 @@ return packer.startup({function(use)
         -- peeks lines of the buffer in non-obtrusive way
         use { 'nacro90/numb.nvim', config = [[ require('plugins/numb') ]] }
 
-        -- read chet sheet within vim (does not seem to work)
-        use { 'reverseila/vim-cheat' }
-
-        -- -- colorize the buffer
-        -- use { 'norcalli/nvim-colorizer.lua', config = [[ require('plugins/colorizer') ]] }
+        -- colorize the buffer
+        use { 'norcalli/nvim-colorizer.lua', config = [[ require('plugins/colorizer') ]] }
 
         -- vim filetype plugin for syntax highlighting of openfoam DSL
         use { 'lervag/vim-foam'}
-
-        -- a good markdown preview plugins
-        use { 'iamcco/markdown-preview.nvim',
-            opt = true, cmd = { 'MarkdownPreview', },
-            run = function() vim.fn['mkdp#util#install']() end, ft = { 'markdown' }
-        }
-
-        -- focus editing
-        use { 'folke/zen-mode.nvim', config = [[ require('plugins/zen-mode') ]] }
-        use { 'folke/twilight.nvim' }
-
-        -- highlight match under cursor different from other matches
-        use { 'adamheins/vim-highlight-match-under-cursor' }
-
-        -- use: statusline and telescope
-        use { 'kyazdani42/nvim-web-devicons' }
-
-        -- colorize hex colors
-        use { 'norcalli/nvim-colorizer.lua', config = [[ require'colorizer'.setup() ]] }
 end,
 
 config = {

@@ -209,7 +209,7 @@ keymap('v', '.', ':normal .<CR>', {noremap = true})
 
 -- Spell-check set to <leader>o, 'o' for 'orthography':
 keymap('n', '<leader>o',
-                        ':setlocal spell! spelllang=en_us<CR>', {})
+                        ':setlocal spell! spelllang=en_us<CR>', {noremap=true, silent=true})
 
 -- Save file as sudo on files that require root permission
 if vim.fn.has('nvim') == 1 then
