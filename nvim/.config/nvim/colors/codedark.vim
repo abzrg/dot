@@ -613,6 +613,12 @@ call <sid>hi('CmpItemKindKeyword', s:cdFront, {}, 'none', {})
 call <sid>hi('CmpItemKindProperty', s:cdFront, {}, 'none', {})
 call <sid>hi('CmpItemKindUnit', s:cdFront, {}, 'none', {})
 
+" lsp
+hi LspReferenceRead gui=none guibg=#373737 guifg=none
+hi LspReferenceText gui=none guibg=#373737 guifg=none
+hi LspReferenceWrite gui=none guibg=#373737 guifg=none
+
+
 " gitsigns
 hi GitSignsCurrentLineBlame guifg = #666666
 hi GitSignsAddLn            guibg=#1e1e1e guifg=Green
