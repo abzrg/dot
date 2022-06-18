@@ -6,12 +6,8 @@ end
 
 cmp.setup({
     snippet = {
-        -- REQUIRED - you must specify a snippet engine
         expand = function(args)
-            -- vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
-            -- -- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
-            -- -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
-            vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+            vim.fn["UltiSnips#Anon"](args.body)
         end,
     },
     window = {
@@ -25,7 +21,7 @@ cmp.setup({
         ['<C-f>'] = cmp.mapping.scroll_docs(4),
         ['<C-Space>'] = cmp.mapping.complete(),
         ['<C-e>'] = cmp.mapping.abort(),
-        ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+        ['<CR>'] = cmp.mapping.confirm({ select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
     }),
     sources = cmp.config.sources({
         { name = 'ultisnips' }, -- For ultisnips users.
@@ -35,8 +31,6 @@ cmp.setup({
         { name = "buffer", keyword_length = 5 },
         { name = "path" },
         -- { name = 'copilot' },
-    }, {
-        { name = 'buffer', keyword_length = 5 },
     }),
     completion = {
         completeopt = 'menu,menuone,noinsert'
@@ -51,9 +45,3 @@ cmp.setup.filetype('gitcommit', {
         { name = 'buffer' },
     })
 })
-
-
--- -- Problem with cmp (hack)
--- -- Sometimes as soon as I type 'o' or 'O' it will popup the completion menu
--- vim.api.nvim_set_keymap("n", "o", [[o42<Esc>"_ciw]], { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("n", "O", [[O42<Esc>"_ciw]], { noremap = true, silent = true })

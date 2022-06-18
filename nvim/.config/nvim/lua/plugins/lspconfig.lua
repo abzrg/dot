@@ -15,31 +15,10 @@ local util = require('lspconfig/util')
     vim.api.nvim_set_keymap('n', '<leader>de',
                             '<cmd>lua vim.diagnostic.disable()<CR>:echo "Diag. is Enabled"<CR>', opts)
 
--- CursorHold
-
-    -- local function lsp_highlight_document(client)
-    --     -- Set autocommands conditional on server_capabilities
-    --     if client.server_capabilities.document_highlight then
-    --         vim.api.nvim_exec([[
-    --         " vscode dark
-    --         hi LspReferenceRead gui=none guibg=darkgrey guifg=none
-    --         hi LspReferenceText gui=none guibg=darkgrey guifg=none
-    --         hi LspReferenceWrite gui=none guibg=darkgrey guifg=none
-    --
-    --         augroup lsp_document_highlight
-    --         autocmd! * <buffer>
-    --         autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
-    --         autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
-    --         augroup END
-    --         ]], false)
-    --     end
-    -- end
-
     -- Use an on_attach function to only map the following keys
     -- after the language server attaches to the current buffer
     local on_attach = function(client, bufnr)
-        -- Server capabilities spec:
-        -- https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#serverCapabilities
+        -- CursorHold
         if client.server_capabilities.documentHighlightProvider then
             vim.api.nvim_create_augroup("lsp_document_highlight", { clear = true })
             vim.api.nvim_clear_autocmds { buffer = bufnr, group = "lsp_document_highlight" }
@@ -60,9 +39,6 @@ local util = require('lspconfig/util')
         -- Enable completion triggered by <c-x><c-o>
         vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-        -- -- enable cursor hold
-        -- lsp_highlight_document(client)
-
         -- Mappings.
         -- See `:help vim.lsp.*` for documentation on any of the below functions
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
@@ -79,7 +55,6 @@ local util = require('lspconfig/util')
         vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', ',f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
     end
-
 
 
 --  Enable (broadcasting) snippet capability for completion
@@ -103,10 +78,7 @@ capabilities = cmp_lsp.update_capabilities(capabilities)
     end
 
 
-                ---------------------- lsp server settings -------------------------
-
 -- --------------------{ TSSERVER LANGUAGE-SERVER }-------------------------------
---
 -- -- sudo npm i -g typescript typescript-language-server
 -- nvim_lsp.tsserver.setup {
 --     cmd = {"typescript-language-server", "--stdio"},
@@ -120,9 +92,9 @@ capabilities = cmp_lsp.update_capabilities(capabilities)
 --     root_dir = util.root_pattern("package.json", "tsconfig.json", ".git", ".js",
 --     vim.loop.cwd())
 -- }
---
+
+
 -- ------------------{ VSCODE HTML LANGUAGE-SERVER }------------------------------
---
 -- -- sudo npm install --global vscode-html-languageserver-bin
 -- -- the binary for this package is
 -- local root_pattern = util.root_pattern("package.json")
@@ -143,8 +115,8 @@ capabilities = cmp_lsp.update_capabilities(capabilities)
 -- }
 --
 
---------------------------------{ LUA }----------------------------------------
 
+--------------------------------{ LUA }----------------------------------------
 -- https://github.com/sumneko/lua-language-server/wiki/Build-and-Run-(Standalone)
 -- https://jdhao.github.io/2021/08/12/nvim_sumneko_lua_conf/
 local HOME = vim.fn.expand('$HOME')
@@ -184,41 +156,7 @@ require'lspconfig'.sumneko_lua.setup {
 }
 
 
--- require'lspconfig'.sumneko_lua.setup {
---     capabilities = capabilities,
---     on_attach = on_attach,
---     cmd = {sumneko_binary, "-E", sumneko_root_path .. "/main.lua"},
---     settings = {
---         Lua = {
---             runtime = {
---                 -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
---                 version = 'LuaJIT',
---                 -- Setup your lua path
---                 path = vim.split(package.path, ';')
---             },
---             diagnostics = {
---                 -- Get the language server to recognize the `vim` global
---                 globals = {'vim'}
---             },
---             workspace = {
---                 -- Make the server aware of Neovim runtime files
---                 library = {
---                     [vim.fn.expand('$VIMRUNTIME/lua')] = true,
---                     [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true
---                 },
---                 preloadFileSize = 500
---             },
---             -- Do not send telemetry data containing a randomized but unique identifier
---             telemetry = {
---                 enable = false,
---             }
---         }
---     }
--- }
-
-
 -- ----------------------------{ EMMET LANGUAGE SERVER }--------------------------
---
 -- -- https://github.com/windwp/emmet-ls
 -- -- # npm install -g emmet-ls
 --
@@ -236,10 +174,9 @@ require'lspconfig'.sumneko_lua.setup {
 -- }
 --
 -- nvim_lsp.emmet_ls.setup {on_attach = on_attach}
---
+
 
 -------------------------------{ BASH }----------------------------------------
-
 -- https://github.com/bash-lsp/bash-language-server
 -- # npm i -g bash-language-server
 
@@ -251,19 +188,36 @@ require'lspconfig'.sumneko_lua.setup {
 
 
 ------------------------------{ CLANGD }---------------------------------------
-
 -- https://clangd.llvm.org/installation.html
 -- clangd relies on a JSON compilation database specified as
 -- compile_commands.json or, for simpler projects, a compile_flags.txt. For
 -- details on how to automatically generate one using CMake look here.
 -- https://cmake.org/cmake/help/latest/variable/CMAKE_EXPORT_COMPILE_COMMANDS.html
 
+-- src: https://github.com/LunarVim/LunarVim/issues/2597#issuecomment-1122731886
+local clangd_flags = {
+  "--fallback-style=google",
+  "--background-index",
+  "-j=12",
+  "--all-scopes-completion",
+  "--pch-storage=disk",
+  "--clang-tidy",
+  "--log=error",
+  "--completion-style=detailed",
+  "--header-insertion=iwyu",
+  "--header-insertion-decorators",
+  "--enable-config",
+  "--offset-encoding=utf-16",
+  "--ranking-model=heuristics",
+  "--folding-ranges",
+}
+local clangd_bin = "clangd"
+
 nvim_lsp.clangd.setup {
     capabilities = capabilities,
     on_attach = on_attach,
-    cmd = {"clangd", "--background-index"},
+    cmd = {clangd_bin, unpack(clangd_flags)},
     filetypes = {"c", "cpp", "objc", "objcpp"},
-    -- on_init = function to handle changing offsetEncoding,
     root_dir =
             util.root_pattern("compile_commands.json", "compile_flags.txt", ".git")
         or
@@ -273,8 +227,16 @@ nvim_lsp.clangd.setup {
 }
 
 
----------------------------------{ CMAKE }-------------------------------------
+vim.cmd([[
+augroup ClangFormat
+au!
+    autocmd BufEnter,BufWritePost,BufWritePre,FileType c,cpp
+            \ nnoremap <silent> <leader>= :w <bar>silent! !clang-format -style=file -i %<CR>
+augroup END
+]])
 
+
+---------------------------------{ CMAKE }-------------------------------------
 -- https://github.com/regen100/cmake-language-server
 -- sudo pip3 install cmake-language-server
 
@@ -287,7 +249,6 @@ require'lspconfig'.cmake.setup {
 
 
 ----------------------------------{ PYRIGHT }----------------------------------
-
 -- https://github.com/microsoft/pyright
 -- sudo npm install -g pyright
 -- pip3 install isort
@@ -295,7 +256,6 @@ require'lspconfig'.cmake.setup {
 -- pip3 install autopep8
 
 require'lspconfig'.pyright.setup {
-    -- - PyrightOrganizeImports: Organize Imports
     cmd = {"pyright-langserver", "--stdio"},
     filetypes = {"python"},
     root_dir = function(fname)
@@ -352,7 +312,6 @@ end
 
 
 --------------------------------{ Zeta-Note }----------------------------------
-
 -- require'lspconfig'.zeta_note.setup {
     --   cmd = {'/usr/local/bin/zeta-note-language-server'},
     --   capabilities = capabilities,
@@ -365,7 +324,6 @@ end
 
 
 ---------------------------------{ TeXLab }------------------------------------
-
 -- brew install texlab
 
 nvim_lsp.texlab.setup{
@@ -403,9 +361,7 @@ nvim_lsp.texlab.setup{
 }
 
 
-
------------------------------------{ GO }---------------------------------------------
-
+----------------------------{ GO }---------------------------------------------
 nvim_lsp.gopls.setup{
     on_attach = on_attach,
     capabilities = capabilities,
@@ -416,8 +372,7 @@ nvim_lsp.gopls.setup{
 }
 
 
-----------------------------------{ VIM }---------------------------------------------
-
+---------------------------{ VIM }---------------------------------------------
 nvim_lsp.vimls.setup{
     on_attach = on_attach,
     capabilities = capabilities,
@@ -430,7 +385,9 @@ nvim_lsp.vimls.setup{
         indexes = {
             count = 3,
             gap = 100,
-            projectRootPatterns = { "runtime", "nvim", ".git", "autoload", "plugin" },
+            projectRootPatterns = {
+                "runtime", "nvim", ".git", "autoload", "plugin"
+            },
             runtimepath = true
         },
         isNeovim = true,
