@@ -132,6 +132,12 @@ keymap('n', '<down>', ':cnf<CR>zzzv', {noremap = true})
 keymap('n', '<up>', ':cpf<CR>zzzv', {noremap = true})
 keymap('n', '<A-q>', ':Copen<CR>', {noremap = true})
 
+-- Center vertical navigation
+keymap('n', '<C-d>', '<C-d>zz', {noremap = true})
+keymap('n', '<C-u>', '<C-u>zz', {noremap = true})
+keymap('n', '<C-f>', '<C-f>zz', {noremap = true})
+keymap('n', '<C-b>', '<C-b>zz', {noremap = true})
+
 -- C style comment with pressing Ctrl-/
 keymap('i', '<C-_>', '/**/<Left><Left>', {noremap = true})
 

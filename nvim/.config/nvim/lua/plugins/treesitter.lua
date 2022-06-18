@@ -13,7 +13,7 @@ require('nvim-treesitter.configs').setup {
         -- disable = {"c","bash","cpp"},
         disable = {"bash"},
     },
-    ensure_installed = {'c', 'cpp', 'python', 'lua', 'json', 'yaml'},
+    ensure_installed = {'c', 'cpp', 'lua', 'json', 'yaml'},
     ignore_install = { "jsonc", "d" },
     playground = {
         enable = true,

@@ -10,39 +10,58 @@ local util = require('lspconfig/util')
     vim.api.nvim_set_keymap('n', '<C-p>', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
     vim.api.nvim_set_keymap('n', '<C-n>', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
     vim.api.nvim_set_keymap('n', '<C-q>', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
+    vim.api.nvim_set_keymap('n', '<leader>dd',
+                            '<cmd>lua vim.diagnostic.disable()<CR>:echo "Diag. is Disabled"<CR>', opts)
+    vim.api.nvim_set_keymap('n', '<leader>de',
+                            '<cmd>lua vim.diagnostic.disable()<CR>:echo "Diag. is Enabled"<CR>', opts)
 
 -- CursorHold
-    local function lsp_highlight_document(client)
-        -- Set autocommands conditional on server_capabilities
-        if client.server_capabilities.document_highlight then
-            vim.api.nvim_exec([[
-            " vscode dark
-            hi LspReferenceRead cterm=none ctermbg=darkgrey ctermfg=none
-            hi LspReferenceText cterm=none ctermbg=darkgrey ctermfg=none
-            hi LspReferenceWrite cterm=none ctermbg=darkgrey ctermfg=none
 
-            " vscode light
-            "hi LspReferenceRead cterm=bold ctermbg=red guibg=#d4d4d4
-            "hi LspReferenceText cterm=bold ctermbg=red guibg=#d4d4d4
-            "hi LspReferenceWrite cterm=bold ctermbg=red guibg=#d4d4d4
+    -- local function lsp_highlight_document(client)
+    --     -- Set autocommands conditional on server_capabilities
+    --     if client.server_capabilities.document_highlight then
+    --         vim.api.nvim_exec([[
+    --         " vscode dark
+    --         hi LspReferenceRead gui=none guibg=darkgrey guifg=none
+    --         hi LspReferenceText gui=none guibg=darkgrey guifg=none
+    --         hi LspReferenceWrite gui=none guibg=darkgrey guifg=none
+    --
+    --         augroup lsp_document_highlight
+    --         autocmd! * <buffer>
+    --         autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
+    --         autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
+    --         augroup END
+    --         ]], false)
+    --     end
+    -- end
 
-            augroup lsp_document_highlight
-            autocmd! * <buffer>
-            autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
-            autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
-            augroup END
-            ]], false)
-        end
-    end
-
--- Use an on_attach function to only map the following keys
--- after the language server attaches to the current buffer
+    -- Use an on_attach function to only map the following keys
+    -- after the language server attaches to the current buffer
     local on_attach = function(client, bufnr)
+        -- Server capabilities spec:
+        -- https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#serverCapabilities
+        if client.server_capabilities.documentHighlightProvider then
+            vim.api.nvim_create_augroup("lsp_document_highlight", { clear = true })
+            vim.api.nvim_clear_autocmds { buffer = bufnr, group = "lsp_document_highlight" }
+            vim.api.nvim_create_autocmd("CursorHold", {
+                callback = vim.lsp.buf.document_highlight,
+                buffer = bufnr,
+                group = "lsp_document_highlight",
+                desc = "Document Highlight",
+            })
+            vim.api.nvim_create_autocmd("CursorMoved", {
+                callback = vim.lsp.buf.clear_references,
+                buffer = bufnr,
+                group = "lsp_document_highlight",
+                desc = "Clear All the References",
+            })
+        end
+
         -- Enable completion triggered by <c-x><c-o>
         vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-        -- enable cursor hold
-        lsp_highlight_document(client)
+        -- -- enable cursor hold
+        -- lsp_highlight_document(client)
 
         -- Mappings.
         -- See `:help vim.lsp.*` for documentation on any of the below functions
@@ -239,7 +258,7 @@ require'lspconfig'.sumneko_lua.setup {
 -- details on how to automatically generate one using CMake look here.
 -- https://cmake.org/cmake/help/latest/variable/CMAKE_EXPORT_COMPILE_COMMANDS.html
 
-require'lspconfig'.clangd.setup {
+nvim_lsp.clangd.setup {
     capabilities = capabilities,
     on_attach = on_attach,
     cmd = {"clangd", "--background-index"},
@@ -271,6 +290,9 @@ require'lspconfig'.cmake.setup {
 
 -- https://github.com/microsoft/pyright
 -- sudo npm install -g pyright
+-- pip3 install isort
+-- brew install black
+-- pip3 install autopep8
 
 require'lspconfig'.pyright.setup {
     -- - PyrightOrganizeImports: Organize Imports
@@ -289,13 +311,44 @@ require'lspconfig'.pyright.setup {
     settings = {
         python = {
             analysis = {
+                typeCheckingMode = "strict",
                 autoSearchPaths = true,
                 diagnosticMode = "workspace",
                 useLibraryCodeForTypes = true
-            }
+            },
         }
     }
 }
+
+
+-- Check if code formatters exist on system
+if (os.execute("command -v black >/dev/null")
+        or os.execute("command -v autopep8 >/dev/null"))
+    and os.execute("command -v isort >/dev/null") then
+    vim.cmd([[
+    function! PythonFormatter() abort
+        :write
+        let l:formatter = 'black'
+        if l:formatter == 'black'
+            :silent! !black %
+        elseif l:formatter == 'autopep8'
+            :silent! !autopep8 --in-place --aggressive --aggressive %
+        endif
+        :silent! !isort %
+        " Some problems arises with completion when buffer is changed externally
+        " This will be fixed if I restart lsp server
+        " And for whatever reason I need to have that redraw at the end, so that
+        " I can suppress some errors
+        :LspRestart <bar> redraw
+    endfunction
+
+    augroup PythonFormat
+        autocmd!
+        autocmd BufEnter,BufWrite,BufWritePre,FileType python
+            \ nnoremap <silent> <leader>= :call PythonFormatter()<CR>
+    augroup END
+    ]])
+end
 
 
 --------------------------------{ Zeta-Note }----------------------------------
@@ -315,7 +368,7 @@ require'lspconfig'.pyright.setup {
 
 -- brew install texlab
 
-require'lspconfig'.texlab.setup{
+nvim_lsp.texlab.setup{
     cmd = { "texlab" },
     -- on_attach = on_attach,
     capabilities = capabilities,
@@ -353,7 +406,7 @@ require'lspconfig'.texlab.setup{
 
 -----------------------------------{ GO }---------------------------------------------
 
-require'lspconfig'.gopls.setup{
+nvim_lsp.gopls.setup{
     on_attach = on_attach,
     capabilities = capabilities,
     cmd = { "gopls" },
@@ -365,7 +418,7 @@ require'lspconfig'.gopls.setup{
 
 ----------------------------------{ VIM }---------------------------------------------
 
-require'lspconfig'.vimls.setup{
+nvim_lsp.vimls.setup{
     on_attach = on_attach,
     capabilities = capabilities,
     cmd = { "vim-language-server", "--stdio" },

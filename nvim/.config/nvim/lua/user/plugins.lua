@@ -42,7 +42,7 @@ return packer.startup({function(use)
     use { 'hrsh7th/cmp-buffer' }
     use { 'hrsh7th/cmp-path' }
     use { 'hrsh7th/cmp-omni' }
-    use { 'hrsh7th/cmp-copilot' }
+    -- use { 'hrsh7th/cmp-copilot' }
     use { 'github/copilot.vim' }
 
 
@@ -92,6 +92,9 @@ return packer.startup({function(use)
 
         -- better compilation
         use { 'tpope/vim-dispatch', opt = true, cmd = { 'Dispatch', 'Make', 'Focus', 'Start' } }
+
+        -- Paris of handy bracket mappings
+        use { 'tpope/vim-unimpaired' }
 
 
     -- lsp

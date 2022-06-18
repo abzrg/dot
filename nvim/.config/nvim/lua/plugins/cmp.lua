@@ -34,9 +34,9 @@ cmp.setup({
         { name = 'omni', keyword_length = 0 },
         { name = "buffer", keyword_length = 5 },
         { name = "path" },
-        { name = 'copilot' },
+        -- { name = 'copilot' },
     }, {
-        { name = 'buffer' },
+        { name = 'buffer', keyword_length = 5 },
     }),
     completion = {
         completeopt = 'menu,menuone,noinsert'
@@ -51,3 +51,9 @@ cmp.setup.filetype('gitcommit', {
         { name = 'buffer' },
     })
 })
+
+
+-- -- Problem with cmp (hack)
+-- -- Sometimes as soon as I type 'o' or 'O' it will popup the completion menu
+-- vim.api.nvim_set_keymap("n", "o", [[o42<Esc>"_ciw]], { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap("n", "O", [[O42<Esc>"_ciw]], { noremap = true, silent = true })
