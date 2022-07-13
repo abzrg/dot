@@ -9,5 +9,6 @@ require('utils/statusline')
 -- Functionality
 vim.cmd('filetype indent plugin on')
 vim.cmd('colo codedark')
-vim.cmd('hi Normal guibg=None')
+-- vim.cmd('hi Normal guibg=None')
 
+vim.cmd([[set guicursor=n-v-c-sm:block,i-ci-ve:bloack,r-cr-o:hor20]])

@@ -205,6 +205,7 @@ keymap('n', '/', 'mszv/\\v', {noremap = true})
 
 -- Throw away in to the black hole! (now, c does'nt put text into yank register)
 keymap('n', 'c', '"_c', {noremap = true})
+keymap('n', 'C', '"_C', {noremap = true})
 
 -- Stay in visual mode after indenting the selected area
 keymap('v', '<', '<gv', {})

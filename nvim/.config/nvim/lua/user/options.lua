@@ -1,6 +1,6 @@
 vim.opt.autoread        = true
-vim.opt.number          = true       -- show line numbers
-vim.opt.relativenumber  = true       -- show relative numbers
+-- vim.opt.number          = true       -- show line numbers
+-- vim.opt.relativenumber  = true       -- show relative numbers
 vim.opt.cursorline      = true       -- highlight current line
 vim.opt.cursorcolumn    = false
 vim.opt.hidden          = true        -- allows you to hide buffers with unsaved changes without being prompted

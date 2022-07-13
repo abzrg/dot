@@ -12,14 +12,16 @@ if !empty($WM_PROJECT_DIR)
     autocmd!
 
 
-    " add projcet directory to path when you open a source file
-    autocmd BufEnter,BufReadPost,BufRead *.C setlocal path+=$WM_PROJECT_DIR/**
-    autocmd BufEnter,BufReadPost,BufRead *.H setlocal path+=$WM_PROJECT_DIR/**
+    " add projcet directory to path and set the make program to wmake when you
+    " open a source file (settings are local to the buffer)
+    autocmd BufEnter,BufReadPost,BufRead *.C setlocal path+=$WM_PROJECT_DIR/** makeprg=wmake
+    autocmd BufEnter,BufReadPost,BufRead *.H setlocal path+=$WM_PROJECT_DIR/** makeprg=wmake
 
 
-    " disable lsp diagnostics for OpenFOAM source code
+    " disable lsp diagnostics for OpenFOAM header files
+    " buffer 0 means the current buffer
     autocmd BufEnter,BufReadPost,BufRead,BufNewFile
-                \ */OpenFOAM/** lua vim.diagnostic.disable()
+                \ */OpenFOAM/**/*.H lua vim.diagnostic.disable(0)
 
 
     " make all files under src/ readonly
@@ -28,14 +30,13 @@ if !empty($WM_PROJECT_DIR)
     " the user directory and the openfoam source code directory, so that the
     " files under user src/ directories are not in readonly mode
     autocmd BufEnter,BufReadPost,BufRead,BufNewFile
-                \ */OpenFOAM/OpenFOAM-*/src/** setlocal readonly
+                \ */OpenFOAM/OpenFOAM-*/src/** setlocal readonly nomodifiable
     autocmd BufEnter,BufReadPost,BufRead,BufNewFile
-                \ */OpenFOAM/foam-extend-*/src/** setlocal readonly
+                \ */OpenFOAM/foam-extend-*/src/** setlocal readonly nomodifiable
 
 
-    " set the correct comment string for foam files
+    " set the correct comment string for foam dictionary files
     autocmd FileType foam set commentstring=//%s
 
     augroup END
 endif
-

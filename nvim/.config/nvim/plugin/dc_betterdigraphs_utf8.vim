@@ -424,3 +424,5 @@ let s:digraph_table = s:BLANK_LINE + s:digraph_table + s:BLANK_LINE
 
 " Restore previous external compatibility options
 let &cpo = s:save_cpo
+
+inoremap <expr>  <C-K>   BDG_GetDigraph()

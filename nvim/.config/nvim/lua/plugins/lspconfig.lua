@@ -272,6 +272,7 @@ require'lspconfig'.pyright.setup {
         python = {
             analysis = {
                 typeCheckingMode = "strict",
+                reportMissingTypeStubs = 'none',
                 autoSearchPaths = true,
                 diagnosticMode = "workspace",
                 useLibraryCodeForTypes = true
@@ -294,7 +295,7 @@ if (os.execute("command -v black >/dev/null")
         elseif l:formatter == 'autopep8'
             :silent! !autopep8 --in-place --aggressive --aggressive %
         endif
-        :silent! !isort %
+        :silent! !isort --ws %
         " Some problems arises with completion when buffer is changed externally
         " This will be fixed if I restart lsp server
         " And for whatever reason I need to have that redraw at the end, so that

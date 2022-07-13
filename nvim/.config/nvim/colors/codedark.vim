@@ -635,7 +635,7 @@ hi GitSignsChangeVirtLn     guibg=#1e1e1e guifg=LightYellow
 hi GitSignsDeleteVirtLn     guibg=#1e1e1e guifg=LightRed
 
 " my config
-hi Normal guibg=None
+" hi Normal guibg=None
 hi EndOfBuffer guibg=None
 " hi SignColumn guibg=None
 hi NonText guibg=None
