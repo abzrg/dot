@@ -42,6 +42,7 @@ function M.project_files()
         "tags",
         "compile_commands.json"
     }
+    gitopts.layout_strategy = "vertical"
 
     fileopts.hidden = true
     fileopts.file_ignore_patterns = {
@@ -61,6 +62,7 @@ function M.project_files()
         ".otf",
         "tags"
     }
+    fileopts.layout_strategy = "vertical"
 
     if ret == 0 then
         builtin.git_files(gitopts)

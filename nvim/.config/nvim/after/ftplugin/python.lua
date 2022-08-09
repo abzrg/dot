@@ -14,7 +14,7 @@ if vim.fn.executable("black") == 1
       vim.cmd("write")
 
       -- Set the formatter and formatter command
-      local formatter = "black"
+      local formatter = "black -q"
       local format_cmd = formatter .. " " .. vim.fn.expand("%")
 
       -- Format and grab status code of code formatter
@@ -32,12 +32,23 @@ if vim.fn.executable("black") == 1
 
       -- Inform user how it did went
       if format_status == 1 then
+        vim.cmd("undo")
         print("[" .. vim.fn.toupper(formatter) .. "]: DONE!")
       else
+        vim.cmd("undo")
         print("[" .. vim.fn.toupper(formatter) .. "]: FAILED!")
       end
     end
   })
+end
+
+-- Use formatter in gq command
+if vim.fn.executable("black") then
+  -- set formatprg
+  vim.bo.formatprg = "black -q - 2>/dev/null"
+
+  -- Ensure we formatprg instead of formatexpr
+  vim.bo.formatexpr = ""
 end
 
 
@@ -56,3 +67,15 @@ if vim.fn.executable("pylint") == 1 then
     end
   })
 end
+
+
+-- [ Run Python ] ----------------------------------------------------------
+
+nnoremap("<F5>", "", {
+  buffer = true, silent = true,
+  callback = function()
+    vim.cmd("compiler python")
+    vim.opt_local.makeprg = "python %"
+    vim.cmd("Make")
+  end
+})

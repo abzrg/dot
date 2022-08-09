@@ -5,7 +5,7 @@ if vim.fn.executable("sdcv") ~= 1 then
 end
 
 
-function normal_dict(word)
+local function normal_dict(word)
     -- Get the width of the window
     local winwidth = vim.fn.winwidth(0)
     if winwidth >= 80 then

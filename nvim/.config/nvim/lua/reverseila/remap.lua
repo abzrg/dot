@@ -178,30 +178,30 @@ nnoremap('<leader>o', '<cmd>setlocal spell! spelllang=en_us<CR>', {silent=true})
 -- -- cmd(
 --     -- [[ cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit! ]])
 --- end
---- 
+---
 --- -- Search & Replace (\<\> is word boundary)
 --- -- keymap('n', 'S', 'yiw:%s///g<Left><Left><Left><C-r>"<Right>',
 --- --                         {noremap = true})
 --- keymap('n', 'S', ':%s///g<Left><Left><Left><C-r><C-w><Right>', {noremap = true})
---- 
+---
 --- -- Search in visually selected area
 --- keymap('v', '/', '<Esc>/\\%V', {noremap = true})
---- 
+---
 --- -- Get rid of accidental jump to ex mode and easily wrap text
 --- keymap('', 'Q', 'gq', {})
---- 
+---
 --- -- Check shell scripts with shell check
 --- keymap('', ',s', ':!clear && shellcheck -x %<CR>', {})
---- 
+---
 --- -- Compile document, be it groff/LaTeX/markdown/etc.
 --- keymap('', ',c', ':w! \\| !compiler "<c-r>%"<CR>', {})
---- 
+---
 --- -- Open corresponding .pdf/.html or preview
 --- keymap('', ',p', ':!opout <c-r>%<CR><CR>', {})
---- 
+---
 --- -- Toggle numbering
 --- cmd([[
---- 
+---
 --- function! ToggleNumber()
 -- -- if &number == '1' && &relativenumber == '1'
 --   -- set rnu! nu!
@@ -215,29 +215,27 @@ nnoremap('<leader>o', '<cmd>setlocal spell! spelllang=en_us<CR>', {silent=true})
 -- -- endif
 --- endfunction
 --- nnoremap <F9> :call ToggleNumber()<CR>
---- 
+---
 --- ]])
---- 
+---
 --- -- Toggle syntax highlighting
 --- cmd([[
---- 
+---
 --- map <silent> <F7> :if exists("g:syntax_on") \| syntax off <CR> else \| syntax enable \| endif <CR>
---- 
+---
 --- ]])
---- 
---- -- Zap trailing whitespaces
---- --     source: wincent
---- cmd([[
---- 
---- function! Zap_trailing_white_space() abort
---- let l:pos=getcurpos()
---- let l:search=@/
---- keepjumps %substitute/\s\+$//e
---- let @/=l:search
---- nohlsearch
---- call setpos('.', l:pos)
---- endfunction
---- 
---- nnoremap <silent> <leader>zz :call Zap_trailing_white_space()<CR>
---- 
---- ]])
+
+
+-- Zap trailing whitespaces
+-- source: wincent
+nnoremap("<leader>zz", "", {
+  silent = true,
+  callback = function()
+    local pos = vim.fn.getcurpos()
+    local search = vim.fn.getreg("/")
+    vim.cmd([[keepjumps %substitute/\s\+$//e]])
+    vim.fn.setreg("/", search)
+    vim.cmd("nohlsearch")
+    vim.fn.setpos(".", pos)
+  end
+})
