@@ -81,11 +81,15 @@ nnoremap("<leader>tk", "<Cmd>Telescope keymaps<CR>")
 -- Oldfiles
 nnoremap("<leader>to", "<Cmd>Telescope oldfiles<CR>")
 
+-- Simple find file for when I don't want to search among git files for
+-- untracked files or the files in the current working directory
+nnoremap("<leader>f", "<Cmd>Telescope find_files<CR>")
+
 
 -- [ Custom functions ] ---------------------------------------
 
 -- Find files (including hidden) with gitfiles & fallback to find_files
-nnoremap("<leader>f", "<Cmd>lua require('reverseila.utils.telescope').project_files()<CR>")
+nnoremap("<leader>F", "<Cmd>lua require('reverseila.utils.telescope').project_files()<CR>")
 
 -- Find notes files
 nnoremap("<leader>nf", "<Cmd>lua require('reverseila.utils.telescope').find_notes()<CR>")

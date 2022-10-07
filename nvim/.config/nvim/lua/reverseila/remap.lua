@@ -41,7 +41,7 @@ if notes_dir == nil then
         print("The env variable 'NOTES_DIR' is not set.")
     end})
 else
-    nnoremap('<leader>nn', ":edit " .. notes_dir .. "/<C-d>")
+    nnoremap('<leader>nn', ":edit " .. notes_dir .. "<C-d>")
 end
 
 -- Delete the current buffer
@@ -61,7 +61,11 @@ cnoremap("%%", "expand('%:p:h')", {expr = true})
 nnoremap("cd", "<cmd>cd %:p:h<CR>:pwd<CR>")
 
 -- Edit init.lua
-nnoremap("<leader>e", "<cmd>edit $MYVIMRC <bar> cd %:p:h<CR>:pwd<CR>")
+nnoremap("<leader>e", "<cmd>silent! edit $MYVIMRC <bar> cd %:p:h<CR>:pwd<CR>")
+
+-- -- Enter command mode with leader
+-- nmap("<leader>;", ":")
+-- vmap("<leader>;", ":")
 
 -- Source current (vim config) file
 nnoremap("<leader>s", "<cmd>source %<CR>")
@@ -78,8 +82,8 @@ nnoremap('<C-o>', '<C-o>zz')
 nnoremap('<C-i>', '<C-i>zz')
 
 -- Sane line-by-line navigation
-nnoremap('j', 'gj')
-nnoremap('k', 'gk')
+nnoremap('j', 'gj', {silent = true})
+nnoremap('k', 'gk', {silent = true})
 
 -- Fix the behavior of `Y`, to be similar to behavior of `C` and `D`
 nmap('Y', 'y$')

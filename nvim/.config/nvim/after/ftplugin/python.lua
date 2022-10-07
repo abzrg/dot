@@ -14,7 +14,7 @@ if vim.fn.executable("black") == 1
       vim.cmd("write")
 
       -- Set the formatter and formatter command
-      local formatter = "black -q"
+      local formatter = "black"
       local format_cmd = formatter .. " " .. vim.fn.expand("%")
 
       -- Format and grab status code of code formatter
@@ -32,10 +32,9 @@ if vim.fn.executable("black") == 1
 
       -- Inform user how it did went
       if format_status == 1 then
-        vim.cmd("undo")
+        vim.cmd("write")
         print("[" .. vim.fn.toupper(formatter) .. "]: DONE!")
       else
-        vim.cmd("undo")
         print("[" .. vim.fn.toupper(formatter) .. "]: FAILED!")
       end
     end
@@ -45,7 +44,7 @@ end
 -- Use formatter in gq command
 if vim.fn.executable("black") then
   -- set formatprg
-  vim.bo.formatprg = "black -q - 2>/dev/null"
+  vim.bo.formatprg = "black -q -l 80 - 2>/dev/null"
 
   -- Ensure we formatprg instead of formatexpr
   vim.bo.formatexpr = ""
@@ -79,3 +78,8 @@ nnoremap("<F5>", "", {
     vim.cmd("Make")
   end
 })
+
+
+-- [ Run Pytest ] -----------------------------------------------------------
+
+vim.api.nvim_buf_create_user_command(0, "Pytest", "compiler pytest | Make", {})

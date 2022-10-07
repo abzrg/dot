@@ -78,95 +78,118 @@ autocmd("BufEnter", {
 --   endfunction
 -- ]])
 
--- Disable cursorline in insert mode
-local cursorline_insert_group = augroup("CursorLineInsertMode", { clear = true })
+-- -- Disable cursorline in insert mode
+-- local cursorline_insert_group = augroup("CursorLineInsertMode", { clear = true })
+--
+-- autocmd("InsertEnter", {
+--   pattern = "*",
+--   callback = function()
+--     vim.wo.cursorline = false
+--   end,
+--   group = cursorline_insert_group
+-- })
 
-autocmd("InsertEnter", {
+-- autocmd("InsertLeavePre", {
+--   pattern = "*",
+--   callback = function()
+--     vim.wo.cursorline = true
+--   end,
+--   group = cursorline_insert_group
+-- })
+
+
+-- -- focus
+-- -- source: @wincent
+-- local focus_group = augroup("FocusGroup", { clear = true })
+--
+-- -- When moving into a split
+-- autocmd({ "VimEnter", "WinEnter", "BufEnter", "CmdWinEnter" }, {
+--   pattern = "*",
+--   callback = function()
+--     -- If the two window are of the same buffer don't bother with gitsings
+--     local lastbuf = vim.fn.expand("#")
+--     local curbuf = vim.fn.expand("%")
+--     if lastbuf ~= curbuf then
+--       if vim.fn.exists(":Gitsigns") then
+--         require("gitsigns").attach()
+--       end
+--     end
+--     -- vim.cmd("ownsyntax on")
+--     vim.wo.colorcolumn = '+' .. vim.fn.join(vim.fn.range(0, 254), ',+')
+--     vim.wo.cursorline = true
+--     -- vim.cmd("hi EndOfBuffer guibg=#000000")
+--   end,
+--   group = focus_group
+-- })
+--
+-- -- When coming into vim
+-- autocmd({ "FocusGained" }, {
+--   pattern = "*",
+--   callback = function()
+--     vim.cmd("syntax on")
+--     if vim.fn.exists(":TSEnable") then
+--       vim.cmd("TSEnable highlight")
+--     end
+--     if vim.fn.exists(":Gitsigns") then
+--       require("gitsigns").attach()
+--     end
+--     vim.wo.colorcolumn = '+' .. vim.fn.join(vim.fn.range(0, 254), ',+')
+--     vim.wo.cursorline = true
+--     -- vim.cmd("hi EndOfBuffer guibg=#252525")
+--     -- vim.cmd("hi CursorLine guibg=#202020")
+--     -- vim.cmd("hi VertSplit guibg=none")
+--   end,
+--   group = focus_group
+-- })
+--
+-- -- When moving out of a splits
+-- autocmd({ "WinLeave", "BufLeave" }, {
+--   pattern = "*",
+--   callback = function()
+--     if vim.bo.filetype == "qf" then
+--       return
+--     else
+--       -- If the two window are of the same buffer don't bother with gitsings
+--       local lastwin = vim.api.nvim_win_get_buf(vim.fn.win_getid(vim.fn.winnr("#")))
+--       local curwin = vim.api.nvim_win_get_buf(vim.api.nvim_get_current_win())
+--       if lastwin ~= curwin then
+--         if vim.fn.exists(":Gitsigns") then
+--           require("gitsigns").detach()
+--         end
+--       end
+--     end
+--     vim.wo.cursorline = false
+--     vim.wo.colorcolumn = vim.fn.join(vim.fn.range(1, 255), ',')
+--     -- vim.cmd("hi EndOfBuffer guibg=#303030")
+--   end,
+--   group = focus_group
+-- })
+--
+-- -- When going out of vim
+-- autocmd({ "FocusLost" }, {
+--   pattern = "*",
+--   callback = function()
+--     vim.cmd("syntax off")
+--     if vim.fn.exists(":TSDisable") then
+--       vim.cmd("TSDisable highlight")
+--     end
+--     if vim.fn.exists(":Gitsigns") then
+--       require("gitsigns").detach_all()
+--     end
+--     vim.wo.cursorline = true
+--     vim.wo.colorcolumn = vim.fn.join(vim.fn.range(1, 255), ',')
+--     -- vim.cmd("hi CursorLine guibg=#303030")
+--     -- vim.cmd("hi VertSplit guibg=#303030")
+--     -- vim.cmd("hi EndOfBuffer guibg=#303030")
+--   end,
+--   group = focus_group
+-- })
+--
+
+-- Disable line number in terminal
+local term_disable_line_nr_group = augroup("TermDisableLineNr", { clear = true })
+autocmd("TermOpen", {
   pattern = "*",
-  callback = function()
-    vim.wo.cursorline = false
-  end,
-  group = cursorline_insert_group
-})
-
-autocmd("InsertLeavePre", {
-  pattern = "*",
-  callback = function()
-    vim.wo.cursorline = true
-  end,
-  group = cursorline_insert_group
-})
-
-
--- focus
--- source: @wincent
-local focus_group = augroup("FocusGroup", { clear = true })
-
--- When moving into a split
-autocmd({ "VimEnter", "WinEnter", "BufEnter" }, {
-  pattern = "*",
-  callback = function()
-    if vim.fn.exists(":Gitsigns") then
-      require("gitsigns").attach()
-    end
-    vim.wo.colorcolumn = '+' .. vim.fn.join(vim.fn.range(0, 254), ',+')
-    vim.wo.cursorline = true
-  end,
-  group = focus_group
-})
-
--- When coming into vim
-autocmd({ "FocusGained" }, {
-  pattern = "*",
-  callback = function()
-    vim.cmd("syntax on")
-    if vim.fn.exists(":TSEnable") then
-      vim.cmd("TSEnable highlight")
-    end
-    if vim.fn.exists(":Gitsigns") then
-      require("gitsigns").attach()
-    end
-    vim.wo.colorcolumn = '+' .. vim.fn.join(vim.fn.range(0, 254), ',+')
-    vim.wo.cursorline = true
-    vim.cmd("hi EndOfBuffer guibg=none")
-    vim.cmd("hi CursorLine guibg=#202020")
-    vim.cmd("hi VertSplit guibg=none")
-  end,
-  group = focus_group
-})
-
--- When moving out of a splits
-autocmd({ "WinLeave" }, {
-  pattern = "*",
-  callback = function()
-    if vim.bo.filetype == "qf" then
-      return
-    end
-    if vim.fn.exists(":Gitsigns") then
-      require("gitsigns").detach()
-    end
-    vim.wo.cursorline = false
-    vim.wo.colorcolumn = vim.fn.join(vim.fn.range(1, 255), ',')
-  end,
-  group = focus_group
-})
-
--- When going out of vim
-autocmd({ "FocusLost" }, {
-  pattern = "*",
-  callback = function()
-    if vim.fn.exists(":TSDisable") then
-      vim.cmd("TSDisable highlight")
-    end
-    vim.cmd("syntax off")
-    if vim.fn.exists(":Gitsigns") then
-      require("gitsigns").detach_all()
-    end
-    vim.wo.cursorline = true
-    vim.wo.colorcolumn = vim.fn.join(vim.fn.range(1, 255), ',')
-    vim.cmd("hi EndOfBuffer guibg=#303030")
-    vim.cmd("hi CursorLine guibg=#303030")
-    vim.cmd("hi VertSplit guibg=#303030")
-  end,
-  group = focus_group
+  command = "setlocal nonu nornu",
+  group = term_disable_line_nr_group
 })

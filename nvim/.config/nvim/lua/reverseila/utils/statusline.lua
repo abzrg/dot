@@ -229,7 +229,7 @@ end
 
 -- Set inactive statusline
 M.set_inactive = function(self)
-  return self.colors.inactive .. '%= %F %='
+  return self.colors.inactive .. '%= %f %='
 end
 
 

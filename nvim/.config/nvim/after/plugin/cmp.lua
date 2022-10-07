@@ -102,6 +102,8 @@ cmp.setup {
         luasnip = "[Snippet]",
         nvim_lua = "[NvLua]",
         nvim_lsp = "[LSP]",
+        pandoc_references = "Ref",
+        cmp_git = "Git",
         buffer = "[Buffer]",
         path = "[Path]",
         -- omni = "[Omni]"
@@ -114,13 +116,15 @@ cmp.setup {
     { name = 'nvim_lsp' },
     { name = "nvim_lua" },
     { name = 'luasnip' },
+    { name = "pandoc_references" },
+    { name = "cmp_git" },
     -- { name = 'omni', keyword_length = 0 },
     { name = "buffer", keyword_length = 5 },
     { name = "path" },
   }),
 
   completion = {
-    completeopt = 'menu,menuone,noinsert'
+    completeopt = 'menu,menuone,noinsert,noselect'
   },
 
   confirm_opts = {
@@ -130,12 +134,19 @@ cmp.setup {
 }
 
 
--- Set configuration for specific filetype.
-cmp.setup.filetype('gitcommit', {
-  sources = cmp.config.sources({
-    -- You can specify the `cmp_git` source if you were installed it.
-    { name = 'cmp_git' },
-  }, {
-    { name = 'buffer' },
-  })
-})
+-- -- Set configuration for specific filetypes
+-- cmp.setup.filetype('gitcommit', {
+--   sources = cmp.config.sources({
+--     { name = 'cmp_git' },
+--   }, {
+--     { name = 'buffer' },
+--   })
+-- })
+
+-- cmp.setup.filetype('markdown', {
+--   sources = cmp.config.sources({
+--     { name = 'pandoc-references' },
+--   }, {
+--     { name = 'buffer' },
+--   })
+-- })

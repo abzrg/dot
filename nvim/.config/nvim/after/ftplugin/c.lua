@@ -4,7 +4,7 @@
 vim.opt.cinoptions      = vim.opt.cinoptions + 'g0' -- do not indent public/private/protected in c++ files
 
 vim.opt_local.cindent = true
-vim.opt_local.cinoptions:append({"g0", "#1s"})
+-- vim.opt_local.cinoptions:append({"g0", "#1s"})
  -- actually keep the indentation of # directives in openfoam codes
 
 

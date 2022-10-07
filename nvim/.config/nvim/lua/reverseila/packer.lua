@@ -26,6 +26,7 @@ return packer.startup({ function()
   -- Colorscheme
   use "folke/tokyonight.nvim"
   use "LunarVim/darkplus.nvim"
+  use "shaunsingh/nord.nvim"
 
   -- Comment
   use "numToStr/Comment.nvim"
@@ -70,6 +71,7 @@ return packer.startup({ function()
   use "hrsh7th/cmp-nvim-lua" -- nvim-cmp source for nvim lua
   use "hrsh7th/cmp-omni" -- nvim-cmp source for omnifunc
   use "petertriho/cmp-git" -- Git source for nvim-cmp
+  use "jc-doyle/cmp-pandoc-references" -- Completion for bibliography, reference and cross-ref items
 
 
   -- Snippet
@@ -82,6 +84,10 @@ return packer.startup({ function()
   use "windwp/nvim-autopairs" -- A super powerful autopair plugin for Neovim that supports multiple characters.
 
 
+  -- Compilers
+  use "tartansandal/vim-compiler-pytest"
+
+
   -- Misc.
   use "ethanholz/nvim-lastplace"
   use "christoomey/vim-tmux-navigator" -- Seamless navigation between tmux panes and vim panes
@@ -92,7 +98,8 @@ return packer.startup({ function()
   use "nanotee/nvim-lua-guide" -- lua guide for neovim
   -- use  "lervag/vim-foam"  -- vim filetype plugin for syntax highlighting of openfoam DSL
   -- use  "rhysd/clever-f.vim"  -- clever f instead of the dumb default
-
+  use "folke/zen-mode.nvim"
+  use "folke/twilight.nvim"
 end,
   config = {
     display = {
