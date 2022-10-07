@@ -15,7 +15,6 @@
 
 	grepc = grep --cached --break --heading
 
-	ff = merge --ff-only
 	noff = merge --no-ff
 	pom = push origin master
 	st = status -sb
@@ -26,12 +25,13 @@
 
 	l = log --simplify-merges --graph --pretty="tformat:%C(yellow)%h%Creset\\ %Cgreen(%ar)%Creset\\ %C(blue)<%an>%Creset\\ %C(red)%d%Creset\\ %s"
 	summary = log --abbrev-commit --pretty=oneline --author="Ali.Bozorgzadeh" --since=last.mon --reverse
-	one = show -s --pretty='format:%h (%s)'
 
 	clone = clone --progress --verbose
 
 	# pretty print git objects
 	cat = cat-file -p
+
+    ls = ls-files
 	# print the contents of the staging area or index
 	index = ls-files -s
 
@@ -48,8 +48,6 @@
 	# Show just the HEAD commit message (no indent) and nothing else
 	message = log -1 --pretty=format:%B
 	msg = message
-
-	no-edit = commit --amend --no-edit
 
 	one = log --pretty=format:'%C(auto)%h%Creset%C(auto)%d%Creset %s %C(magenta bold)(%cr)%Creset %C(cyan)<%aN>%Creset'
 	ten = log -10 --pretty=format:'%C(auto)%h%Creset%C(auto)%d%Creset %s %C(magenta bold)(%cr)%Creset %C(cyan)<%aN>%Creset'
@@ -110,7 +108,7 @@
 [core]
 	compression = 0
 	autocrlf = input
-	pager = less -FRSX
+	; pager = less -FRSX
 	editor = nvim
 	excludesFile = ~/.gitignore
 
@@ -188,7 +186,7 @@
 
 [pager] #?
 	show-branch = true
-	status = true
+	; status = true
 
 
 ; [rebase]

@@ -43,7 +43,6 @@ $if mode=vi
 $endif
 
 # Terminate cycling completion by Esc
-set isearch-terminators on
 set print-completions-horizontally on
 set bell-style visible
 set skip-completed-text on

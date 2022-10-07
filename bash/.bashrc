@@ -34,7 +34,6 @@ shopt -s histappend # append to the history file, do not overwrite history
 shopt -s expand_aliases # expand aliases. use C-A-e for expantion
 shopt -s no_empty_cmd_completion
 shopt -s globstar # Allow ** for recursive matches ('lib/**/*.sh' => 'lib/a/b/c.sh')
-#shopt -s histverify # Don't execute expand result immediately
 stty -ixon # Disable ctrl-s and ctrl-q.
 
 # Ignore duplicate and line starting space
@@ -57,7 +56,7 @@ case ${TERM} in
 esac
 
 # Only retain 2 trailing directory components when expanding \w prompt string escape. Characters are replaced with an ellipsis.
-PROMPT_DIRTRIM=2
+#PROMPT_DIRTRIM=2
 
 # NOTE:
 #   - `history -a`: append history lines from this session to the history file
@@ -69,7 +68,8 @@ PROMPT_DIRTRIM=2
 source $HOME/.git-prompt.sh
 
 # A prompt inspired by Luke Smith's prompt
-PS1='$(history -a)\[\e[1;31m\][\[\e[1;34m\]\w\[\e[1;36m\]$(__git_ps1)\[\e[1;31m\]]\[\e[0m\]$ '
+#PS1='$(history -a)\[\e[1;31m\][\[\e[1;34m\]\w\[\e[1;36m\]$(__git_ps1)\[\e[1;31m\]]\[\e[0m\]$ '
+PS1='$(history -a)\W $(__git_ps1)$ '
 
 # A very simple prompt
 # PS1='$(history -a)\w $ '
@@ -84,13 +84,13 @@ xterm*|*rxvt*)
 esac
 
 # Aliases
-[ -f "$HOME/.bash_aliases" ] && source "$HOME/.bash_aliases"
+# [ -f "$HOME/.bash_aliases" ] && source "$HOME/.bash_aliases"
 
 # Functions
-[ -f "$HOME/.bash_functions" ] && source "$HOME/.bash_functions"
+# [ -f "$HOME/.bash_functions" ] && source "$HOME/.bash_functions"
 
 # Fzf
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+# [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 # Fix problems of delete key in terminal
 printf '\033[?1h\033=' >/dev/tty
@@ -109,4 +109,20 @@ if ! shopt -oq posix; then
   fi
 fi
 
-printf "( .-.)\n"
+alias v=nvim
+alias of2112='. ~/OpenFOAM/OpenFOAM-v2112/etc/bashrc'
+alias sbrc='. ~/.bashrc'
+
+# enable color support of ls and also add handy aliases
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+
+# some more ls aliases
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+
+echo -ne '\e[2 q'
+

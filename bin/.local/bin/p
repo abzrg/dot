@@ -11,7 +11,7 @@
 #                                Variables (global)                           #
 # =========================================================================== #
 
-_word="$(echo $1 | tr ' ' '-')"
+_word="$(echo $1 | tr A-Z a-z | tr ' ' '-')"
 _base_url="https://dictionary.cambridge.org"
 _cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}/pronunciations"
 _default_accent="uk"
@@ -24,7 +24,7 @@ _default_accent="uk"
 
 # print usage and exit
 _usage() {
-    printf "\033[33;1mUSAGE\033[0m: `basename $0` word [accent]\n"
+    printf "\033[33;1mUSAGE\033[0m: %s word [accent]\n" "$(basename $0)"
     printf "\033[35;1maccent\033[0m: uk, us\n"
     exit 1
 }
