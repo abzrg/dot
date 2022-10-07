@@ -15,37 +15,47 @@ alias \
     fgrep='fgrep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}'          \
     diff='diff'                                                                \
 
+alias ls='ls -CF --color=auto'
 
-# -- list files --
-if command -v exa >/dev/null
-then
-    alias \
-        ls='exa -bgh -sname --group-directories-first -F'                      \
-        l='exa -bgh -sname --group-directories-first -F'                       \
-        la='ls -a'                                                             \
-        ll='ls -l --git'                                                       \
-        sl='ls'
-else
-    alias \
-        ls='ls -hFG --color=auto'                                              \
-        l='ls'                                                                 \
-        la='ls -A'                                                             \
-        ll='ls -Ali'                                                           \
-        sl='ls'
-fi
+# # -- list files --
+# if ! command -v exa >/dev/null
+# then
+#     # alias exa='exa'
+#     # if [ ! $TERM = "xterm-256color" ]; then
+#         alias exa='exa --icons'
+#     # fi
+#     alias \
+#         ls='exa -bgh -sname --group-directories-first -F'                      \
+#         l='exa -bgh -sname --group-directories-first -F'                       \
+#         la='ls -a'                                                             \
+#         ll='ls -l --git'                                                       \
+#         sl='ls'
+# else
+#     if [ `uname -s` = "Darwin" ]; then
+#         alias ls='ls -hFG --color=auto'
+#     else
+#         alias ls='ls -hFG --color=auto --group-directories-first'
+#     fi
+#     alias \
+#         l='ls'                                                                 \
+#         la='ls -A'                                                             \
+#         ll='ls -l'                                                             \
+#         sl='ls'
+# fi
 
 
 # -- long commands --
 alias \
     o='open'                                                                   \
+    t='tmux'                                                                   \
     f='find . -name'                                                           \
     h='history'                                                                \
     g='git'                                                                    \
     bc='bc -ql'                                                                \
     df='df -h'                                                                 \
     v='$EDITOR'                                                                \
-    e='emacs -nw -nbc'                                                         \
-    ec='emacsclient -nw'                                                       \
+    nv='neovide'                                                               \
+    n='newsboat'                                                               \
     ka='killall'                                                               \
     type='type -a'                                                             \
     mkd='mkdir -pv'                                                            \
@@ -55,9 +65,12 @@ alias \
     chreg='chmod 644'                                                          \
     wget='wget --hsts-file ~/.cache/wget-hsts'                                 \
     myip='curl http://myip.dnsomatic.com && echo '''                           \
-    w3m='stty cols 80 && w3m'                                                  \
+    w3m='w3m -cols 80'                                                         \
     sz='source $HOME/.zshrc'                                                   \
-
+    ec='emacsclient -nc'                                                       \
+    pydoc='python -m pydoc'                                                    \
+    em="echo -ne '\e[2 q' && command emacs -nw"                                \
+    # emacs="echo -ne '\e[?1004h'; emacs"                                        \
 
 # -- navigate to common directories --
 alias \
@@ -76,8 +89,9 @@ alias \
     cfz="$EDITOR $HOME/.zshrc"                                                 \
     cfzp="$EDITOR $HOME/.zprofile"                                             \
     cft="$EDITOR $HOME/.tmux.conf"                                             \
-    cfa="$EDITOR ${HOME}/.aliasrc"                                             \
+    cfa="$EDITOR ${HOME}/.zsh-aliases"                                         \
     cfA="$EDITOR ${XDG_CONFIG_HOME:-$HOME/.config}/alacritty/alacritty.yml"    \
+    cfk="$EDITOR ${XDG_CONFIG_HOME:-$HOME/.config}/kitty/kitty.conf"           \
 
 
 # Oops vim
@@ -130,6 +144,9 @@ alias \
 
 # -- misc. --
 
+    # problem of kitty with ssh
+    [ "$TERM" = "xterm-kitty" ] && alias ssh="kitty +kitten ssh"
+
     # use `\vim` or `command vim` to get the real vim.
     command -v nvim >/dev/null && alias                                        \
         vim=nvim                                                               \
@@ -140,20 +157,20 @@ alias \
         yt="yt-dlp --add-metadata -ci \
         --external-downloader aria2c  \
         --external-downloader-args '-c -x 5 -k 2M'"                            \
-        yta="yt -x -f bestaudio/best"                                          \
+        yta="yt -x -f bestaudio/best --audio-format opus"                      \
         ytb="yt -f bestvideo+bestaudio"                                        \
         yt7="yt -f 'bestvideo[height<=?720]+bestaudio/best' "                  \
         yts="yt-dlp --all-subs --skip-download"                                \
         ytas="yt-dlp --skip-download --write-auto-sub --convert-subs=srt"      \
-        yt7pl="yt7 -o '%(playlist_index)s-%(title)s.%(ext)s'"                  \
-        ytbpl="ytb -o '%(playlist_index)s-%(title)s.%(ext)s'"
+        yt7pl="yt7 -o '%(playlist_index)s-%(title)s.%(ext)s' --yes-playlist"   \
+        ytbpl="ytb -o '%(playlist_index)s-%(title)s.%(ext)s' --yes-playlist"
 
     # openfoam
-    alias of2112="source ${FOAM_INST_DIR}/OpenFOAM-v2112/etc/bashrc"
+    alias of22="source ${FOAM_INST_DIR}/OpenFOAM-v2206/etc/bashrc"
     alias fe41="source ~/OpenFOAM/foam-extend-4.1/etc/bashrc 2>&1"
 
     # vim and neovim config
-    alias cfv="$EDITOR ${XDG_CONFIG_HOME:-$HOME/.config}/nvim/init.lua"
+    alias cfv="$EDITOR -c 'cd %:h' ${XDG_CONFIG_HOME:-$HOME/.config}/nvim/init.lua"
 
     # ascii table
     alias ascii='man ascii | grep -m 1 -A 63 --color=never Oct | less'
@@ -165,7 +182,6 @@ alias \
     # Pretty print the path
     alias path='echo $PATH | tr -s ":" "\n"'
 
-
     # NIT remote
     [ -e $HOME/.hpc.nit ] && source $HOME/.hpc.nit
 
@@ -173,3 +189,28 @@ alias \
     if command -v rlwrap >/dev/null && command -v sbcl >/dev/null; then
         alias   sbcl='rlwrap sbcl'
     fi
+
+    # added by sumneko_lua
+    alias luamake=/Users/ali/.local/src/lua-language-server/3rd/luamake/luamake
+
+    # fix cursor shape for some programs
+    # (I like these programs to have box shape cursor)
+    alias w3m="echo -ne '\e[2 q' && w3m"
+    alias lynx="echo -ne '\e[2 q' && lynx -vikeys"
+    # alias vim="echo -ne '\e[2 q' && vim"
+    alias vi="echo -ne '\e[2 q' && command vim"
+    alias docker="echo -ne '\e[2 q' && command docker"
+    alias lua="echo -ne '\e[2 q' && lua && echo -ne '\e[6 q'"
+    alias python="echo -ne '\e[2 q' && python"
+    alias python3="echo -ne '\e[2 q' && python"
+    alias eq="echo -ne '\e[2 q' && emacs -Q -nw -l ~/.eq"
+    alias mksh="echo -ne '\e[2 q' && mksh"
+
+    # on macos use gmake instead of make
+    [ `uname -s` = "Darwin" ] && alias make=gmake
+
+    # ubuntu18 docker
+    alias u18='docker start -v $HOME/.local/share/docker-share/ubuntu18:/home/user  '
+
+    # hugo server with nocache
+    alias hss='hugo server --noHTTPCache'

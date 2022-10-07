@@ -3,10 +3,17 @@
     # Create a hash table for globally stashing variables without polluting main
     # scope with a bunch of identifiers.
     typeset -A __ALI
-
     __ALI[ITALIC_ON]=$'\e[3m'
     __ALI[ITALIC_OFF]=$'\e[23m'
 
+    # # syntax highlighting for man pages
+    # export LESS_TERMCAP_mb=$'\e[1;32m'
+    # export LESS_TERMCAP_md=$'\e[1;32m'
+    # export LESS_TERMCAP_me=$'\e[0m'
+    # export LESS_TERMCAP_se=$'\e[0m'
+    # export LESS_TERMCAP_so=$'\e[01;33m'
+    # export LESS_TERMCAP_ue=$'\e[0m'
+    # export LESS_TERMCAP_us=$'\e[1;4;31m'
 
 # -- settings --
 
@@ -224,11 +231,13 @@
 # -- completion --
 
     # basic auto/tab complete:
+    # Rust completion
+    export fpath=($HOME/.local/src/rust-zsh-completions/src $fpath)
     autoload -U compinit
     zstyle ':completion:*' menu select
 
     # auto-insert first possible ambiguous completion
-    setopt MENU_COMPLETE
+    #setopt MENU_COMPLETE
 
     # Make completion:
     # - Try exact (case-sensitive) match first.
@@ -291,9 +300,9 @@
     #fignore=( .part ,v .aux .toc .lot .lof .blg .bbl .bak .BAK .sav .old .o .trace .swp \~)
 
     # escape shell characters in a url
-    autoload -Uz url-quote-magic bracketed-paste-magic
-    zle -N self-insert url-quote-magic
-    zle -N bracketed-paste bracketed-paste-magic
+    # autoload -Uz url-quote-magic bracketed-paste-magic
+    # zle -N self-insert url-quote-magic
+    # zle -N bracketed-paste bracketed-paste-magic
 
 
 # -- vi mode --
@@ -314,28 +323,32 @@
     bindkey -M menuselect 'up' vi-forward-char
     bindkey -M menuselect 'right' vi-down-line-or-history
 
-    # change cursor shape for different vi modes.
-    #    0: Blinking block
-    #    1: Blinking block (default)
-    #    2: Steady block (“â–ˆ”)
-    #    3: Blinking underline
-    #    4: Steady underline ("_")
-    #    5: Blinking bar
-    #    6: Steady bar ("|")
-    function zle-keymap-select () {
-        case $KEYMAP in
-            vicmd) echo -ne '\e[2 q';;      # block
-            viins|main) echo -ne '\e[6 q';; # beam
-        esac
-    }
-    zle -N zle-keymap-select
-    zle-line-init() {
-        zle -K viins # initiate `vi insert` as keymap (can be removed if `bindkey -V` has been set elsewhere)
-        echo -ne "\e[6 q"
-    }
-    zle -N zle-line-init
-    echo -ne '\e[6 q' # use beam shape cursor on startup.
-    precmd() { echo -ne '\e[6 q' ;} # use beam shape cursor for each new prompt.
+   # # change cursor shape for different vi modes.
+   # #    0: Blinking block
+   # #    1: Blinking block (default)
+   # #    2: Steady block (“â–ˆ”)
+   # #    3: Blinking underline
+   # #    4: Steady underline ("_")
+   # #    5: Blinking bar
+   # #    6: Steady bar ("|")
+   # function zle-keymap-select () {
+   #     case $KEYMAP in
+   #         vicmd) echo -ne '\e[2 q';;      # block
+   #         viins|main) echo -ne '\e[6 q';; # beam
+   #     esac
+   # }
+   # zle -N zle-keymap-select
+   # zle-line-init() {
+   #     zle -K viins # initiate `vi insert` as keymap (can be removed if `bindkey -V` has been set elsewhere)
+   #     echo -ne "\e[6 q"
+   # }
+   # zle -N zle-line-init
+   # echo -ne '\e[6 q' # use beam shape cursor on startup.
+   # precmd() { echo -ne '\e[6 q' ;} # use beam shape cursor for each new prompt.
+
+   # fix the change of cursor via reset
+   reset() { echo -ne '\e[2 q' && command reset ;}
+
 
     # ci", ci', ci`, di", etc
     autoload -U select-quoted
@@ -379,6 +392,7 @@
     bindkey "^A" beginning-of-line
     bindkey "^E" end-of-line
     bindkey "^W" backward-kill-word
+    bindkey '^U' kill-whole-line
     bindkey "^K" kill-line
     bindkey "^B" backward-char
     bindkey "^F" forward-char
@@ -388,6 +402,10 @@
     bindkey '^H' backward-kill-word # ctrl+backspace
     bindkey '^o' accept-and-hold
     bindkey '^R' history-incremental-pattern-search-backward
+    bindkey '\ef' forward-word
+    bindkey '\eb' backward-word
+    bindkey '\ed' kill-word
+    bindkey '^D' delete-char-or-list
 
     # fix backspace bug when switching modes
     bindkey "^?" backward-delete-char
@@ -401,23 +419,15 @@
 
 # -- widgets --
 
-    # fzf man pages
-    # zle: https://sgeb.io/posts/zsh-zle-custom-widgets/
-    fzf-man-widget() {
-        gman $(gapropos --long . | fzf | awk '{print $2, $1}' | tr -d '()') 2>/dev/null; :
-        zle reset-prompt
-    }
-    zle     -N   fzf-man-widget
-    bindkey '\em' fzf-man-widget
-
     # fzf notes
-    fzf-notes-widget() {
-        _file="$(find ~/Documents/notes -type f 2>/dev/null | fzf)"
+    fzf-dotfiles-widget() {
+        _file="$(find ~/.dot/ -not \( -wholename "./.git" -prune \) -type f 2>/dev/null | fzf)"
         [ -z "$_file" ] && zle reset-prompt || nvim $_file
+        echo -ne '\e[6 q'
         zle reset-prompt
     }
-    zle     -N   fzf-notes-widget
-    bindkey '\C-h' fzf-notes-widget
+    zle     -N   fzf-dotfiles-widget
+    bindkey '\C-t' fzf-dotfiles-widget
 
     # make Alt-backspace less liberal version of Ctrl-w
     backward-kill-dir () {
@@ -447,6 +457,31 @@
     bindkey -M vicmd "^Z" fg-widget
     bindkey -M viins "^Z" fg-widget
 
+    # google from commandline with only one keybinding
+    google_clipboard() {
+        # store the content of the clipboard
+        if [ $(uname -s) = Darwin ]; then
+            local clipboard_cmd="pbpaste"
+        else
+            local clipboard_cmd="xclip -sel clip -o"
+        fi
+        local clipboard_content="$($clipboard_cmd | tr ' ' '+')"
+
+        open -a 'Brave Browser' "https://www.google.com/search?q=${clipboard_content}"
+        zle reset-prompt
+    }
+    zle     -N   google_clipboard
+    bindkey '\es' google_clipboard
+
+    # open alacritty config with Alt-,
+    open-alacritty-config () {
+        $EDITOR ~/.config/alacritty/alacritty.yml
+        echo -ne '\e[6 q'
+        zle reset-prompt
+    }
+    zle -N open-alacritty-config
+    bindkey '\e,' open-alacritty-config
+
 
 # -- OpenFOAM --
 
@@ -461,13 +496,26 @@
     [ -e "$HOME/.zsh-functions" ] && . "$HOME/.zsh-functions"
 
     # prompt and title
-    [ -e "$HOME/.zsh-prompt" ] && . "$HOME/.zsh-prompt"
+    # [ -e "$HOME/.zsh-prompt" ] && . "$HOME/.zsh-prompt"
+    # export PROMPT="%1~  $ "
+    # PROMPT='$ '
+    # autoload -U colors && colors
+    # PS1="%{$fg[cyan]%}%1~ %{$reset_color%}%% "
+    # PS1="%F{cyan}%1~%f $ "
 
     # zoxide
     eval "$(zoxide init zsh)"
 
-    # fzf
-    [ -f "$HOME/.fzf.zsh" ] && source "$HOME/.fzf.zsh"
+    # # prompt Winline
+    # setopt TRANSIENT_RPROMPT
+    # fpath+="$HOME/.local/src/winline"
+    # . $HOME/.local/src/winline/winline.zsh
 
-    # load syntax highlighting; should be last.
-    source ~/.local/src/fsh/fast-syntax-highlighting.plugin.zsh 2>/dev/null
+    # docker completion for zsh
+    autoload -Uz compinit && compinit -i
+    fpath=(~/.zsh/completion $fpath)
+
+    # # load syntax highlighting; should be last.
+    # source ~/.local/src/fsh/fast-syntax-highlighting.plugin.zsh 2>/dev/null
+
+    export NOTES_DIR='~/src/repos/notes/'

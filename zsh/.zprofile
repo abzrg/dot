@@ -13,11 +13,13 @@
     export XDG_CONFIG_HOME="$HOME/.config"
     export XDG_DATA_HOME="$HOME/.local/share"
     export XDG_CACHE_HOME="$HOME/.cache"
-    export GOPATH="${XDG_DATA_HOME:-$HOME/.local/share}/go"
+    export GOPATH="${XDG_DATA_HOME:-$HOME/.local/share}/go:${HOME}/src/go"
     export CARGO_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/cargo"
     export RUSTUP_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/cargo"
     export LESSHISTFILE='-' # no history file for less
     export NPM_CONFIG_USERCONFIG=$XDG_CONFIG_HOME/npm/npmrc
+    export PYTHONSTARTUP=${HOME}/.startup.py
+    export BIB="$HOME/Documents/bib/references.bib"  # Mega bibliography file for Latex
 
 
 # -- fzf settings --
@@ -59,30 +61,75 @@
 
 # -- brew (on macos) --
 
-    if [ -d /opt/homebrew ]; then
-      export HOMEBREW_PREFIX="/opt/homebrew"
-      export HOMEBREW_CELLAR="/opt/homebrew/Cellar"
-      export HOMEBREW_NO_AUTO_UPDATE=1
-      export HOMEBREW_REPOSITORY="/opt/homebrew"
-    fi
+    # if [ -d /opt/homebrew ]; then
+    #   export HOMEBREW_PREFIX="/opt/homebrew"
+    #   export HOMEBREW_CELLAR="/opt/homebrew/Cellar"
+    #   export HOMEBREW_NO_AUTO_UPDATE=1
+    #   export HOMEBREW_REPOSITORY="/opt/homebrew"
+    # fi
 
     if [ $(uname -s) = "Darwin" ]
     then
-        # set local location for libraries. If not set compilers cannot find the
-        # libraries and give us the error:
-        export CPATH=/opt/homebrew/include
-        # export ld_library_path=/opt/homebrew/lib/:$ld_library_path
-        export LIBRARY_PATH=/opt/homebrew/lib
-
-        # llvm, system and homebrew problem
-        export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
-
-        # For compilers to find llvm you may need to set:
-        export LDFLAGS="-L/opt/homebrew/opt/llvm/lib"
-        export CPPFLAGS="-I/opt/homebrew/opt/llvm/include"
+        # -- brew
 
         eval "$(/opt/homebrew/bin/brew shellenv)"
-    elif [ $(uname -s) = "Linux" ]
-    then
-        export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+
+    #     # -- llvm
+    #
+    #     # set local location for libraries. If not set compilers cannot find the
+    #     # libraries and give us the error:
+    #     export CPATH=/opt/homebrew/include
+    #     # export ld_library_path=/opt/homebrew/lib/:$ld_library_path
+    #     export LIBRARY_PATH=/opt/homebrew/lib
+    #
+    #     # llvm, system and homebrew problem
+    #     export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
+    #
+    #     # For compilers to find llvm you may need to set:
+    #     export LDFLAGS="$LDFLAGS -L/opt/homebrew/opt/llvm/lib -lm"
+    #     export CPPFLAGS="$LDFLAGS -I/opt/homebrew/opt/llvm/include -Wall -Wextra"
+    #     export CFLAGS="$CFLAGS -I/opt/homebrew/opt/llvm/include -Wall -Wextra"
+    #
+    #     # Enable memory leak detection for clang sanitizers
+    #     export ASAN_OPTIONS=detect_leaks=1
+    #
+        #curl
+
+        export PATH="/opt/homebrew/opt/curl/bin:$PATH"
+
+        # export LDFLAGS="$LDFLAGS -L/opt/homebrew/opt/curl/lib"
+        # export CPPFLAGS="$CPPFLAGS -I/opt/homebrew/opt/curl/include"
+        #
+        # # For pkg-config to find curl you may need to set:
+        # export PKG_CONFIG_PATH="/opt/homebrew/opt/curl/lib/pkgconfig"
+        #
+        # # gnu's version of info (texinfo)
+        # export PATH="/opt/homebrew/opt/texinfo/bin:$PATH"
+    #
+    #     # java (keg-only)
+    #     export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
+    #
+    #
+    #     # Python pip packages
+    #     export PATH="$PATH:/opt/homebrew/opt/python@3.9/Frameworks/Python.framework/Versions/3.9/bin"
+    #
+    #     # iconv (for booksplit script)
+    #     export PATH="/opt/homebrew/opt/libiconv/bin:$PATH"
+    #
+    #     # Ruby
+    #     export PATH="$HOME/.gem/ruby/2.6.0:$PATH"
+    # elif [ $(uname -s) = "Linux" ]
+    # then
+    #     export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
     fi
+
+
+# -- access to linux man pages on macos
+    if [ `uname -s` = "Darwin" ]; then
+        export MANPATH="$HOME/.local/share/man:$MANPATH"
+    fi
+
+
+# -- Add gopath binary directory to path
+
+    export PATH="$PATH:${HOME}/.local/share/go/bin"

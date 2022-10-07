@@ -90,7 +90,7 @@
                 | sed 's/<br>/\n/g' \
                 | sed 's/<BR>/\n/g' \
                 | sed -e 's/<[^>]*>//g' \
-                | fold -s -w ${width:-80} | less -FRX
+                | fold -s -w ${width:-80} | \less -FRX
         else
             [ $(tput cols) -lt 80 ] && local width=$(tput cols)
             echo -e "[`date`]:  $@" >> $HOME/Documents/notes/dic-words.txt
@@ -98,7 +98,7 @@
                 | sed 's/<br>/\n/g' \
                 | sed 's/<BR>/\n/g' \
                 | sed -e 's/<[^>]*>//g' \
-                | fold -s -w ${width:-80} | less -FRX
+                | fold -s -w ${width:-80} | \less -FRX
         fi
     }
 
@@ -146,10 +146,57 @@
 
 # -- sci-hub downloader --
 
-    shdl() { curl -O "https://sci-hub.se"$(curl -s https://sci-hub.se/"$@" | grep location.href | grep -o '/.*pdf') ;}
+    shdl() { curl -O "https://sci-hub.se"$(curl -s https://sci-hub.se/"$@" | grep location.href | grep -o '/.*pdf' | sed -e 's#//#/#') ;}
     shdl-backup() { curl -O $(curl -s https://sci-hub.se/"$@" | grep location.href | grep -o http.*pdf) ;}
 
 
 # -- Create a directory and take me there --
 
     take() { mkdir $1 && cd $1 ;}
+
+
+# -- better man page
+
+    man() {
+        MANCMD=gman
+        # set the width of the manpage
+        MANWIDTH=100
+
+        # if terminal width is smaller than manwidth then use that width
+        # src: archwiki (https://wiki.archlinux.org/title/man_page#Page_width)
+        local width=$(tput cols)
+        [ "$width" -gt "$MANWIDTH" ] && width=$MANWIDTH
+
+        # change the cursor shape if by chance it is a pipe
+        echo -ne '\e[2 q'
+
+        # issue with gcc on macos (no man page for gcc!)
+        if [ `uname -s` = "Darwin" ] && [ "$1" = "gcc" ];then
+            env MANWIDTH=$width command $MANCMD gcc-11
+        else
+            env MANWIDTH=$width command $MANCMD "$@" 2>/dev/null
+        fi
+    }
+
+
+# -- pip serach is broken
+
+    if command -v poetry >/dev/null; then
+        function pip() {
+            if [ "$1" = "search" ]; then
+                shift
+                command poetry search "$@"
+            else
+                command pip "$@"
+            fi
+        }
+    fi
+
+# -- convert
+
+    # ConvertTo-Mp4 .\someFile.mkv
+    function mkv2Mp4() {
+        video="$1"
+        videobase=${video%%.mkv}
+        ffmpeg -i "$video" -vcodec copy -acodec aac "${videobase}.mp4"
+    }

@@ -39,7 +39,7 @@
         fi
 
         # choose prompt sign
-        local prompt_sign='$'
+        local prompt_sign='❯'
 
         # the final suffix of the prompt will be the shown w.r.t number of subshells
         # spawn
@@ -83,17 +83,17 @@
 
         if [ -z "$1" ]; then
             # Default format
-            printf ":(%s)" "$branch"
+            printf " %s" "(%F{magenta}$branch%f)%f"
         else
             # Use passed format string
             printf "$1" "$branch"
         fi
     }
 
-
 # -- zsh prompt --
 
-    PROMPT="%1~"                            # path
-    PROMPT="$PROMPT\$(__fastgit_ps1)%f"     # git prompt
+    # PROMPT="%(?.%F{green}.%F{red})▸%f"      # pre-prompt symbol (for use in tmux)
+    PROMPT="%F{blue}%1~%f"                  # path
+    PROMPT="$PROMPT\$(__fastgit_ps1)%f "    # git prompt
     PROMPT="$PROMPT\$(_shlvl_prompt)%f "    # shell level
     export PROMPT
