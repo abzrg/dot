@@ -23,14 +23,14 @@ vim.opt.smartcase  = true
 
 -- [ Scroll ] --------------------------
 
-vim.opt.scrolloff     = 3 -- start scroll 3 lines before edge of the viewport
+vim.opt.scrolloff     = 8 -- start scroll 3 lines before edge of the viewport
 vim.opt.sidescrolloff = 3
 
 
 -- [ Splits ] --------------------------
 
-vim.opt.splitbelow = true
-vim.opt.splitright = true
+vim.opt.splitbelow = true -- open horizontal splits below current window
+vim.opt.splitright = true -- open vertical splits to the right of the current window
 
 
 -- [ Backup ] --------------------------
@@ -103,10 +103,12 @@ vim.opt.listchars = {
 
 -- [ Misc. ] --------------------------
 
+vim.opt.showbreak = '↪ ' -- ↳ DOWNWARDS ARROW WITH TIP RIGHTWARDS (U+21B3, UTF-8: E2 86 B3)
+vim.opt.linebreak = true
 vim.opt.cmdheight   = 1
-vim.opt.laststatus  = 3
+vim.opt.laststatus  = 0
 vim.opt.ruler       = true
-vim.opt.rulerformat = [[%30(%{FugitiveStatusline()}%m%=%l,%c%V   %P%)]]
+vim.opt.rulerformat = [[%30(%{FugitiveStatusline()}%=%l,%c%V   %P%)]]
 vim.opt.textwidth   = 80 -- automatically hard wrap at 120 columns
 vim.opt.updatetime  = 500 -- CursorHold interval
 
@@ -120,6 +122,7 @@ vim.opt.showmode      = false
 vim.opt.termguicolors = true
 vim.opt.title         = true
 
+-- vim.opt.guicursor       = ""
 vim.opt.encoding    = "utf-8"
 vim.opt.fileformat  = "unix"
 -- vim.opt.foldmethod      = 'indent'
@@ -127,8 +130,10 @@ vim.opt.inccommand  = "split" -- live preview of :s results
 vim.opt.mouse       = "a" -- enable mouse
 vim.opt.shell       = "zsh"
 vim.opt.shortmess   = "filnxtToOc"
-vim.opt.signcolumn  = "auto"
+vim.opt.signcolumn  = "yes"
 vim.opt.virtualedit = "block" -- allow cursor to move where there is no text in visual block mode
+vim.opt.spellcapcheck = '' -- don't check for capital letters at start of sentence
+
 
 vim.opt.clipboard:append("unnamedplus")
 vim.opt.isfname:remove("=") -- Avoid recognizing = as part of file name

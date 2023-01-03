@@ -2,11 +2,7 @@
 
 local clangd_flags = {
   "--fallback-style=google",
-  "--background-index",
-  "-j=12",
   "--all-scopes-completion",
-  "--pch-storage=disk",
-  "--clang-tidy",
   "--log=error",
   "--completion-style=detailed",
   "--header-insertion=iwyu",
@@ -15,6 +11,12 @@ local clangd_flags = {
   "--offset-encoding=utf-16",
   "--ranking-model=heuristics",
   "--folding-ranges",
+  "--clang-tidy",
+  "-j=12",
+  "--limit-references=100",
+  "--limit-results=20",
+  "--background-index",
+  "--pch-storage=memory",
 }
 
 local clangd_bin = "clangd"

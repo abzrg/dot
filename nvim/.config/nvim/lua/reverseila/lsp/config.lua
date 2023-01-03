@@ -1,5 +1,5 @@
 local servers = {
-  -- { "rust", "rust-analyzer" },
+  { "rust_analyzer", "rust-analyzer" }, -- It has it's own plugin
   { "jsonls", "vscode-json-language-server" },
   { "pyright", "pyright-langserver" },
   { "clangd", "clangd" },

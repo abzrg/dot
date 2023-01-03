@@ -27,7 +27,7 @@ local highlight_yank_group = augroup("HighlightYank", { clear = true })
 autocmd("TextYankPost", {
   pattern = "*",
   callback = function()
-    vim.highlight.on_yank { higroup = "IncSearch", timeout = 400 }
+    vim.highlight.on_yank { higroup = "IncSearch", timeout = 100 }
   end,
   group = highlight_yank_group,
 })
@@ -192,4 +192,16 @@ autocmd("TermOpen", {
   pattern = "*",
   command = "setlocal nonu nornu",
   group = term_disable_line_nr_group
+})
+
+
+-- Automatically quit Vim if quickfix window is the last
+local netrw = augroup("netrwRelated", { clear = true })
+autocmd("FileType", {
+  pattern = "netrw",
+  callback = function()
+    vim.keymap.set({ "n", "v" }, "<C-h>", "<cmd>bp<cr>", { noremap = true, buffer = true })
+    vim.keymap.set({ "n", "v" }, "<C-l>", "<cmd>bn<cr>", { noremap = true, buffer = true })
+  end,
+  group = netrw,
 })

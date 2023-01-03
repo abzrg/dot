@@ -1,6 +1,6 @@
 -- Check it is installed first
 if vim.g.loaded_committia ~= 1 then
-    return
+  return
 end
 
 vim.g.committia_min_window_width = 90

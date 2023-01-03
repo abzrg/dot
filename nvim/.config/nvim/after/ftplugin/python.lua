@@ -7,9 +7,8 @@ local nnoremap = require("reverseila.utils.keymap").nnoremap
 -- Check if a black is installed
 if vim.fn.executable("black") == 1
     and vim.fn.executable("isort") then
-  nnoremap("<leader>=", "", {
-    buffer = true, silent = true,
-    callback = function()
+  vim.keymap.set("n", "<leader>=",
+    function()
       -- First write the file
       vim.cmd("write")
 
@@ -37,8 +36,8 @@ if vim.fn.executable("black") == 1
       else
         print("[" .. vim.fn.toupper(formatter) .. "]: FAILED!")
       end
-    end
-  })
+    end,
+    { buffer = true, silent = true, })
 end
 
 -- Use formatter in gq command

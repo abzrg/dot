@@ -8,6 +8,7 @@ if not luasnip_loaded then
   return
 end
 
+
 -- Luasnipt config
 luasnip.config.set_config {
   history = true,
@@ -15,7 +16,9 @@ luasnip.config.set_config {
 }
 require("luasnip/loaders/from_vscode").lazy_load()
 
+
 --   פּ ﯟ   some other good icons
+-- find more here: https://www.nerdfonts.com/cheat-sheet
 local kind_icons = {
   Text = "",
   Method = "m",
@@ -43,7 +46,7 @@ local kind_icons = {
   Operator = "",
   TypeParameter = "",
 }
--- find more here: https://www.nerdfonts.com/cheat-sheet
+
 
 -- Used for super tab behavior
 local has_words_before = function()
@@ -51,6 +54,8 @@ local has_words_before = function()
   return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
 end
 
+
+-- Setup
 cmp.setup {
   snippet = {
     expand = function(args)

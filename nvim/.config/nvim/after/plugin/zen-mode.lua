@@ -1,7 +1,7 @@
 -- Check it is installed
 local status_ok, zenmode = pcall(require, "zen-mode")
 if (not status_ok) then
-    return
+  return
 end
 
 
@@ -47,11 +47,10 @@ zenmode.setup {
       font = "+4", -- font size increment
     },
   },
-  -- callback where you can add custom code when the Zen window opens
-  on_open = function(win)
-  end,
-  -- callback where you can add custom code when the Zen window closes
-  on_close = function()
-  end,
+  -- -- callback where you can add custom code when the Zen window opens
+  -- on_open = function(win)
+  -- end,
+  -- -- callback where you can add custom code when the Zen window closes
+  -- on_close = function()
+  -- end,
 }
-

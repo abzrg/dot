@@ -5,4 +5,4 @@ if not status_lsp_ok then
 end
 
 require("reverseila.lsp.handlers").setup()
-require("reverseila/lsp/config")
+require("reverseila.lsp.config")

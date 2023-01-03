@@ -1,17 +1,5 @@
 -- [ Helper functions ] --------------------------------------
-local nmap = require("reverseila.utils.keymap").nmap
-local vmap = require("reverseila.utils.keymap").vmap
-local xmap = require("reverseila.utils.keymap").xmap
-local imap = require("reverseila.utils.keymap").imap
-local cmap = require("reverseila.utils.keymap").cmap
-
-local nnoremap = require("reverseila.utils.keymap").nnoremap
-local vnoremap = require("reverseila.utils.keymap").vnoremap
-local xnoremap = require("reverseila.utils.keymap").xnoremap
-local inoremap = require("reverseila.utils.keymap").inoremap
-local cnoremap = require("reverseila.utils.keymap").cnoremap
-
-local cmd = vim.cmd
+local opts = { noremap = true, silent = true }
 
 
 -- [ Leader key ] -----------------------------------------
@@ -23,156 +11,158 @@ vim.g.maplocalleader = '\\'
 -- [ Bindings ] --------------------------------------------
 
 -- Temporarily remove annoying highlighted search item
-nnoremap('<BS>', '<cmd>nohl<CR>')
+vim.keymap.set("n", '<BS>', '<cmd>nohl<CR>', opts)
 
 -- Exit vim without using :
-nnoremap("<leader>q", "<cmd>q!<cr>")
-nnoremap("<leader>w", "<cmd>w<cr>")
+vim.keymap.set("n", "<leader>q", "<cmd>q!<cr>", opts)
+vim.keymap.set("n", "<leader>w", "<cmd>w<cr>", opts)
 
 -- Maintain the cursor position when yanking a visual selection
 --   source: https://youtu.be/434tljD-5C8
-vnoremap("y", "myy`y")
-vnoremap("Y", "myY`y")
+vim.keymap.set("v", "y", "myy`y", opts)
+vim.keymap.set("v", "Y", "myY`y", opts)
 
 -- Create new notes (Only if the env NOTES_DIR is set)
 local notes_dir = os.getenv("NOTES_DIR")
 if notes_dir == nil then
-    nnoremap('<leader>nn', '', {callback = function()
-        print("The env variable 'NOTES_DIR' is not set.")
-    end})
+  vim.keymap.set("n", '<leader>nn', '', { callback = function()
+    print("The env variable 'NOTES_DIR' is not set.")
+  end })
 else
-    nnoremap('<leader>nn', ":edit " .. notes_dir .. "<C-d>")
+  vim.keymap.set("n", '<leader>nn', ":edit " .. notes_dir .. "<C-d>")
 end
 
 -- Delete the current buffer
-nnoremap('<leader>k', '<cmd>bd<CR>')
+vim.keymap.set("n", '<leader>k', '<cmd>bd<CR>', opts)
 
 -- Add *** as **/* on command-line...
 --  source: Darmian Conway
-cnoremap("***", "**/*")
+vim.keymap.set("c", "***", "**/*", opts)
 
 -- Open the current directory
-nnoremap("-", "<cmd>e %:h<CR>")
+vim.keymap.set("n", "-", "<cmd>e %:h<CR>", opts)
 
 -- Expand %% to current buffer's directory in ex-mode
-cnoremap("%%", "expand('%:p:h')", {expr = true})
+vim.keymap.set("c", "%%", "expand('%:p:h', opts)", { expr = true })
 
 -- Change to directory of the current file
-nnoremap("cd", "<cmd>cd %:p:h<CR>:pwd<CR>")
+vim.keymap.set("n", "cd", "<cmd>cd %:p:h<CR>:pwd<CR>", opts)
 
 -- Edit init.lua
-nnoremap("<leader>e", "<cmd>silent! edit $MYVIMRC <bar> cd %:p:h<CR>:pwd<CR>")
+vim.keymap.set("n", "<leader>e", "<cmd>silent! edit $MYVIMRC <bar> cd %:p:h<CR>:pwd<CR>", opts)
 
 -- -- Enter command mode with leader
 -- nmap("<leader>;", ":")
 -- vmap("<leader>;", ":")
 
 -- Source current (vim config) file
-nnoremap("<leader>s", "<cmd>source %<CR>")
+vim.keymap.set("n", "<leader>s", "<cmd>source %<CR>", opts)
 
 -- Let the pinky rest a bit
-inoremap("jj", "<Esc>")
-cnoremap("jj", "<Esc>")
+vim.keymap.set("i", "jj", "<Esc>", opts)
+vim.keymap.set("c", "jj", "<Esc>", opts)
 
 -- Sometimes I want to undo without having the cursor moved to have some context
-nnoremap('<leader>u', 'u<C-o>')
+vim.keymap.set("n", '<leader>u', 'u<C-o>', opts)
 
 -- Centric jump
-nnoremap('<C-o>', '<C-o>zz')
-nnoremap('<C-i>', '<C-i>zz')
+vim.keymap.set("n", '<C-o>', '<C-o>zz', opts)
+vim.keymap.set("n", '<C-i>', '<C-i>zz', opts)
 
 -- Sane line-by-line navigation
-nnoremap('j', 'gj', {silent = true})
-nnoremap('k', 'gk', {silent = true})
+vim.keymap.set("n", 'j', 'gj', { silent = true }, opts)
+vim.keymap.set("n", 'k', 'gk', { silent = true }, opts)
 
 -- Fix the behavior of `Y`, to be similar to behavior of `C` and `D`
-nmap('Y', 'y$')
+vim.keymap.set("n", 'Y', 'y$')
 
 -- Make the behaviour of arrow key and C-n/p the same
-cnoremap('<C-n>', 'wildmenumode() ? "\\<c-n>" : "\\<down>"', {expr = true})
-cnoremap('<C-p>', 'wildmenumode() ? "\\<c-p>" : "\\<up>"', {expr = true})
+vim.keymap.set("c", '<C-n>', '<Down>', {}, opts)
+vim.keymap.set("c", '<C-p>', '<Up>', {}, opts)
 
 -- Use somewhat unused H and L key for going to the begining/end of the line
-nnoremap('H', '0')
-nnoremap('L', '$')
+vim.keymap.set("n", 'H', '0', opts)
+vim.keymap.set("n", 'L', '$', opts)
 
 -- Center-wise n and N with absolute direction
 --   source: https://superuser.com/a/1430972 + the primeagen
-nnoremap('n', "(v:searchforward ? \'nzzzv\' : \'Nzzzv\')", {expr = true})
-nnoremap('N', "(v:searchforward ? \'Nzzzv\' : \'nzzzv\')", {expr = true})
+-- vim.keymap.set("n", 'n', "(v:searchforward ? \'nzzzv\' : \'Nzzzv\', opts)", { expr = true })
+-- vim.keymap.set("n", 'N', "(v:searchforward ? \'Nzzzv\' : \'nzzzv\', opts)", { expr = true })
 
 -- Stay Where you are when joining lines
-nnoremap('J', 'mzJ`z')
+vim.keymap.set("n", 'J', 'mzJ`z', opts)
 
 -- Quick Fix List mappings + Centered
-nnoremap('<right>', '<cmd>cnext<CR>zzzv')
-nnoremap('<left>', '<cmd>cprevious<CR>zzzv')
-nnoremap('<down>', '<cmd>cnf<CR>zzzv')
-nnoremap('<up>', '<cmd>cpf<CR>zzzv')
+vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
+vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
+vim.keymap.set("n", '<right>', '<cmd>cnext<CR>zzzv', opts)
+vim.keymap.set("n", '<left>', '<cmd>cprevious<CR>zzzv', opts)
+vim.keymap.set("n", '<down>', '<cmd>cnf<CR>zzzv', opts)
+vim.keymap.set("n", '<up>', '<cmd>cpf<CR>zzzv', opts)
 
 -- Center-wise vertical navigation
-nnoremap('<C-d>', '<C-d>zz')
-nnoremap('<C-u>', '<C-u>zz')
-nnoremap('<C-f>', '<C-f>zz')
-nnoremap('<C-b>', '<C-b>zz')
+vim.keymap.set("n", '<C-d>', '<C-d>zz', opts)
+vim.keymap.set("n", '<C-u>', '<C-u>zz', opts)
+vim.keymap.set("n", '<C-f>', '<C-f>zz', opts)
+vim.keymap.set("n", '<C-b>', '<C-b>zz', opts)
 
 -- Use the far more useful visual block selection
-nnoremap("v", "<C-v>")
-nnoremap("<C-v>", "v")
-vnoremap("v", "<C-V>")
-vnoremap("<C-V>", "v")
+vim.keymap.set("n", "v", "<C-v>", opts)
+vim.keymap.set("n", "<C-v>", "v", opts)
+vim.keymap.set("v", "v", "<C-V>", opts)
+vim.keymap.set("v", "<C-V>", "v", opts)
 
 -- Make BS/DEL work as expected in visual modes (i.e. delete the selected text)...
-xmap('<BS>', 'x')
+vim.keymap.set("x", '<BS>', 'x')
 
 -- Easily surround stuff in visual mode
-vmap("*", "S*")
-vmap("_", "S_")
-vmap("'", "S'")
-vmap('"', 'S"')
-vmap("`", "S`")
-vmap("(", "S(")
-vmap("[", "S[")
+vim.keymap.set("v", "*", "S*")
+vim.keymap.set("v", "_", "S_")
+vim.keymap.set("v", "'", "S'")
+vim.keymap.set("v", '"', 'S"')
+vim.keymap.set("v", "`", "S`")
+vim.keymap.set("v", "(", "S(")
+vim.keymap.set("v", "[", "S[")
 
 -- Undo break points (Don't Undo the whole thing that is typed in insert mode)
-inoremap(',', ',<C-g>U')
-inoremap('.', '.<C-g>U')
-inoremap('!', '!<C-g>U')
-inoremap('?', '?<C-g>U')
+vim.keymap.set("i", ',', ',<C-g>U', opts)
+vim.keymap.set("i", '.', '.<C-g>U', opts)
+vim.keymap.set("i", '!', '!<C-g>U', opts)
+vim.keymap.set("i", '?', '?<C-g>U', opts)
 
 -- Moving text
-vnoremap('J', '<cmd>m \'>+1<CR>gv=gv')
-vnoremap('K', '<cmd>m \'<-2<CR>gv=gv')
-inoremap('<A-C-j>', '<esc>:m .+1<CR>==a')
-inoremap('<A-C-k>', '<esc>:m .-2<CR>==a')
-nnoremap('<A-C-k>', '<cmd>m .-2<CR>==')
-nnoremap('<A-C-j>', '<cmd>m .+1<CR>==')
+vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", opts)
+vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", opts)
+vim.keymap.set("n", "<A-C-j>", "<esc>:m .+1<CR>==i", opts)
+vim.keymap.set("n", "<A-C-j>", "<esc>:m .-2<CR>==i", opts)
+vim.keymap.set("n", '<A-C-k>', '<cmd>m .-2<CR>==', opts)
+vim.keymap.set("n", '<A-C-j>', '<cmd>m .+1<CR>==', opts)
 
 -- Replace the last change-command with dot
-nnoremap('cn', '*``cgn')
-nnoremap('cN', '*``cgN')
+vim.keymap.set("n", 'cn', '*``cgn', opts)
+vim.keymap.set("n", 'cN', '*``cgN', opts)
 
 -- Get Dictionary meaning of a word (using sdcv)
 if vim.fn.executable("sdcv") and vim.fn.executable("vimdic.sh") == 1 then
-    nmap('<leader>?', ':!vimdic.sh <C-r><C-w><CR>g')
+  vim.keymap.set('n', '<leader>?', ':!vimdic.sh <C-r><C-w><CR>g', opts)
 end
 
 -- Magical search (\v)
-nnoremap('/', '/\\v')
+-- vim.keymap.set("n", '/', '/\\v', {noremap=true})
 
 -- Throw away in to the black hole! (now, c doesn't put text into yank register)
-nnoremap('c', '"_c')
-nnoremap('C', '"_C')
+vim.keymap.set("n", 'c', '"_c', opts)
+vim.keymap.set("n", 'C', '"_C', opts)
 
 -- Stay in visual mode after indenting the selected area
-vmap('<', '<gv')
-vmap('>', '>gv')
+vim.keymap.set("v", '<', '<gv')
+vim.keymap.set("v", '>', '>gv')
 
 -- Perform dot commands over visual blocks:
-vnoremap('.', '<cmd>normal .<CR>')
+vim.keymap.set("v", '.', '<cmd>normal .<CR>', opts)
 
 -- Spell-check set to <leader>o, 'o' for 'orthography':
-nnoremap('<leader>o', '<cmd>setlocal spell! spelllang=en_us<CR>', {silent=true})
+vim.keymap.set("n", "<leader>o", "<cmd>setlocal spell! spelllang=en_us<cr>", { silent = true }, opts)
 
 --- -- Save file as sudo on files that require root permission
 --- if vim.fn.has('nvim') == 1 then
@@ -182,64 +172,25 @@ nnoremap('<leader>o', '<cmd>setlocal spell! spelllang=en_us<CR>', {silent=true})
 -- -- cmd(
 --     -- [[ cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit! ]])
 --- end
----
---- -- Search & Replace (\<\> is word boundary)
---- -- keymap('n', 'S', 'yiw:%s///g<Left><Left><Left><C-r>"<Right>',
---- --                         {noremap = true})
---- keymap('n', 'S', ':%s///g<Left><Left><Left><C-r><C-w><Right>', {noremap = true})
----
---- -- Search in visually selected area
---- keymap('v', '/', '<Esc>/\\%V', {noremap = true})
----
---- -- Get rid of accidental jump to ex mode and easily wrap text
---- keymap('', 'Q', 'gq', {})
----
+
+-- Search & Replace (\<\> is word boundary)
+vim.keymap.set("n", "S", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>")
+
+-- Make it executable
+vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
+
 --- -- Check shell scripts with shell check
 --- keymap('', ',s', ':!clear && shellcheck -x %<CR>', {})
----
---- -- Compile document, be it groff/LaTeX/markdown/etc.
---- keymap('', ',c', ':w! \\| !compiler "<c-r>%"<CR>', {})
----
---- -- Open corresponding .pdf/.html or preview
---- keymap('', ',p', ':!opout <c-r>%<CR><CR>', {})
----
---- -- Toggle numbering
---- cmd([[
----
---- function! ToggleNumber()
--- -- if &number == '1' && &relativenumber == '1'
---   -- set rnu! nu!
---   -- echo "Number and relative number disabled"
--- -- elseif &number == '1' && &relativenumber == '0'
---   -- set nu!
---   -- echo "Number disabled"
--- -- else
---   -- set nu! rnu!
---   -- echo "Number and relative number enabled"
--- -- endif
---- endfunction
---- nnoremap <F9> :call ToggleNumber()<CR>
----
---- ]])
----
---- -- Toggle syntax highlighting
---- cmd([[
----
---- map <silent> <F7> :if exists("g:syntax_on") \| syntax off <CR> else \| syntax enable \| endif <CR>
----
---- ]])
-
 
 -- Zap trailing whitespaces
 -- source: wincent
-nnoremap("<leader>zz", "", {
-  silent = true,
-  callback = function()
+vim.keymap.set("n", "<leader>zz",
+  function()
     local pos = vim.fn.getcurpos()
     local search = vim.fn.getreg("/")
     vim.cmd([[keepjumps %substitute/\s\+$//e]])
     vim.fn.setreg("/", search)
     vim.cmd("nohlsearch")
     vim.fn.setpos(".", pos)
-  end
-})
+  end,
+  opts)

@@ -8,16 +8,6 @@ end
 
 local M = {}
 
--- possible values are 'arrow' | 'rounded' | 'blank'
--- local active_sep = 'blank'
-
-
--- change them if you want to different separator
-M.separators = {
-  arrow = { '', '' },
-  rounded = { '', '' },
-  blank = { '', '' },
-}
 
 -- Highlight groups
 M.colors = {
@@ -96,18 +86,9 @@ end
 
 -- Get status of the file
 M.get_filestat = function()
-  return " %m%r%h%w%q%y"
+  return " %r%h%w%q%y%m"
 end
 
--- -- Get filetype
--- M.get_filetype = function()
---   local file_name, file_ext = fn.expand("%:t"), fn.expand("%:e")
---   local icon = require 'nvim-web-devicons'.get_icon(file_name, file_ext, { default = true })
---   local filetype = vim.bo.filetype
---
---   if filetype == '' then return '' end
---   return string.format(' %s %s ', icon, filetype):lower()
--- end
 
 -- Get line number and column Number
 M.get_line_col = function()
@@ -125,11 +106,11 @@ M.get_line_col = function()
       rhs = rhs .. (' '):rep(padding)
     end
 
-    rhs = rhs .. 'ℓ ' -- (Literal, \u2113 "SCRIPT SMALL L").
+    rhs = rhs .. 'l: ' -- (Literal, \u2113 "SCRIPT SMALL L").
     rhs = rhs .. line
     rhs = rhs .. '/'
     rhs = rhs .. height
-    rhs = rhs .. ' 𝚌 ' -- (Literal, \u1d68c "MATHEMATICAL MONOSPACE SMALL C").
+    rhs = rhs .. ' c: ' -- (Literal, \u1d68c "MATHEMATICAL MONOSPACE SMALL C").
     rhs = rhs .. column
     rhs = rhs .. '/'
     rhs = rhs .. width
@@ -211,7 +192,7 @@ M.set_active = function(self)
   return table.concat({
     left_sep,
     colors.left_powerline,
-    '',
+    '|',
     colors.active,
     " ",
     filename,
@@ -220,7 +201,7 @@ M.set_active = function(self)
     git,
     -- filetype,
     colors.right_powerline,
-    '',
+    '|',
     colors.active,
     colors.line_col,
     line_col

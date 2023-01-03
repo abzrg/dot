@@ -16,13 +16,15 @@ vim.g.tmux_navigator_preserve_zoom = 1
 
 
 -- [ Custom mapping ] -----------------------------------
-local nnoremap = require("reverseila.utils.keymap").nnoremap
 
 vim.g.tmux_navigator_no_mappings = 1
 
-nnoremap("<M-h>", ":TmuxNavigateLeft<cr>", {silent = true})
-nnoremap("<M-j>", ":TmuxNavigateDown<cr>", {silent = true})
-nnoremap("<M-k>", ":TmuxNavigateUp<cr>", {silent = true})
-nnoremap("<M-l>", ":TmuxNavigateRight<cr>", {silent = true})
-nnoremap("<C-\\>", ":TmuxNavigatePrevious<cr>", {silent = true})
+vim.keymap.set("", "<M-h>", ":TmuxNavigateLeft<cr>", {silent = true})
+vim.keymap.set("", "<M-j>", ":TmuxNavigateDown<cr>", {silent = true})
+vim.keymap.set("", "<M-k>", ":TmuxNavigateUp<cr>", {silent = true})
+vim.keymap.set("", "<M-l>", ":TmuxNavigateRight<cr>", {silent = true})
+vim.keymap.set("", "<C-\\>", ":TmuxNavigatePrevious<cr>", {silent = true})
 
+-- Intuitive buffer navigation + bufferline plugin
+vim.keymap.set({ "n", "v" }, "<C-h>", "<cmd>bp<cr>", { noremap = true })
+vim.keymap.set({ "n", "v" }, "<C-l>", "<cmd>bn<cr>", { noremap = true })
