@@ -63,9 +63,9 @@ if vim.fn.empty(wm_project_dir) == 0 then
   }
   )
 
-  vim.cmd([[
-      autocmd BufEnter,BufReadPost,BufRead,BufNewFile
-                \ */OpenFOAM/**/*.C lua vim.diagnostic.disable(0)
-  ]])
+  -- vim.cmd([[
+  --     autocmd BufEnter,BufReadPost,BufRead,BufNewFile
+  --               \ */OpenFOAM/**/*.C lua vim.diagnostic.disable(0)
+  -- ]])
 
 end

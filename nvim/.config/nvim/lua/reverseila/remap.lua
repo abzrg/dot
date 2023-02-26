@@ -86,8 +86,8 @@ vim.keymap.set("n", 'L', '$', opts)
 
 -- Center-wise n and N with absolute direction
 --   source: https://superuser.com/a/1430972 + the primeagen
--- vim.keymap.set("n", 'n', "(v:searchforward ? \'nzzzv\' : \'Nzzzv\', opts)", { expr = true })
--- vim.keymap.set("n", 'N', "(v:searchforward ? \'Nzzzv\' : \'nzzzv\', opts)", { expr = true })
+vim.keymap.set("n", 'n', "(v:searchforward ? \'nzzzv\' : \'Nzzzv\')", { expr = true })
+vim.keymap.set("n", 'N', "(v:searchforward ? \'Nzzzv\' : \'nzzzv\')", { expr = true })
 
 -- Stay Where you are when joining lines
 vim.keymap.set("n", 'J', 'mzJ`z', opts)
@@ -148,7 +148,7 @@ if vim.fn.executable("sdcv") and vim.fn.executable("vimdic.sh") == 1 then
 end
 
 -- Magical search (\v)
--- vim.keymap.set("n", '/', '/\\v', {noremap=true})
+vim.keymap.set("n", '/', '/\\v', { noremap = true })
 
 -- Throw away in to the black hole! (now, c doesn't put text into yank register)
 vim.keymap.set("n", 'c', '"_c', opts)
@@ -194,3 +194,35 @@ vim.keymap.set("n", "<leader>zz",
     vim.fn.setpos(".", pos)
   end,
   opts)
+
+vim.keymap.set("n", "gh", "<cmd>TSHighlightCapturesUnderCursor<cr>", {})
+
+-- Disable annoying space behaviour (moving one character forward with delay)
+vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
+
+
+-- toggle between treee condition
+--
+-- * nu
+-- * nu + rnu
+-- * nonu + nornu
+vim.keymap.set(
+  { 'n', 'v' },
+  '<leader>N', function()
+    if vim.wo.number == true and vim.wo.relativenumber == true then
+      vim.wo.number = false
+      vim.wo.relativenumber = false
+    elseif vim.wo.number == true and vim.wo.relativenumber == false then
+      vim.wo.relativenumber = true
+    elseif vim.wo.number == false and vim.wo.relativenumber == true then
+      vim.wo.relativenumber = false
+    else
+      vim.wo.number = true
+      vim.wo.relativenumber = false
+    end
+  end,
+  {
+    silent = true,
+    noremap = true
+  }
+)

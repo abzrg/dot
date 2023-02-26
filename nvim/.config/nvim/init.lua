@@ -4,4 +4,5 @@ require("reverseila/hook")
 require("reverseila/packer")
 require("reverseila/lsp")
 -- require("reverseila/utils/statusline")
--- vim.cmd("set bg=light")
+
+vim.opt.guicursor = ""

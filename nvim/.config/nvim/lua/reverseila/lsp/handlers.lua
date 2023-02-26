@@ -1,24 +1,24 @@
 local M = {}
 
 M.setup = function()
-  local signs = {
-    { name = "DiagnosticSignError", text = "" },
-    { name = "DiagnosticSignWarn", text = "" },
-    { name = "DiagnosticSignHint", text = "" },
-    { name = "DiagnosticSignInfo", text = "" },
-  }
+  -- local signs = {
+  --   { name = "DiagnosticSignError", text = "" },
+  --   { name = "DiagnosticSignWarn", text = "" },
+  --   { name = "DiagnosticSignHint", text = "" },
+  --   { name = "DiagnosticSignInfo", text = "" },
+  -- }
 
-  for _, sign in ipairs(signs) do
-    vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = "" })
-  end
+  -- for _, sign in ipairs(signs) do
+  --   vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = "" })
+  -- end
 
   local config = {
     -- disable virtual text
     virtual_text = false,
     -- show signs
-    signs = {
-      active = signs,
-    },
+    -- signs = {
+    --   active = signs,
+    -- },
     update_in_insert = true,
     underline = true,
     severity_sort = true,
@@ -46,22 +46,36 @@ M.setup = function()
 end
 
 local function lsp_highlight_document(client, bufnr)
-  if client.server_capabilities.documentHighlightProvider then
+  -- local cap = client.server_capabilities
+
+  -- if client.server_capabilities.document_highlight then
+  if client.server_capabilities.document_highlight then
     vim.api.nvim_create_augroup("lsp_document_highlight", { clear = true })
     vim.api.nvim_clear_autocmds { buffer = bufnr, group = "lsp_document_highlight" }
     vim.api.nvim_create_autocmd("CursorHold", {
-      callback = vim.lsp.buf.document_highlight,
+      callback = function()
+        -- thanks to: https://www.reddit.com/r/neovim/comments/uvemjr/comment/i9lrdpc/?utm_source=share&utm_medium=web2x&context=3
+        -- exclude fucking cmake from document highliting
+        if vim.bo.filetype ~= "cmake" and vim.bo.filetype ~= "json" then
+          vim.lsp.buf.document_highlight()
+        end
+      end,
       buffer = bufnr,
       group = "lsp_document_highlight",
       desc = "Document Highlight",
     })
     vim.api.nvim_create_autocmd("CursorMoved", {
-      callback = vim.lsp.buf.clear_references,
+      callback = function()
+        if vim.bo.filetype ~= "cmake" and vim.bo.filetype ~= "json" then
+          vim.lsp.buf.clear_references()
+        end
+      end,
       buffer = bufnr,
       group = "lsp_document_highlight",
       desc = "Clear All the References",
     })
   end
+
 end
 
 local function lsp_keymaps(bufnr)
@@ -112,6 +126,11 @@ end
 M.on_attach = function(client, bufnr)
   if client.name == "tsserver" then
     client.server_capabilities.document_formatting = false
+  end
+  if client.name == "cmake" then
+    client.server_capabilities.document_highlight = false
+  else
+    client.server_capabilities.document_highlight = true
   end
   lsp_keymaps(bufnr)
   lsp_highlight_document(client)

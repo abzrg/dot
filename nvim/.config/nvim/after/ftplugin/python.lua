@@ -40,14 +40,15 @@ if vim.fn.executable("black") == 1
     { buffer = true, silent = true, })
 end
 
--- Use formatter in gq command
-if vim.fn.executable("black") then
-  -- set formatprg
-  vim.bo.formatprg = "black -q -l 80 - 2>/dev/null"
-
-  -- Ensure we formatprg instead of formatexpr
-  vim.bo.formatexpr = ""
-end
+-- -- Does not work properly
+-- -- Use formatter in gq command
+-- if vim.fn.executable("black") then
+--   -- set formatprg
+--   vim.bo.formatprg = "black -q -l 80 - 2>/dev/null"
+--
+--   -- Ensure we formatprg instead of formatexpr
+--   vim.bo.formatexpr = ""
+-- end
 
 
 -- [ Pylint ] ---------------------------------------

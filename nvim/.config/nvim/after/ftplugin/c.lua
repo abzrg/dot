@@ -10,3 +10,7 @@ vim.opt_local.cindent = true
 
 -- local nnoremap = require("reverseila.utils.keymap").nnoremap
 -- nnoremap("<leader>=", ":w <bar>silent! !clang-format -style=file -i %<CR>", {silent = true, buffer = true})
+
+-- vim.opt_local.tabstop = 4
+-- vim.opt_local.shiftwidth = 4
+-- vim.opt_local.expandtab = false

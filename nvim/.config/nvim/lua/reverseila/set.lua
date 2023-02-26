@@ -1,7 +1,13 @@
+-- [ Disable netrw ] --------------------------
+
+-- vim.g.loaded_netrw = 1
+-- vim.g.loaded_netrwPlugin = 1
+
+
 -- [ Line Numbers ] --------------------------
 
-vim.opt.number         = true
-vim.opt.relativenumber = true
+vim.opt.number         = false
+vim.opt.relativenumber = false
 
 
 -- [ Indentation ] --------------------------
@@ -103,14 +109,15 @@ vim.opt.listchars = {
 
 -- [ Misc. ] --------------------------
 
+vim.opt.showcmd = true
 vim.opt.showbreak = '↪ ' -- ↳ DOWNWARDS ARROW WITH TIP RIGHTWARDS (U+21B3, UTF-8: E2 86 B3)
 vim.opt.linebreak = true
 vim.opt.cmdheight   = 1
-vim.opt.laststatus  = 0
-vim.opt.ruler       = true
-vim.opt.rulerformat = [[%30(%{FugitiveStatusline()}%=%l,%c%V   %P%)]]
+vim.opt.laststatus  = 3
+-- vim.opt.ruler       = true
+-- vim.opt.rulerformat = [[%30(%{FugitiveStatusline()}%=%l,%c%V   %P%)]]
 vim.opt.textwidth   = 80 -- automatically hard wrap at 120 columns
-vim.opt.updatetime  = 500 -- CursorHold interval
+vim.opt.updatetime  = 250 -- CursorHold interval
 
 vim.opt.wrap          = false
 vim.opt.cursorline    = true
@@ -129,8 +136,8 @@ vim.opt.fileformat  = "unix"
 vim.opt.inccommand  = "split" -- live preview of :s results
 vim.opt.mouse       = "a" -- enable mouse
 vim.opt.shell       = "zsh"
-vim.opt.shortmess   = "filnxtToOc"
-vim.opt.signcolumn  = "yes"
+vim.opt.shortmess   = "filnxtToOcI"
+vim.opt.signcolumn  = "no"
 vim.opt.virtualedit = "block" -- allow cursor to move where there is no text in visual block mode
 vim.opt.spellcapcheck = '' -- don't check for capital letters at start of sentence
 
@@ -140,7 +147,7 @@ vim.opt.isfname:remove("=") -- Avoid recognizing = as part of file name
 vim.opt.iskeyword:append("-") -- treat dash separated words as a word text object
 
 vim.opt.completeopt = {
-    "menuone", "noselect"
+    "menu","menuone", "noselect"
 }
 
 vim.opt.fileencodings = {

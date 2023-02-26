@@ -9,7 +9,7 @@ local actions = require('telescope.actions')
 -- Setup
 telescope.setup {
   extensions = {
-    file_browser = {},
+    -- file_browser = {},
   },
 
   defaults = {
@@ -20,11 +20,11 @@ telescope.setup {
     selection_caret = "> ",
     color_devicons = true,
     layout_config = {
-      prompt_position = "top",
+      prompt_position = "bottom",
       horizontal = {
         width_padding = 0.04,
         height_padding = 0.1,
-        preview_width = 0.6
+        preview_width = 0.4
       },
       vertical = {
         width_padding = 0.05,
@@ -40,7 +40,7 @@ telescope.setup {
     },
 
     -- Sort strategy
-    sorting_strategy = "ascending",
+    sorting_strategy = "descending",
 
     -- Mappings
     mappings = {

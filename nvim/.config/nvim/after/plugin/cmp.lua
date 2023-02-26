@@ -20,31 +20,31 @@ require("luasnip/loaders/from_vscode").lazy_load()
 --   פּ ﯟ   some other good icons
 -- find more here: https://www.nerdfonts.com/cheat-sheet
 local kind_icons = {
-  Text = "",
-  Method = "m",
-  Function = "",
-  Constructor = "",
-  Field = "",
-  Variable = "",
-  Class = "",
-  Interface = "",
-  Module = "",
-  Property = "",
-  Unit = "",
-  Value = "",
-  Enum = "",
-  Keyword = "",
-  Snippet = "",
-  Color = "",
-  File = "",
-  Reference = "",
-  Folder = "",
-  EnumMember = "",
-  Constant = "",
-  Struct = "",
-  Event = "",
-  Operator = "",
-  TypeParameter = "",
+  Text = "txt",
+  Method = "mthd",
+  Function = "func",
+  Constructor = "ctor",
+  Field = "field",
+  Variable = "var",
+  Class = "cls",
+  Interface = "interface",
+  Module = "mod",
+  Property = "prop",
+  Unit = "unit",
+  Value = "val",
+  Enum = "enum",
+  Keyword = "kw",
+  Snippet = "snip",
+  Color = "color",
+  File = "file",
+  Reference = "ref",
+  Folder = "folder",
+  EnumMember = "eunmMem",
+  Constant = "const",
+  Struct = "struct",
+  Event = "event",
+  Operator = "op",
+  TypeParameter = "typeParam",
 }
 
 
@@ -64,8 +64,8 @@ cmp.setup {
   },
 
   window = {
-    completion = cmp.config.window.bordered(),
-    documentation = cmp.config.window.bordered(),
+    -- completion = cmp.config.window.bordered(),
+    -- documentation = cmp.config.window.bordered(),
   },
 
   mapping = cmp.mapping.preset.insert({
@@ -129,6 +129,7 @@ cmp.setup {
   }),
 
   completion = {
+    autocomplete = false,
     completeopt = 'menu,menuone,noinsert,noselect'
   },
 

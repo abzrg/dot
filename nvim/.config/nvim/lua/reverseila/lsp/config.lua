@@ -3,7 +3,7 @@ local servers = {
   { "jsonls", "vscode-json-language-server" },
   { "pyright", "pyright-langserver" },
   { "clangd", "clangd" },
-  { "sumneko_lua", "lua-language-server" },
+  { "lua_ls", "lua-language-server" },
   { "texlab", "texlab" },
   { "gopls", "gopls" },
   { "tsserver", "typescript-language-server" },

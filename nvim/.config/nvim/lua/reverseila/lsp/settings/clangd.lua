@@ -25,7 +25,11 @@ return {
   cmd = { clangd_bin, unpack(clangd_flags) },
   filetypes = { "c", "cpp", "objc", "objcpp" },
   root_dir =
-  require("lspconfig.util").root_pattern("compile_commands.json", "compile_flags.txt", ".git")
+  require("lspconfig.util").root_pattern(
+    "compile_commands.json",
+    "build/compile_commands.json",
+    "compile_flags.txt",
+    ".git")
   or
   function()
     return vim.loop.cwd()
