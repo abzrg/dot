@@ -1,4 +1,5 @@
 local servers = {
+  -- { config_file, server_name }
   { "rust_analyzer", "rust-analyzer" }, -- It has it's own plugin
   { "jsonls", "vscode-json-language-server" },
   { "pyright", "pyright-langserver" },
@@ -11,6 +12,7 @@ local servers = {
   { "bashls", "bash-language-server" },
   { "cmake", "cmake-language-server" },
   { "vimls", "vim-language-server" },
+  { "jdtls", "jdtls" },
 }
 
 for _, server in pairs(servers) do

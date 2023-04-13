@@ -25,7 +25,7 @@ M.setup = function()
     float = {
       focusable = false,
       style = "minimal",
-      border = "rounded",
+      -- border = "rounded",
       source = "always",
       header = "",
       -- prefix = "",
@@ -75,7 +75,6 @@ local function lsp_highlight_document(client, bufnr)
       desc = "Clear All the References",
     })
   end
-
 end
 
 local function lsp_keymaps(bufnr)
@@ -101,7 +100,14 @@ local function lsp_keymaps(bufnr)
 
   -- See `:help K` for why this keymap
   nmap("K", vim.lsp.buf.hover, "Hover Documentation")
-  nmap("<C-k>", vim.lsp.buf.signature_help, "Signature Documentation")
+  vim.keymap.set('i',
+    "<C-k>",
+    vim.lsp.buf.signature_help,
+    {
+      desc = "Signature Documentation",
+      noremap = true,
+      silent = true
+    })
 
   -- vim.api.nvim_buf_set_keymap(bufnr, "n", "gl", '<cmd>lua vim.diagnostic.open_float({ border = "rounded" })<CR>', opts)
   nmap("gl", vim.diagnostic.open_float, "[Go] and [L]int")

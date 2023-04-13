@@ -205,3 +205,33 @@ autocmd("FileType", {
   end,
   group = netrw,
 })
+
+-- add relative line numbering in insert mode and remove it when you switch back to normal mode
+
+local ins_rel_ln_nr = augroup("insModeRelLineNr", { clear = true })
+autocmd("InsertEnter", {
+  pattern = {"*.c", "*.cpp", "*.py", "*.java"},
+  command = "set rnu",
+  group = ins_rel_ln_nr
+})
+autocmd("InsertLeavePre", {
+  pattern = {"*.c", "*.cpp", "*.py", "*.java"},
+  command = "set nornu",
+  group = ins_rel_ln_nr
+})
+
+
+-- enable wrap in quickfix list
+local quickfixlist_wrapped = augroup("QuickFixListWrapped", { clear = true })
+autocmd("BufEnter", {
+  pattern = "*",
+  callback = function()
+    if vim.bo.buftype == "quickfix" then
+      vim.cmd("set wrap")
+    end
+  end,
+  group = quickfixlist_wrapped,
+})
+
+
+

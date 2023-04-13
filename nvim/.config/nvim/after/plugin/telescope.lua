@@ -31,6 +31,15 @@ telescope.setup {
         height_padding = 1,
         preview_height = 0.5
       }
+
+    },
+
+    file_ignore_patterns = {
+      ".git", -- git
+      "node_modules", "__pycache__", "%.class", -- programming languages
+      "%.mp4", "%.mkv", "%.webp", "%.png", "%.pdf", "%.eps", -- media
+      "%.snm", "%.aux", "%.bbl", "%.blg", "%.fdb_latexmk", "%.dtx", -- tex
+      "%.ins", "%.lof", "%.fff", "%.ttt", "%.fls", "%.out", "%.spl", "%.lot" -- tex
     },
 
     -- Vimgrep using ripgrep
@@ -85,6 +94,8 @@ nnoremap("<leader>to", "<Cmd>Telescope oldfiles<CR>")
 -- untracked files or the files in the current working directory
 nnoremap("<leader>F", "<Cmd>Telescope find_files<CR>")
 
+nnoremap("<leader>/", "<cmd>Telescope current_buffer_fuzzy_find<cr>")
+
 
 -- [ Custom functions ] ---------------------------------------
 
@@ -102,3 +113,7 @@ nnoremap('<leader>ts', "<Cmd>lua require('reverseila.utils.telescope').find_scri
 
 -- Find dot files
 nnoremap("<leader>td", "<Cmd>lua require('reverseila.utils.telescope').find_dotfiles()<CR>")
+
+nnoremap("<leader>i", "<cmd>Telescope colorscheme<cr>")
+
+nnoremap("<leader>/", "<cmd>Telescope treesitter<cr>")

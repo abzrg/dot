@@ -1,4 +1,4 @@
--- Installation: npm install -g pyright
+-- Installation: pip install pyright
 -- Does not support code formatting
 
 local util = require("lspconfig.util")
@@ -12,6 +12,7 @@ return {
       'setup.py',
       'setup.cfg',
       'requirements.txt',
+      'requirements-dev.txt',
       'Pipfile',
       'pyrightconfig.json'
     }
@@ -26,6 +27,7 @@ return {
         diagnosticMode = "workspace",
         useLibraryCodeForTypes = true,
         reportMissingTypeStubs = "none",
+        single_file_support = true
       },
     }
   }

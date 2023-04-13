@@ -32,6 +32,9 @@ else
   vim.keymap.set("n", '<leader>nn', ":edit " .. notes_dir .. "<C-d>")
 end
 
+-- Create new english notes
+vim.keymap.set("n", '<leader>ne', ":edit ~/Git/projects/english/<C-d>")
+
 -- Delete the current buffer
 vim.keymap.set("n", '<leader>k', '<cmd>bd<CR>', opts)
 
@@ -58,9 +61,9 @@ vim.keymap.set("n", "<leader>e", "<cmd>silent! edit $MYVIMRC <bar> cd %:p:h<CR>:
 -- Source current (vim config) file
 vim.keymap.set("n", "<leader>s", "<cmd>source %<CR>", opts)
 
--- Let the pinky rest a bit
-vim.keymap.set("i", "jj", "<Esc>", opts)
-vim.keymap.set("c", "jj", "<Esc>", opts)
+-- -- Let the pinky rest a bit
+-- vim.keymap.set("i", "jj", "<Esc>", opts)
+-- vim.keymap.set("c", "jj", "<Esc>", opts)
 
 -- Sometimes I want to undo without having the cursor moved to have some context
 vim.keymap.set("n", '<leader>u', 'u<C-o>', opts)
@@ -177,7 +180,7 @@ vim.keymap.set("n", "<leader>o", "<cmd>setlocal spell! spelllang=en_us<cr>", { s
 vim.keymap.set("n", "S", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>")
 
 -- Make it executable
-vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
+vim.keymap.set("n", "<leader>X", "<cmd>!chmod +x %<CR>", { silent = true })
 
 --- -- Check shell scripts with shell check
 --- keymap('', ',s', ':!clear && shellcheck -x %<CR>', {})

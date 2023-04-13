@@ -41,7 +41,7 @@ function M.project_files()
     "__pycache__/",
     ".pytest_cache/",
     "tags",
-    "build/"
+    "build/",
   }
   -- gitopts.layout_strategy = "vertical"
 
@@ -65,7 +65,13 @@ function M.project_files()
     ".ttf",
     ".otf",
     "tags",
-    "build/"
+    "build/",
+    ".metadata/",
+
+    "node_modules", "__pycache__", "%.class", -- programming languages
+    "%.mp4", "%.mkv", "%.webp", "%.png", "%.pdf", "%.eps", -- media
+    "%.snm", "%.aux", "%.bbl", "%.blg", "%.fdb_latexmk", "%.dtx", -- tex
+    "%.ins", "%.lof", "%.fff", "%.ttt", "%.fls", "%.out", "%.spl", "%.lot" -- tex
   }
   fileopts.layout_strategy = "vertical"
 
@@ -99,6 +105,7 @@ function M.grep_notes()
 
   builtin.live_grep(opts)
 end
+
 
 -------------------------------------------------------------------------------
 
@@ -161,7 +168,6 @@ function M.find_scripts()
     layout_strategy = "horizontal",
     layout_config = { preview_width = 0.65, width = 0.75 }
   }
-
   builtin.find_files(opts)
 end
 

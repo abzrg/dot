@@ -1,7 +1,3 @@
--- Some niceties
-local nnoremap = require("reverseila.utils.keymap").nnoremap
-
-
 -- [ Formatter ] -----------------------------------------
 
 -- Check if a black is installed
@@ -54,8 +50,9 @@ end
 -- [ Pylint ] ---------------------------------------
 
 if vim.fn.executable("pylint") == 1 then
-  nnoremap("<leader>l", "", {
-    buffer = true, silent = true,
+  vim.keymap.set("n", "<leader>L", "", {
+    buffer = true,
+    silent = true,
     callback = function()
       vim.opt_local.makeprg = "pylint --output-format=parseable %"
       if vim.fn.exists(":Make") then
@@ -70,8 +67,9 @@ end
 
 -- [ Run Python ] ----------------------------------------------------------
 
-nnoremap("<F5>", "", {
-  buffer = true, silent = true,
+vim.keymap.set("n", "<F5>", "", {
+  buffer = true,
+  silent = true,
   callback = function()
     vim.cmd("compiler python")
     vim.opt_local.makeprg = "python %"
@@ -83,3 +81,38 @@ nnoremap("<F5>", "", {
 -- [ Run Pytest ] -----------------------------------------------------------
 
 vim.api.nvim_buf_create_user_command(0, "Pytest", "compiler pytest | Make", {})
+
+
+-- [ fold ] -----------------------------------------------------------------
+
+-- vim.opt_local.foldmethod = "expr"
+vim.opt_local.foldexpr = 'nvim_treesitter#foldexpr()'
+vim.opt_local.foldenable = false -- Disable folding at startup.
+
+local autocmd = vim.api.nvim_create_autocmd
+local augroup = vim.api.nvim_create_augroup
+
+vim.api.nvim_create_autocmd({ "BufEnter" }, { pattern = { "*" }, command = "normal zx", })
+-- enable wrap in quickfix list
+local fold_python = augroup("FoldPython", { clear = true })
+autocmd("BufEnter", {
+  pattern = "*.py",
+  command = "normal zx",
+  group = fold_python
+})
+
+-- https://github.com/nvim-treesitter/nvim-treesitter/issues/1564#issuecomment-931000867
+-- only fold class and functions
+vim.treesitter.set_query("python", "folds", [[
+  (function_definition (block) @fold)
+  (class_definition (block) @fold)
+]])
+
+
+vim.keymap.set("n", "<CR>", "za", { buffer=true, noremap=true, silent=true })
+
+
+---- [ Enable Numbering ] ---------------
+
+vim.opt_local.number = true
+vim.opt.signcolumn  = "yes"

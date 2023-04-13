@@ -66,7 +66,7 @@ vim.opt.wildmode = {
 
 -- patterns to ingore durng file navigation
 vim.opt.wildignore:append({
-    '*.git/*', '*.tags', 'tags', '*.o', '*.class'
+    '*.git/*', '*.tags', 'tags', '*.o', '*.class', '*.egg-info', '__pycache__'
 })
 
 
@@ -116,8 +116,11 @@ vim.opt.cmdheight   = 1
 vim.opt.laststatus  = 3
 -- vim.opt.ruler       = true
 -- vim.opt.rulerformat = [[%30(%{FugitiveStatusline()}%=%l,%c%V   %P%)]]
+vim.opt.statusline = [[%f %y %m %r%=%30(%{FugitiveStatusline()}  %l,%c   %P%)]]
 vim.opt.textwidth   = 80 -- automatically hard wrap at 120 columns
 vim.opt.updatetime  = 250 -- CursorHold interval
+
+vim.opt.pumheight = 10
 
 vim.opt.wrap          = false
 vim.opt.cursorline    = true
@@ -137,7 +140,7 @@ vim.opt.inccommand  = "split" -- live preview of :s results
 vim.opt.mouse       = "a" -- enable mouse
 vim.opt.shell       = "zsh"
 vim.opt.shortmess   = "filnxtToOcI"
-vim.opt.signcolumn  = "no"
+vim.opt.signcolumn  = "auto"
 vim.opt.virtualedit = "block" -- allow cursor to move where there is no text in visual block mode
 vim.opt.spellcapcheck = '' -- don't check for capital letters at start of sentence
 

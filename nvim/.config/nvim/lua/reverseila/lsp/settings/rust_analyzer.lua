@@ -1,3 +1,4 @@
+-- brew install rust_analyzer
 -- For more information on config
 -- https://github.com/rust-lang/rust-analyzer/tree/master/docs/user
 return {
