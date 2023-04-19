@@ -36,3 +36,14 @@
 
 ;; ffap -- find-file-at-point
 (global-set-key (kbd "M-s M-f") 'find-file-at-point)
+
+
+;; delete pair
+(global-set-key (kbd "C-x C-d") 'delete-pair)
+
+
+;; easier compile & recompile
+(global-set-key (kbd "M-g M-c") 'compile)
+(global-set-key (kbd "M-g M-r") 'recompile)
+
+

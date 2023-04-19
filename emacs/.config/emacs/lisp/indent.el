@@ -4,6 +4,9 @@
 (setq indent-line-function 'insert-tab)
 (setq-default c-basic-offset 4)
 
+;; Annoying electric indent mode in OpenFOAM codes
+
+
 ;; brace on the newline and not indented
 (setq c-default-style "bsd")
 

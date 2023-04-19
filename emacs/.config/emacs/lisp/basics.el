@@ -3,21 +3,39 @@
 (tool-bar-mode -1)
 (tooltip-mode -1)
 (menu-bar-mode -1)
+(scroll-bar-mode -1)
 
 ;; line numbers
 (setq-default display-line-numbers-type 'relative)
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 
+;; Set text width
+(setq-default fill-column 80)
+
+;; highlight current line
+;;(global-hl-line-mode +1)
+;;(add-hook 'term-mode-hook (lambda () (setq-local global-hl-line-mode nil))) ; disable in term mode
+;;(set-face-attribute 'hl-line nil :background "gainsboro")
+
 ;; theme
-(load-theme 'gruber-darker t)
-;;(set-face-attribute 'line-number-current-line nil :background nil :foreground "yellow")
-;; (set-face-attribute 'orglevel-2 nil :background nil :foreground "Cornsilk3")
-;; (set-face-attribute 'org-verbatim nil :background nil :foreground "LavenderBlush4")
+;; (add-to-list 'custom-theme-load-path "~/.config/emacs/themes/")
+;; (set-background-color "gray90")
+;; (set-foreground-color "gray10")
+;; (add-to-list 'default-frame-alist '(foreground-color . "gray10"))
+;; (add-to-list 'default-frame-alist '(background-color . "gray90"))
+(load-theme 'doom-nord t)
+;; (set-face-attribute 'region nil :background "light gray")
+
+;; (set-face-attribute 'line-number-current-line nil :background nil :foreground "black")
+;; (set-face-italic 'font-lock-comment-face nil) ; Make comments italic
+
+;; Cursor shape
+;;(setq-default cursor-type 'bar)
 
 ;; font
-(set-face-attribute 'default nil :font "saucecodepro Nerd Font" :height 220)
-(set-face-attribute 'fixed-pitch nil :font "saucecodepro Nerd Font Mono Light" :height 220)
-(setq default-frame-alist '((font . "saucecodepro Nerd Font Mono-22")))
+(set-face-attribute 'default nil :font "firacode nerd font mono" :height 200)
+(set-face-attribute 'fixed-pitch nil :font "firacode nerd font mono" :height 200)
+(setq default-frame-alist '((font . "firacode nerd font mono-20")))
 
 ;; disable backup files
 (setq make-backup-files nil)
@@ -56,14 +74,23 @@
 ;; revert buffer when the underlying file has changed
 (global-auto-revert-mode 1)
 
-;; auto close bracket
+;; Auto close bracket
 (electric-pair-mode 1)
-;; auto close bracket insertion. New in emacs 24
-(electric-pair-mode 1)
+;; No delay when deleting pairs
+(setq-default delete-pair-blink-delay 0)
+(setq electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit)
+(setq electric-pair-preserve-balance t)
 (setq electric-pair-pairs
-      '(
-        (?\" . ?\")
-        (?\{ . ?\})))
+      '((8216 . 8217)
+        (8220 . 8221)
+        (171 . 187)))
+(setq electric-pair-skip-self 'electric-pair-default-skip-self)
+(setq electric-pair-skip-whitespace nil)
+(setq electric-pair-skip-whitespace-chars '(9 10 32))
+(setq electric-quote-context-sensitive t)
+(setq electric-quote-paragraph t)
+(setq electric-quote-string nil)
+(setq electric-quote-replace-double t)
 
 ;; disable alarms
 (setq ring-bell-function 'ignore)
@@ -83,3 +110,8 @@
 ;; Don't pop-up UI dialog when prompting
 (setq use-dialog-box nil)
 
+;; Disable stupid cursor jump in latex when you do $$
+(setq blink-matching-paren nil)
+
+;; Always follow symlinks in a version-controlled path
+(setq vc-follow-symlinks t)
