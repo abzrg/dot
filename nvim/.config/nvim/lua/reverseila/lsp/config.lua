@@ -1,18 +1,22 @@
 local servers = {
-  -- { config_file, server_name }
+  --[[
+    server name,     executable name
+  --]]
   { "rust_analyzer", "rust-analyzer" }, -- It has it's own plugin
-  { "jsonls", "vscode-json-language-server" },
-  { "pyright", "pyright-langserver" },
-  { "clangd", "clangd" },
-  { "lua_ls", "lua-language-server" },
-  { "texlab", "texlab" },
-  { "gopls", "gopls" },
-  { "tsserver", "typescript-language-server" },
-  { "html", "html-languageserver" },
-  { "bashls", "bash-language-server" },
-  { "cmake", "cmake-language-server" },
-  { "vimls", "vim-language-server" },
-  { "jdtls", "jdtls" },
+  { "jsonls",        "vscode-json-language-server" },
+  { "pyright",       "pyright-langserver" },
+  { "clangd",        "clangd" },
+  { "lua_ls",        "lua-language-server" },
+  { "texlab",        "texlab" },
+  { "gopls",         "gopls" },
+  { "tsserver",      "typescript-language-server" },
+  { "html",          "vscode-html-language-server" },
+  { "cssls",         "vscode-css-language-server" },
+  { "emmet_ls",      "emmet-ls" },
+  { "bashls",        "bash-language-server" },
+  { "cmake",         "cmake-language-server" },
+  { "vimls",         "vim-language-server" },
+  { "jdtls",         "jdtls" },
 }
 
 for _, server in pairs(servers) do

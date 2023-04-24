@@ -1,14 +1,23 @@
--- Installation: npm install --global vscode-html-languageserver-bin
+-- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#html
+-- Installation: npm i -g vscode-langservers-extracted
 
 return {
-  cmd = {"html-languageserver", "--stdio"},
-  filetypes = {"html"},
+  cmd = { "vscode-html-language-server", "--stdio" },
+  filetypes = { "html" },
   init_options = {
-    configurationSection = {"html", "css", "javascript"},
-    embeddedLanguages = {css = true, javascript = true}
+    configurationSection = {
+      "html",
+      "css",
+      "javascript"
+    },
+    embeddedLanguages = {
+      css = true,
+      javascript = true
+    },
   },
   -- root_dir = function(fname)
   --   return require("lspconfig.util")(fname) or vim.loop.os_homedir()
   -- end,
   settings = {},
+  single_file_support = true,
 }

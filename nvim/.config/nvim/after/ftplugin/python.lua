@@ -103,7 +103,7 @@ autocmd("BufEnter", {
 
 -- https://github.com/nvim-treesitter/nvim-treesitter/issues/1564#issuecomment-931000867
 -- only fold class and functions
-vim.treesitter.set_query("python", "folds", [[
+vim.treesitter.query.set("python", "folds", [[
   (function_definition (block) @fold)
   (class_definition (block) @fold)
 ]])

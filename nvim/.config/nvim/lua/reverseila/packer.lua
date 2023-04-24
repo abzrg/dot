@@ -21,8 +21,11 @@ return require('packer').startup({
     use { "neovim/nvim-lspconfig", }
 
     -- Treesitter
-    use "nvim-treesitter/nvim-treesitter" -- Treesitter configurations and abstraction layer for Neovim.
-    use "RRethy/nvim-treesitter-endwise"  -- Wisely add "end" in Ruby, Vimscript, Lua, etc. Tree-sitter aware alternative to tpope's vim-endwise
+    use "nvim-treesitter/nvim-treesitter"             -- Treesitter configurations and abstraction layer for Neovim.
+    use "RRethy/nvim-treesitter-endwise"              -- Wisely add "end" in Ruby, Vimscript, Lua, etc. Tree-sitter aware alternative to tpope's vim-endwise
+    use "windwp/nvim-ts-autotag"                      -- Use treesitter to auto close and auto rename html tag
+    use "JoosepAlviste/nvim-ts-context-commentstring" -- Neovim treesitter plugin for setting the commentstring based on the cursor location in a file.
+
 
     -- Auto-Completion
     use { -- Autocompletion
@@ -84,18 +87,8 @@ return require('packer').startup({
     use "rhysd/committia.vim"            -- Split screen with details for better commit
     use "ironhouzi/starlite-nvim"        -- better * and # that don't jump immediately
     use "nacro90/numb.nvim"              -- peeks lines of the buffer in non-obtrusive way
-    use {                                -- colorize the buffer
-      "norcalli/nvim-colorizer.lua",
-      opt = true,
-      cmd = {
-        "ColorizerAttachToBuffer",
-        "ColorizerDetachFromBuffer",
-        "ColorizerReloadAllBuffers",
-        "ColorizerToggle"
-      }
-
-    }
-    use "rhysd/clever-f.vim" -- clever f instead of the dumb default
+    use { "NvChad/nvim-colorizer.lua" }  -- colorize the buffer
+    use "rhysd/clever-f.vim"             -- clever f instead of the dumb default
     use { "folke/zen-mode.nvim", opt = true, cmd = { "ZenMode" } }
     use { "folke/twilight.nvim", opt = true, cmd = { "Twilight" } }
     use 'simrat39/symbols-outline.nvim'
