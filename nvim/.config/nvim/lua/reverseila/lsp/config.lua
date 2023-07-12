@@ -14,7 +14,8 @@ local servers = {
   { "cssls",         "vscode-css-language-server" },
   { "emmet_ls",      "emmet-ls" },
   { "bashls",        "bash-language-server" },
-  { "cmake",         "cmake-language-server" },
+  -- { "cmake",         "cmake-language-server" },
+  { "neocmake",         "neocmakelsp" },
   { "vimls",         "vim-language-server" },
   { "jdtls",         "jdtls" },
 }

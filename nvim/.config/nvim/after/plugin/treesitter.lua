@@ -28,7 +28,7 @@ require('nvim-treesitter.configs').setup {
     "javascript",
     "typescript",
     "java",
-    -- "lua",
+    "lua",
   },
 
   -- Playground config
@@ -60,7 +60,7 @@ require('nvim-treesitter.configs').setup {
   autotag = {
     enable = true,
     filetypes = {
-      'html', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'svelte', 'vue', 'tsx', 'jsx',
+      'html', 'htmldjango', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'svelte', 'vue', 'tsx', 'jsx',
       'rescript',
       'xml',
       'php',

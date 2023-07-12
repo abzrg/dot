@@ -11,7 +11,7 @@ end
 
 -- Luasnipt config
 luasnip.config.set_config {
-  history = true,
+  history = false,
   updateevents = "TextChanged,TextChangedI",
 }
 require("luasnip/loaders/from_vscode").lazy_load()
@@ -19,34 +19,63 @@ require("luasnip/loaders/from_vscode").lazy_load()
 
 --   פּ ﯟ   some other good icons
 -- find more here: https://www.nerdfonts.com/cheat-sheet
-local kind_icons = {
-  Text = "txt",
-  Method = "mthd",
-  Function = "func",
-  Constructor = "ctor",
-  Field = "field",
-  Variable = "var",
-  Class = "cls",
-  Interface = "interface",
-  Module = "mod",
-  Property = "prop",
-  Unit = "unit",
-  Value = "val",
-  Enum = "enum",
-  Keyword = "kw",
-  Snippet = "snip",
-  Color = "color",
-  File = "file",
-  Reference = "ref",
-  Folder = "folder",
-  EnumMember = "eunmMem",
-  Constant = "const",
-  Struct = "struct",
-  Event = "event",
-  Operator = "op",
-  TypeParameter = "typeParam",
-}
 
+-- local kind_icons = {
+--   Text = "txt",
+--   Method = "mthd",
+--   Function = "func",
+--   Constructor = "ctor",
+--   Field = "field",
+--   Variable = "var",
+--   Class = "cls",
+--   Interface = "interface",
+--   Module = "mod",
+--   Property = "prop",
+--   Unit = "unit",
+--   Value = "val",
+--   Enum = "enum",
+--   Keyword = "kw",
+--   Snippet = "snip",
+--   Color = "color",
+--   File = "file",
+--   Reference = "ref",
+--   Folder = "folder",
+--   EnumMember = "eunmMem",
+--   Constant = "const",
+--   Struct = "struct",
+--   Event = "event",
+--   Operator = "op",
+--   TypeParameter = "typeParam",
+-- }
+--
+
+local kind_icons = {
+  Text = "",
+  Method = "m",
+  Function = "",
+  Constructor = "",
+  Field = "",
+  Variable = "",
+  Class = "",
+  Interface = "",
+  Module = "",
+  Property = "",
+  Unit = "",
+  Value = "",
+  Enum = "",
+  Keyword = "",
+  Snippet = "",
+  Color = "",
+  File = "",
+  Reference = "",
+  Folder = "",
+  EnumMember = "",
+  Constant = "",
+  Struct = "",
+  Event = "",
+  Operator = "",
+  TypeParameter = "",
+}
 
 -- Used for super tab behavior
 local has_words_before = function()
@@ -63,8 +92,8 @@ cmp.setup {
   },
 
   window = {
-    -- completion = cmp.config.window.bordered(),
-    -- documentation = cmp.config.window.bordered(),
+    completion = cmp.config.window.bordered(),
+    documentation = cmp.config.window.bordered(),
   },
 
   mapping = cmp.mapping.preset.insert({
@@ -78,7 +107,7 @@ cmp.setup {
     ['<CR>']      = cmp.mapping.confirm({ select = false }),
     ["<Tab>"]     = cmp.mapping(function(fallback)
       if cmp.visible() then
-        cmp.select_next_item()
+        cmp.confirm({ select = false })
       elseif luasnip.expand_or_jumpable() then
         luasnip.expand_or_jump()
       elseif has_words_before() then
@@ -89,7 +118,7 @@ cmp.setup {
     end, { "i", "s" }),
     ["<S-Tab>"]   = cmp.mapping(function(fallback)
       if cmp.visible() then
-        cmp.select_prev_item()
+        cmp.confirm({ select = false })
       elseif luasnip.jumpable(-1) then
         luasnip.jump(-1)
       else
@@ -98,8 +127,9 @@ cmp.setup {
     end, { "i", "s" }),
   }),
 
+
   formatting = {
-    fields = { "kind", "abbr", "menu" },
+    fields = { "abbr", "kind", "menu" },
     format = function(entry, vim_item)
       vim_item.kind = string.format("%s", kind_icons[vim_item.kind])
       vim_item.menu = ({
@@ -123,13 +153,13 @@ cmp.setup {
     { name = "pandoc_references" },
     { name = "cmp_git" },
     -- { name = 'omni', keyword_length = 0 },
-    { name = "buffer", keyword_length = 5 },
+    { name = "buffer",           keyword_length = 5 },
     { name = "path" },
   }),
 
   completion = {
     -- autocomplete = true,
-    completeopt = 'menu,menuone,noinsert,noselect'
+    completeopt = 'menu,menuone,noinsert,select'
   },
 
   confirm_opts = {

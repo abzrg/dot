@@ -25,9 +25,11 @@ vim.keymap.set("v", "Y", "myY`y", opts)
 -- Create new notes (Only if the env NOTES_DIR is set)
 local notes_dir = os.getenv("NOTES_DIR")
 if notes_dir == nil then
-  vim.keymap.set("n", '<leader>nn', '', { callback = function()
-    print("The env variable 'NOTES_DIR' is not set.")
-  end })
+  vim.keymap.set("n", '<leader>nn', '', {
+    callback = function()
+      print("The env variable 'NOTES_DIR' is not set.")
+    end
+  })
 else
   vim.keymap.set("n", '<leader>nn', ":edit " .. notes_dir .. "<C-d>")
 end
@@ -229,3 +231,7 @@ vim.keymap.set(
     noremap = true
   }
 )
+
+-- To turn one line into title caps, make every first letter of a word uppercase
+-- src: :help change.txt
+vim.keymap.set('n', 'gtt', [[<cmd>:s/\v<(.)(\w*)/\u\1\L\2/g | nohlsearch<cr>]], { noremap = true })

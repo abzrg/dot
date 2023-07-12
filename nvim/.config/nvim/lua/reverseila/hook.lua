@@ -207,18 +207,17 @@ autocmd("FileType", {
 })
 
 -- add relative line numbering in insert mode and remove it when you switch back to normal mode
-
-local ins_rel_ln_nr = augroup("insModeRelLineNr", { clear = true })
-autocmd("InsertEnter", {
-  pattern = {"*.c", "*.cpp", "*.py", "*.java"},
-  command = "set rnu",
-  group = ins_rel_ln_nr
-})
-autocmd("InsertLeavePre", {
-  pattern = {"*.c", "*.cpp", "*.py", "*.java"},
-  command = "set nornu",
-  group = ins_rel_ln_nr
-})
+-- local ins_rel_ln_nr = augroup("insModeRelLineNr", { clear = true })
+-- autocmd("InsertEnter", {
+--   pattern = { "*.c", "*.cpp", "*.py", "*.java" },
+--   command = "set rnu",
+--   group = ins_rel_ln_nr
+-- })
+-- autocmd("InsertLeavePre", {
+--   pattern = { "*.c", "*.cpp", "*.py", "*.java" },
+--   command = "set nornu",
+--   group = ins_rel_ln_nr
+-- })
 
 
 -- enable wrap in quickfix list
@@ -235,3 +234,25 @@ autocmd("BufEnter", {
 
 
 
+-- -- cmake-language-server does not read cmake-format config
+-- local cmake_format = augroup("CMakeFormatMapping", { clear = true })
+-- autocmd("FileType", {
+--   pattern = "cmake",
+--   callback = function()
+--     vim.keymap.set("n", "<leader>=", function()
+--       local formatted = vim.fn.systemlist("cmake-format -l error " .. vim.fn.expand("%"))
+--
+--       if vim.v.shell_error ~= 0 then
+--         print(table.concat(formatted, '\n'))
+--         print("cmake-format: FAILED! check your config")
+--         return
+--       end
+--       -- Get the current buffer number
+--       local currentBuffer = vim.api.nvim_get_current_buf()
+--       -- Set the lines of the buffer using the string variable
+--       vim.api.nvim_buf_set_lines(currentBuffer, 0, -1, false, formatted)
+--       print("cmake-format: DONE!")
+--     end, { noremap = true, buffer = true })
+--   end,
+--   group = cmake_format,
+-- })

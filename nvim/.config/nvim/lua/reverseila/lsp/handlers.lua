@@ -56,8 +56,9 @@ local function lsp_highlight_document(client, bufnr)
       callback = function()
         -- thanks to: https://www.reddit.com/r/neovim/comments/uvemjr/comment/i9lrdpc/?utm_source=share&utm_medium=web2x&context=3
         -- exclude fucking cmake from document highliting
-        if vim.bo.filetype ~= "cmake" and vim.bo.filetype ~= "json" then
+        if vim.bo.filetype ~= "cmake" and vim.bo.filetype ~= "json" and client.name ~= "emmet_ls" then
           vim.lsp.buf.document_highlight()
+          -- print(vim.inspect(client))
         end
       end,
       buffer = bufnr,
@@ -66,7 +67,7 @@ local function lsp_highlight_document(client, bufnr)
     })
     vim.api.nvim_create_autocmd("CursorMoved", {
       callback = function()
-        if vim.bo.filetype ~= "cmake" and vim.bo.filetype ~= "json" then
+        if vim.bo.filetype ~= "cmake" and vim.bo.filetype ~= "json" and client.name ~= "emmet_ls" then
           vim.lsp.buf.clear_references()
         end
       end,

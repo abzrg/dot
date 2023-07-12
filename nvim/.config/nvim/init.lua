@@ -5,4 +5,4 @@ require("reverseila/packer")
 require("reverseila/lsp")
 -- require("reverseila/utils/statusline")
 
-vim.opt.guicursor = ""
+-- vim.opt.guicursor = ""

@@ -123,13 +123,13 @@ vim.opt.updatetime  = 250 -- CursorHold interval
 vim.opt.pumheight = 10
 
 vim.opt.wrap          = false
-vim.opt.cursorline    = true
+vim.opt.cursorline    = false
 vim.opt.equalalways   = false
 vim.opt.joinspaces    = false -- don't autoinsert two spaces after '.', '?', '!' for join command
 vim.opt.lazyredraw    = false -- don't bother updating screen during macro playback
 vim.opt.showmatch     = false
 vim.opt.showmode      = false
-vim.opt.termguicolors = true
+vim.opt.termguicolors = false
 vim.opt.title         = true
 
 -- vim.opt.guicursor       = ""
@@ -139,7 +139,7 @@ vim.opt.fileformat  = "unix"
 vim.opt.inccommand  = "split" -- live preview of :s results
 vim.opt.mouse       = "a" -- enable mouse
 vim.opt.shell       = "zsh"
-vim.opt.shortmess   = "filnxtToOcI"
+vim.opt.shortmess   = "filnxtToOc"
 vim.opt.signcolumn  = "auto"
 vim.opt.virtualedit = "block" -- allow cursor to move where there is no text in visual block mode
 vim.opt.spellcapcheck = '' -- don't check for capital letters at start of sentence

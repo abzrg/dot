@@ -38,7 +38,6 @@ return require('packer').startup({
         "L3MON4D3/LuaSnip",             -- Snippet
         "saadparwaiz1/cmp_luasnip",
         "rafamadriz/friendly-snippets", -- Extra snippets
-        "onsails/lspkind.nvim",         -- vscode-like pictograms for neovim lsp completion items
       },
     }
 
@@ -78,9 +77,21 @@ return require('packer').startup({
     use 'Yazeed1s/minimal.nvim'
     -- use "tjdevries/colorbuddy.nvim"
     -- use "svrana/neosolarized.nvim"
+    use 'ofirgall/ofirkai.nvim'
+    use "catppuccin/nvim"
+    use "olimorris/onedarkpro.nvim"
 
     use "maxmx03/solarized.nvim"
+    use 'yeddaif/neovim-purple'
 
+    -- Neovim file explorer: edit your filesystem like a buffer
+    use {
+      'stevearc/oil.nvim',
+      -- config = function() require('oil').setup() end
+      requires = {
+        'nvim-tree/nvim-web-devicons'
+      }
+    }
 
     use "ethanholz/nvim-lastplace"
     use "christoomey/vim-tmux-navigator" -- Seamless navigation between tmux panes and vim panes

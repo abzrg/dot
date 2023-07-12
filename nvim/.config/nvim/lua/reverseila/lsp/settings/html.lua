@@ -3,7 +3,7 @@
 
 return {
   cmd = { "vscode-html-language-server", "--stdio" },
-  filetypes = { "html" },
+  filetypes = { "html", "htmldjango" },
   init_options = {
     configurationSection = {
       "html",
