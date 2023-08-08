@@ -85,3 +85,23 @@ require("catppuccin").setup({
 
 -- setup must be called before loading
 -- vim.cmd.colorscheme "catppuccin"
+
+
+-- require("gruber-darker").setup(
+-- {
+--   bold = true,
+--   invert = {
+--     signs = false,
+--     tabline = false,
+--     visual = false,
+--   },
+--   italic = {
+--     strings = false,
+--     comments = false,
+--     operators = false,
+--     folds = false,
+--   },
+--   undercurl = true,
+--   underline = true,
+-- })
+-- vim.cmd.colorscheme("gruber-darker")

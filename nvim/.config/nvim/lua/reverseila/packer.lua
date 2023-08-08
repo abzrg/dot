@@ -74,6 +74,7 @@ return require('packer').startup({
     use "windwp/nvim-autopairs" -- A super powerful autopair plugin for Neovim that supports multiple characters.
     use "numToStr/Comment.nvim" -- "gc" to comment visual regions/lines
     use "Mofiqul/vscode.nvim"   -- Theme inspired by visual studio code
+    use "blazkowolf/gruber-darker.nvim"
     use 'Yazeed1s/minimal.nvim'
     -- use "tjdevries/colorbuddy.nvim"
     -- use "svrana/neosolarized.nvim"

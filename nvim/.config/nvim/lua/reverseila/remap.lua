@@ -235,3 +235,8 @@ vim.keymap.set(
 -- To turn one line into title caps, make every first letter of a word uppercase
 -- src: :help change.txt
 vim.keymap.set('n', 'gtt', [[<cmd>:s/\v<(.)(\w*)/\u\1\L\2/g | nohlsearch<cr>]], { noremap = true })
+
+
+--
+vim.keymap.set("n", '<leader>M', "<cmd>Make<cr>", {noremap = true})
+vim.keymap.set("n", '<leader>mm', ":set makeprg=", {noremap = true})
