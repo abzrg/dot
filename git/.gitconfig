@@ -8,6 +8,7 @@
 	co = checkout
 	cb = checkout -b
 	b = branch
+    cur = branch --show-current
 
 	di = diff
 	dc = diff --cached
@@ -35,7 +36,7 @@
 	# print the contents of the staging area or index
 	index = ls-files -s
 
-	ctags = !.git/hooks/ctags
+	; ctags = !.git/hooks/ctags
 	abbrev = !sh -c 'git rev-parse --short ${1-`echo HEAD`}' -
 	count = !sh -c 'git log --oneline | wc -l'
 
@@ -72,7 +73,7 @@
 
 [user]
 	name = Ali Bozorgzadeh
-	email = aliiiib95@gmail.com
+    email = 61201050+abzrg@users.noreply.github.com
 
 
 [github]
@@ -101,7 +102,7 @@
 
 
 [http]
-    # problem with cloning large repos
+	# problem with cloning large repos
 	postBuffer = 524288000
 
 
@@ -114,7 +115,8 @@
 
 
 [init]
-	templatedir = ~/.git_template
+	; templatedir = ~/.git_template
+	defaultBranch = master
 
 ; [interactive]
 ;	singlekey = true
