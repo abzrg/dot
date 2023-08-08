@@ -6,6 +6,10 @@
 
 # -- OpenFOAM --
 
-    export FOAM_INST_DIR=/Volumes/OpenFOAM
+    # export FOAM_INST_DIR=/Volumes/OpenFOAM
     export BASH=/bin/bash
-. "/Users/ali/.local/share/cargo/env"
+
+
+# -- rust --
+
+    . "$HOME/.cargo/env"

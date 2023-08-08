@@ -37,10 +37,10 @@
     # stack
     setopt pushdignoredups
 
-    # do query the user before executing 'rm *' or 'rm path/*'
-    # $ rm -rf *
-    # zsh: sure you want to delete all the files in /home/dope/foo [yn]?
-    setopt normstarsilent
+    # # do query the user before executing 'rm *' or 'rm path/*'
+    # # $ rm -rf *
+    # # zsh: sure you want to delete all the files in /home/dope/foo [yn]?
+    # setopt normstarsilent
 
     # if querying the user before executing `rm *' or `rm path/*',
     # first wait ten seconds and ignore anything typed in that time.
@@ -91,8 +91,8 @@
     # printing the matches in columns with different widths.
     setopt list_packed
 
-    # [default] for non-zero exit status
-    #setopt PRINT_EXIT_VALUE
+    # # [default] for non-zero exit status
+    # setopt PRINT_EXIT_VALUE
 
     # print a carriage return just before printing a prompt in the line
     # editor. For example:
@@ -122,10 +122,10 @@
 
 # -- history --
 
-    # how many lines of history to keep in memory 
+    # how many lines of history to keep in memory
     HISTSIZE=20000000
 
-    # number of history entries to save to disk   
+    # number of history entries to save to disk
     SAVEHIST=10000000
 
     # history in cache directory:
@@ -233,20 +233,21 @@
     # basic auto/tab complete:
     # Rust completion
     export fpath=($HOME/.local/src/rust-zsh-completions/src $fpath)
-    autoload -U compinit
+    autoload -Uz compinit && compinit
+    zmodload zsh/complist
     zstyle ':completion:*' menu select
 
     # auto-insert first possible ambiguous completion
-    #setopt MENU_COMPLETE
+    # setopt MENU_COMPLETE
 
     # Make completion:
     # - Try exact (case-sensitive) match first.
     # - Then fall back to case-insensitive.
     # - Accept abbreviations after . or _ or - (ie. f.b -> foo.bar).
-    # - Substring complete (ie. bar -> foobar).
+    # # - Substring complete (ie. bar -> foobar).
     zstyle ':completion:*' matcher-list '' '+m:{[:lower:]}={[:upper:]}' '+m:{[:upper:]}={[:lower:]}' '+m:{_-}={-_}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 
-    # Allow completion of ..<Tab> to ../ and beyond.
+    # Allow completion of ..<Tab> to ../ and beyond. (CANCER: autocompletes the name of scripts where only path completion make sense)
     zstyle -e ':completion:*' special-dirs '[[ $PREFIX = (../)#(..) ]] && reply=(..)'
 
     # $CDPATH is overpowered (can allow us to jump to 100s of directories) so tends
@@ -266,8 +267,13 @@
     # (not just tab/shift-tab but cursor keys as well):
     zstyle ':completion:*' menu select
 
-    zmodload zsh/complist
-    compinit
+    # stop the stupidity around the completion for 'source' command
+    #
+    # zsh searches through the PATH to find completion for the 'source' command
+    # and this is really annoying when I'm working with virtualenv as I always
+    # choose 'venv' as the name of the virtualenv directory.
+    unset '_comps[source]'
+
     # do not require a leading '.' in a filename to be matched explicitly.
     _comp_options+=(globdots)
 
@@ -277,8 +283,8 @@
     # autocomplete for aliases
     setopt completealiases
 
-    # if unset, the cursor is set to the end of the word if completion is
-    # started. Otherwise it stays there and completion is done from both ends.
+    # # if unset, the cursor is set to the end of the word if completion is
+    # # started. Otherwise it stays there and completion is done from both ends.
     setopt completeinword
 
     # when listing files that are possible completions, show the
@@ -304,6 +310,13 @@
     # zle -N self-insert url-quote-magic
     # zle -N bracketed-paste bracketed-paste-magic
 
+    # Do not include this pattern when autocomplete for neovim/vim
+    zstyle ':completion:*:*:v*:*' file-patterns '^(__pycache__|*.egg-info|build|venv|*.o|.pytest_cache|.git):directories'
+    zstyle ':completion:*:*:vi:*' file-patterns '^(__pycache__|*.egg-info|build|venv|*.o|.pytest_cache|.git):directories'
+    zstyle ':completion:*:*:vim:*' file-patterns '^(__pycache__|*.egg-info|build|venv|*.o|.pytest_cache|.git):directories'
+    zstyle ':completion:*:*:nvim:*' file-patterns '^(__pycache__|*.egg-info|build|venv|*.o|.pytest_cache|.git):directories'
+
+    zstyle ':completion:*:*:python:*' file-patterns '^(__pycache__|*.egg-info|build|venv|*.o|.pytest_cache|.git):directories'
 
 # -- vi mode --
 
@@ -407,6 +420,7 @@
     bindkey '\ed' kill-word
     bindkey '^D' delete-char-or-list
 
+
     # fix backspace bug when switching modes
     bindkey "^?" backward-delete-char
 
@@ -423,11 +437,11 @@
     fzf-dotfiles-widget() {
         _file="$(find ~/.dot/ -not \( -wholename "./.git" -prune \) -type f 2>/dev/null | fzf)"
         [ -z "$_file" ] && zle reset-prompt || nvim $_file
-        echo -ne '\e[6 q'
+        # echo -ne '\e[6 q'
         zle reset-prompt
     }
     zle     -N   fzf-dotfiles-widget
-    bindkey '\C-t' fzf-dotfiles-widget
+    bindkey '\et' fzf-dotfiles-widget
 
     # make Alt-backspace less liberal version of Ctrl-w
     backward-kill-dir () {
@@ -495,27 +509,25 @@
     [ -e "$HOME/.zsh-aliases" ] && . "$HOME/.zsh-aliases"
     [ -e "$HOME/.zsh-functions" ] && . "$HOME/.zsh-functions"
 
-    # prompt and title
+
+    # # prompt and title here
     # [ -e "$HOME/.zsh-prompt" ] && . "$HOME/.zsh-prompt"
-    # export PROMPT="%1~  $ "
-    # PROMPT='$ '
-    # autoload -U colors && colors
-    # PS1="%{$fg[cyan]%}%1~ %{$reset_color%}%% "
-    # PS1="%F{cyan}%1~%f $ "
 
     # zoxide
     eval "$(zoxide init zsh)"
 
-    # # prompt Winline
-    # setopt TRANSIENT_RPROMPT
-    # fpath+="$HOME/.local/src/winline"
-    # . $HOME/.local/src/winline/winline.zsh
 
-    # docker completion for zsh
-    autoload -Uz compinit && compinit -i
-    fpath=(~/.zsh/completion $fpath)
+    # # Extra zsh completion for Docker, CMake etc.
+    # fpath=(~/.zsh/completion $fpath)
+    # autoload -Uz compinit && compinit -i
+
 
     # # load syntax highlighting; should be last.
-    # source ~/.local/src/fsh/fast-syntax-highlighting.plugin.zsh 2>/dev/null
+    # source ~/.zsh/plugins/fsh/fast-syntax-highlighting.plugin.zsh 2>/dev/null
 
-    export NOTES_DIR='~/src/repos/notes/'
+    # zsh-bd
+    source $HOME/.zsh/plugins/bd/bd.zsh
+
+
+    export EDITOR="nvim"
+    export VISUAL="nvim"

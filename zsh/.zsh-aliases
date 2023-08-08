@@ -17,31 +17,31 @@ alias \
 
 alias ls='ls -CF --color=auto'
 
-# # -- list files --
-# if ! command -v exa >/dev/null
-# then
-#     # alias exa='exa'
-#     # if [ ! $TERM = "xterm-256color" ]; then
-#         alias exa='exa --icons'
-#     # fi
-#     alias \
-#         ls='exa -bgh -sname --group-directories-first -F'                      \
-#         l='exa -bgh -sname --group-directories-first -F'                       \
-#         la='ls -a'                                                             \
-#         ll='ls -l --git'                                                       \
-#         sl='ls'
-# else
-#     if [ `uname -s` = "Darwin" ]; then
-#         alias ls='ls -hFG --color=auto'
-#     else
-#         alias ls='ls -hFG --color=auto --group-directories-first'
-#     fi
-#     alias \
-#         l='ls'                                                                 \
-#         la='ls -A'                                                             \
-#         ll='ls -l'                                                             \
-#         sl='ls'
-# fi
+# -- list files --
+if ! command -v exa >/dev/null
+then
+    # alias exa='exa'
+    # if [ ! $TERM = "xterm-256color" ]; then
+        alias exa='exa --icons'
+    # fi
+    alias \
+        ls='exa -bgh -sname --group-directories-first -F'                      \
+        l='exa -bgh -sname --group-directories-first -F'                       \
+        la='ls -a'                                                             \
+        ll='ls -l --git'                                                       \
+        sl='ls'
+else
+    if [ `uname -s` = "Darwin" ]; then
+        alias ls='ls -hFG --color=always'
+    else
+        alias ls='ls -hFG --color=auto --group-directories-first'
+    fi
+    alias \
+        l='ls'                                                                 \
+        la='ls -A'                                                             \
+        ll='ls -l'                                                             \
+        sl='ls'
+fi
 
 
 # -- long commands --
@@ -51,9 +51,9 @@ alias \
     f='find . -name'                                                           \
     h='history'                                                                \
     g='git'                                                                    \
+    gst='git st'                                                               \
     bc='bc -ql'                                                                \
     df='df -h'                                                                 \
-    v='$EDITOR'                                                                \
     nv='neovide'                                                               \
     n='newsboat'                                                               \
     ka='killall'                                                               \
@@ -67,9 +67,9 @@ alias \
     myip='curl http://myip.dnsomatic.com && echo '''                           \
     w3m='w3m -cols 80'                                                         \
     sz='source $HOME/.zshrc'                                                   \
-    ec='emacsclient -nc'                                                       \
+    ec="emacsclient -nc -F \"'(fullscreen . maximized)\""                      \
     pydoc='python -m pydoc'                                                    \
-    em="echo -ne '\e[2 q' && command emacs -nw"                                \
+    edit="echo -ne '\e[2 q' && command emacs -nw"                              \
     # emacs="echo -ne '\e[?1004h'; emacs"                                        \
 
 # -- navigate to common directories --
@@ -92,6 +92,7 @@ alias \
     cfa="$EDITOR ${HOME}/.zsh-aliases"                                         \
     cfA="$EDITOR ${XDG_CONFIG_HOME:-$HOME/.config}/alacritty/alacritty.yml"    \
     cfk="$EDITOR ${XDG_CONFIG_HOME:-$HOME/.config}/kitty/kitty.conf"           \
+    cftor="$EDITOR $HOMEBREW_PREFIX/etc/tor/torrc"                             \
 
 
 # Oops vim
@@ -149,14 +150,16 @@ alias \
 
     # use `\vim` or `command vim` to get the real vim.
     command -v nvim >/dev/null && alias                                        \
-        vim=nvim                                                               \
+        nvim=nvim                                                               \
         vimdiff="nvim -d"                                                      \
 
     # youtube-dl / yt-dlp
+      # aria2c
+        # yt="yt-dlp --add-metadata -ci \
+        # --external-downloader aria2c  \
+        # --external-downloader-args '-c -x 5 -k 2M'"                            \
     alias \
-        yt="yt-dlp --add-metadata -ci \
-        --external-downloader aria2c  \
-        --external-downloader-args '-c -x 5 -k 2M'"                            \
+        yt="yt-dlp --add-metadata -ci"
         yta="yt -x -f bestaudio/best --audio-format opus"                      \
         ytb="yt -f bestvideo+bestaudio"                                        \
         yt7="yt -f 'bestvideo[height<=?720]+bestaudio/best' "                  \
@@ -165,9 +168,31 @@ alias \
         yt7pl="yt7 -o '%(playlist_index)s-%(title)s.%(ext)s' --yes-playlist"   \
         ytbpl="ytb -o '%(playlist_index)s-%(title)s.%(ext)s' --yes-playlist"
 
+    alias ytdl="yt-dlp \
+        --no-warning \
+        --proxy socks5://127.0.0.1:9050/ \
+        --add-metadata -ci \
+        -f 'bestvideo[height<=?720]+bestaudio/best'"
+
+    alias ytdlpl="ytdl -o '%(playlist_index)s-%(title)s-%(id)s.%(ext)s' --yes-playlist"
+
+    alias yta="yt-dlp \
+        --proxy socks5://127.0.0.1:9050/ \
+        --add-metadata -ci \
+        -x -f bestaudio/best --audio-format opus"
+
+    alias ytdlsub='ytdl --skip-download --write-auto-sub --convert-subs=srt'
+    alias ytdlplsub='ytdlpl --skip-download --write-auto-sub --convert-subs=srt'
+
+    # # python
+    # alias python3=/opt/homebrew/opt/python@3.10/libexec/bin/python
+
     # openfoam
-    alias of22="source ${FOAM_INST_DIR}/OpenFOAM-v2206/etc/bashrc"
+    alias of22="source /Volumes/OpenFOAM/OpenFOAM-v2206/etc/bashrc"
+    alias of="of22"
     alias fe41="source ~/OpenFOAM/foam-extend-4.1/etc/bashrc 2>&1"
+    alias fe51="source ~/foam/foam-extend-5.1/etc/bashrc"
+    alias fo=fe51
 
     # vim and neovim config
     alias cfv="$EDITOR -c 'cd %:h' ${XDG_CONFIG_HOME:-$HOME/.config}/nvim/init.lua"
@@ -197,20 +222,51 @@ alias \
     # (I like these programs to have box shape cursor)
     alias w3m="echo -ne '\e[2 q' && w3m"
     alias lynx="echo -ne '\e[2 q' && lynx -vikeys"
-    # alias vim="echo -ne '\e[2 q' && vim"
+    alias vim="echo -ne '\e[2 q' && vim"
     alias vi="echo -ne '\e[2 q' && command vim"
     alias docker="echo -ne '\e[2 q' && command docker"
     alias lua="echo -ne '\e[2 q' && lua && echo -ne '\e[6 q'"
-    alias python="echo -ne '\e[2 q' && python"
-    alias python3="echo -ne '\e[2 q' && python"
+    # alias python="echo -ne '\e[2 q' && python"
+    # alias python3="echo -ne '\e[2 q' && python"
     alias eq="echo -ne '\e[2 q' && emacs -Q -nw -l ~/.eq"
+    alias edit="emacsclient -nc -F \"'(fullscreen . maximized)\""
     alias mksh="echo -ne '\e[2 q' && mksh"
 
     # on macos use gmake instead of make
-    [ `uname -s` = "Darwin" ] && alias make=gmake
+    # [ `uname -s` = "Darwin" ] && alias make=gmake
 
     # ubuntu18 docker
     alias u18='docker start -v $HOME/.local/share/docker-share/ubuntu18:/home/user  '
 
     # hugo server with nocache
-    alias hss='hugo server --noHTTPCache'
+    alias hss='hugo server --noHTTPCache --disableFastRender'
+
+    # use macos version of locate
+    alias locate=/usr/bin/locate
+
+    # nvim = v
+    alias v=nvim
+
+    alias gmsh="gmsh -fontsize 17"
+
+    alias py=python
+
+    # alias pip='pip --disable-pip-version-check'
+
+    # Curious problem of updatedb in macos
+    alias updatedb='PATH=/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin  sudo /usr/libexec/locate.updatedb'
+
+    alias tree='tree -CF -I "__pycache__" --gitignore'
+
+    # inverted mpv
+    alias impv='mpv --vf=sub,lavfi="negate"'
+    function ampv() {
+        command mpv --quiet --force-window=no "$@"
+    }
+
+
+    # amd64 ubuntu docker for assembly and the like
+    alias asm='docker start --interactive --attach angry_bhabha'
+
+    # curl through socks proxy
+    alias curlsocks="curl --proxy socks5://127.0.0.1:9050"

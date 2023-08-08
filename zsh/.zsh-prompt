@@ -24,7 +24,7 @@
     setopt prompt_subst
 
     # show how many subshell is spawned using the number of prompt sign
-    function _shlvl_prompt()
+    function __shlvl_prompt()
     {
         # check if you are in tmux or not
         # if you are in tmux the shlvl is incremented by one, so it must be
@@ -39,11 +39,11 @@
         fi
 
         # choose prompt sign
-        local prompt_sign='❯'
+        local prompt_sign='->'
 
         # the final suffix of the prompt will be the shown w.r.t number of subshells
         # spawn
-        local suffix=""
+        local suffix="%%"
         for i in {1.."${level}"}
         do
             suffix="$suffix$prompt_sign"
@@ -56,7 +56,7 @@
 # -- git prompt (fast) --
 
     # src: https://gist.github.com/Ragnoroct/c4c3bf37913afb9469d8fc8cffea5b2f
-    function __fastgit_ps1() {
+    function __fastgit_prompt() {
         local headfile head branch
         local dir="$PWD"
 
@@ -83,17 +83,84 @@
 
         if [ -z "$1" ]; then
             # Default format
-            printf " %s" "(%F{magenta}$branch%f)%f"
+            # printf " %s" "%F{blue}git:(%F{magenta}$branch%f%F{blue})%f"
+            # printf " %s" "%F{blue}git:(%F{red}$branch%f%F{blue})%f"
+            printf " %s" "($branch)"
         else
             # Use passed format string
             printf "$1" "$branch"
         fi
     }
 
+    # src: https://github.com/ohmyzsh/ohmyzsh/issues/5068
+    function __path_prompt() {
+        if [ "$PWD" == "$HOME" ]; then 
+            printf "~"
+        else
+            printf ${${:-${(j:/:)${(M)${(s:/:)${(D)PWD:h}}#(|.)[^.]}}/${PWD:t}}//~/\~}
+        fi
+    }
+
+    function __foam_env_prompt() {
+        if test -z $WM_PROJECT_DIR; then
+            printf ""
+        else
+            printf " %s(of-$WM_PROJECT_VERSION)%s" '%F{red}' '%f'
+
+        fi
+    }
+
 # -- zsh prompt --
 
-    # PROMPT="%(?.%F{green}.%F{red})▸%f"      # pre-prompt symbol (for use in tmux)
-    PROMPT="%F{blue}%1~%f"                  # path
-    PROMPT="$PROMPT\$(__fastgit_ps1)%f "    # git prompt
-    PROMPT="$PROMPT\$(_shlvl_prompt)%f "    # shell level
+    # # Luke Smith's prompt
+    # autoload -U colors && colors
+    # export PROMPT="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%m %{$fg[magenta]%}%1~%{$fg[red]%}]%{$reset_color%}\$(__fastgit_prompt)$%b "
+
+
+    # PROMPT="%(?.%F{green}.%F{red})❯%f %F{blue}%1~%f"       #prompt indicator
+    # # PROMPT="> %1~"                                       # path
+    # PROMPT="$PROMPT\$(__fastgit_ps1) %% "                 # git prompt
+    # export PROMPT
+
+    # PROMPT='%F{green}%n@%m%f:%f%B%F{blue}$(__path_prompt)%f%b'
+    # PROMPT="$PROMPT"'$(__fastgit_prompt)'
+    # PROMPT="$PROMPT"'$(__foam_env_prompt)'
+    # PROMPT="$PROMPT"$'\n'
+    # export PROMPT="$PROMPT%(?..%F{#f44747})$%f " # %#
+
+
+    # # src: https://github.com/ohmyzsh/ohmyzsh/issues/5068
+    # zle-line-pre-redraw() {
+    #     (( BUFFERLINES == 1 + ${#BUFFER//[^$'\n']} )) || PREDISPLAY=$'\n↪  '
+    # }
+    # zle -N zle-line-pre-redraw
+    # # 🠖🡢🡲🢂 ➞  ➝   ➜   ➔     →
+    # PROMPT="%(?.%F{green}.%F{red})→%f"       #prompt indicator
+    # PROMPT="$PROMPT %F{cyan}%1~%f"
+    # PROMPT="$PROMPT"'$(__fastgit_prompt)'
+    # export PROMPT="$PROMPT  %% "
+
+
+
+    # src: https://github.com/ohmyzsh/ohmyzsh/issues/5068
+    zle-line-pre-redraw() {
+        (( BUFFERLINES == 1 + ${#BUFFER//[^$'\n']} )) || PREDISPLAY=$'\n↪ '
+    }
+    zle -N zle-line-pre-redraw
+
+    # PROMPT='%F{green}%n@%m%f:%B%F{blue}$(__path_prompt)%f%b'
+    PROMPT='%(?.%F{green}.%F{red})❯%f '
+    # PROMPT="%F{green}%n@%m%f:%B%F{blue}%1~%f%b"
+    PROMPT="$PROMPT"'$(__fastgit_prompt)'
+    PROMPT="$PROMPT %B%F{blue}%1~%f%b "
     export PROMPT
+
+
+    # # -- WINLINE --------------------------------
+    # # prompt Winline
+    # setopt TRANSIENT_RPROMPT
+    # fpath+="$HOME/.local/src/winline"
+    # . $HOME/.local/src/winline/winline.zsh
+
+
+
