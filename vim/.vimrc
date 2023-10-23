@@ -23,7 +23,9 @@ let mapleader = " "
 " hi CursorlineNr gui=None cterm=None
 " hi LineNr guifg=#52494e
 
-colo simple
+set bg=dark
+" colo retrobox
+set mouse=a
 
 " -- options
 "syntax on
@@ -43,7 +45,7 @@ set autoread
 set noswapfile
 set nobackup
 set mouse=a
-set cursorline
+set nocursorline
 set nowrap
 set virtualedit=block
 set spellcapcheck=""
@@ -66,7 +68,7 @@ set incsearch
 set ignorecase
 set smartcase
 set hlsearch
-set laststatus=0
+set laststatus=2
 
 set tw=80
 
