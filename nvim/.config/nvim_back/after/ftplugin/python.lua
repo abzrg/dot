@@ -1,14 +1,13 @@
 -- [ Formatter ] -----------------------------------------
 
 -- Check if a black is installed
-if vim.fn.executable("black") == 1 and vim.fn.executable("isort") then
-
+if vim.fn.executable("black") == 1
+    and vim.fn.executable("isort") then
   vim.keymap.set("n", "<leader>=",
     function()
       -- First write the file
       vim.cmd("write")
 
-      print("hello?")
       -- Set the formatter and formatter command
       local formatter = "black"
       local format_cmd = formatter .. " " .. vim.fn.expand("%")
@@ -25,8 +24,6 @@ if vim.fn.executable("black") == 1 and vim.fn.executable("isort") then
 
       -- Re-read buffer after changes
       vim.cmd("silent! edit!")
-
-      print("hello??")
 
       -- Inform user how it did went
       if format_status == 1 then
@@ -119,4 +116,4 @@ vim.api.nvim_buf_create_user_command(0, "Pytest", "compiler pytest | Make", {})
 ---- [ Enable Numbering ] ---------------
 
 vim.opt_local.number = true
-vim.opt.signcolumn   = "yes"
+vim.opt.signcolumn  = "yes"
