@@ -23,7 +23,7 @@
 ;; (set-foreground-color "gray10")
 ;; (add-to-list 'default-frame-alist '(foreground-color . "gray10"))
 ;; (add-to-list 'default-frame-alist '(background-color . "gray90"))
-(load-theme 'doom-nord t)
+(load-theme 'naysayer t)
 ;; (set-face-attribute 'region nil :background "light gray")
 
 ;; (set-face-attribute 'line-number-current-line nil :background nil :foreground "black")
@@ -33,9 +33,9 @@
 ;;(setq-default cursor-type 'bar)
 
 ;; font
-(set-face-attribute 'default nil :font "firacode nerd font mono" :height 200)
-(set-face-attribute 'fixed-pitch nil :font "firacode nerd font mono" :height 200)
-(setq default-frame-alist '((font . "firacode nerd font mono-20")))
+(set-face-attribute 'default nil :font "sfmono nerd font" :height 180)
+(set-face-attribute 'fixed-pitch nil :font "sfmono nerd font" :height 180)
+(setq default-frame-alist '((font . "sfmono nerd font-18")))
 
 ;; disable backup files
 (setq make-backup-files nil)

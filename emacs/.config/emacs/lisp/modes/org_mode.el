@@ -21,6 +21,9 @@
 (setq org-confirm-babel-evaluate nil)
 
 
+(org-indent-mode 1)
+
+
 ;; Structure Template
 ;; This is needed as of Org 9.2
 (require 'org-tempo)
