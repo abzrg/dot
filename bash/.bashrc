@@ -28,7 +28,7 @@ shopt -s checkwinsize # checks term size when bash regains control
 shopt -s autocd # change to named directory
 shopt -s cdspell # autocorrects cd misspellings
 shopt -s cmdhist # save multi-line commands in history as single line
-shopt -s direxpand # If set, Bash replaces directory names with the results of word expansion when performing filename completion.
+# shopt -s direxpand # If set, Bash replaces directory names with the results of word expansion when performing filename completion.
 shopt -s dotglob # Wildcards match dotfiles ("*.sh" => "foo.sh")
 shopt -s histappend # append to the history file, do not overwrite history
 shopt -s expand_aliases # expand aliases. use C-A-e for expantion
@@ -67,9 +67,26 @@ esac
 # Git prompt for bash
 source $HOME/.git-prompt.sh
 
+function __prompt_path() {
+
+    # If we're in HOME then just return ~
+    if [ "$PWD" = "$HOME" ]; then
+        printf "~"
+        return
+    fi
+
+    local __cur_dir_name="${PWD##*/}"
+    local __cur_dir_parents="$(echo ${PWD%/*} | sed 's#$HOME#~#' )"
+
+    local __path_repr=$(printf "$__cur_dir_parents" | sed -e "s;\(/\.\?.\)[^/]*;\1;g" -e "s;/h/s;~;" -e "s;\./;;")
+    printf "%s/%s" "$__path_repr" "$__cur_dir_name"
+    # printf "%s" "$(printf \"$__cur_dir_parents\" | sed -e 's|\(/\.\?.\)[^/]*|\1|g' -e 's;/h/s;~;' -e 's;\./;;\')"
+
+}
+
 # A prompt inspired by Luke Smith's prompt
-#PS1='$(history -a)\[\e[1;31m\][\[\e[1;34m\]\w\[\e[1;36m\]$(__git_ps1)\[\e[1;31m\]]\[\e[0m\]$ '
-PS1='$(history -a)\W $(__git_ps1)$ '
+PS1='$(history -a)\[\e[0;32m\]\u@\h\[\e[0m\]:\[\e[1;34m\]$(__prompt_path)\[\e[0;38;5;229m\]$(__git_ps1)\[\e[0m\]\n$ '
+# PS1='$(history -a)\W $(__git_ps1)$ '
 
 # A very simple prompt
 # PS1='$(history -a)\w $ '
@@ -111,7 +128,8 @@ fi
 
 alias v=nvim
 alias of2112='. ~/OpenFOAM/OpenFOAM-v2112/etc/bashrc'
-alias sbrc='. ~/.bashrc'
+alias sz='. ~/.bashrc'
+alias cfb='$EDITOR ~/.bashrc'
 
 # enable color support of ls and also add handy aliases
 alias ls='ls --color=auto'
@@ -126,3 +144,23 @@ alias l='ls -CF'
 
 echo -ne '\e[2 q'
 
+# bash completion
+[[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] && . "/opt/homebrew/etc/profile.d/bash_completion.sh" 2>/dev/null
+
+
+
+alias \
+    cfz="$EDITOR $HOME/.zshrc"                                                 \
+    cfzp="$EDITOR $HOME/.zprofile"                                             \
+    cft="$EDITOR $HOME/.tmux.conf"                                             \
+    cfa="$EDITOR ${HOME}/.zsh-aliases"                                         \
+    cfA="$EDITOR ${XDG_CONFIG_HOME:-$HOME/.config}/alacritty/alacritty.yml"    \
+    cfk="$EDITOR ${XDG_CONFIG_HOME:-$HOME/.config}/kitty/kitty.conf"           \
+
+
+alias mkd='mkdir -p'
+
+# zoxide
+eval "$(zoxide init bash)"
+alias z='zoxide'
+. "$HOME/.cargo/env"

@@ -40,6 +40,8 @@ $if mode=vi
     "\C-b": backward-char
     "\C-f": forward-char
     "\C-k": kill-line
+    "\C-d": delete-char
+    "\ef": forward-word
 $endif
 
 # Terminate cycling completion by Esc
