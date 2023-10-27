@@ -18,11 +18,11 @@ alias \
 alias ls='ls -CF --color=auto'
 
 # -- list files --
-if ! command -v exa >/dev/null
+if command -v exa >/dev/null
 then
     # alias exa='exa'
     # if [ ! $TERM = "xterm-256color" ]; then
-        alias exa='exa --icons'
+        alias exa='exa'
     # fi
     alias \
         ls='exa -bgh -sname --group-directories-first -F'                      \
@@ -32,7 +32,7 @@ then
         sl='ls'
 else
     if [ `uname -s` = "Darwin" ]; then
-        alias ls='ls -hFG --color=always'
+        alias ls='ls -hFG --color=never'
     else
         alias ls='ls -hFG --color=auto --group-directories-first'
     fi
@@ -90,6 +90,7 @@ alias \
     cfzp="$EDITOR $HOME/.zprofile"                                             \
     cft="$EDITOR $HOME/.tmux.conf"                                             \
     cfa="$EDITOR ${HOME}/.zsh-aliases"                                         \
+    cff="$EDITOR ${HOME}/.zsh-functions"                                       \
     cfA="$EDITOR ${XDG_CONFIG_HOME:-$HOME/.config}/alacritty/alacritty.yml"    \
     cfk="$EDITOR ${XDG_CONFIG_HOME:-$HOME/.config}/kitty/kitty.conf"           \
     cftor="$EDITOR $HOMEBREW_PREFIX/etc/tor/torrc"                             \
@@ -270,3 +271,4 @@ alias \
 
     # curl through socks proxy
     alias curlsocks="curl --proxy socks5://127.0.0.1:9050"
+

@@ -201,8 +201,8 @@
 # -- find pdf files
 
     function fpdf() {
-        pdf="$(find $HOME/Documents -type f -iname '*.pdf'  2>/dev/null | fzf-tmux --keep-right)"
-        test -n "${pdf}" && open "${pdf}"
+        pdf="$(find $HOME/Documents $HOME/Desktop/books -type f -iname '*.pdf'  2>/dev/null | fzf-tmux --keep-right)"
+        test -n "${pdf}" && ( mupdf-gl 1>/dev/null 2>&1 "${pdf}" & )
     }
 
 

@@ -511,7 +511,7 @@
 
 
     # # prompt and title here
-    # [ -e "$HOME/.zsh-prompt" ] && . "$HOME/.zsh-prompt"
+    [ -e "$HOME/.zsh-prompt" ] && . "$HOME/.zsh-prompt"
 
     # zoxide
     eval "$(zoxide init zsh)"

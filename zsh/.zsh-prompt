@@ -88,7 +88,7 @@
             printf " %s" "($branch)"
         else
             # Use passed format string
-            printf "$1" "$branch"
+            printf " $1" "$branch"
         fi
     }
 
@@ -122,11 +122,12 @@
     # PROMPT="$PROMPT\$(__fastgit_ps1) %% "                 # git prompt
     # export PROMPT
 
-    # PROMPT='%F{green}%n@%m%f:%f%B%F{blue}$(__path_prompt)%f%b'
-    # PROMPT="$PROMPT"'$(__fastgit_prompt)'
-    # PROMPT="$PROMPT"'$(__foam_env_prompt)'
+    # PROMPT='%F{green}%n@%m%f%F{blue}:%f%F{green}$(__path_prompt)%f'
+    # # PROMPT="$PROMPT"'%F{magenta} $(__fastgit_prompt)%f'
+    # # PROMPT="$PROMPT"'$(__foam_env_prompt)'
     # PROMPT="$PROMPT"$'\n'
-    # export PROMPT="$PROMPT%(?..%F{#f44747})$%f " # %#
+    # export PROMPT="$PROMPT-> " # %#
+    # # export PROMPT="$PROMPT%(?..%F{#f44747})$%f " # %#
 
 
     # # src: https://github.com/ohmyzsh/ohmyzsh/issues/5068
@@ -142,18 +143,23 @@
 
 
 
-    # src: https://github.com/ohmyzsh/ohmyzsh/issues/5068
-    zle-line-pre-redraw() {
-        (( BUFFERLINES == 1 + ${#BUFFER//[^$'\n']} )) || PREDISPLAY=$'\n↪ '
-    }
-    zle -N zle-line-pre-redraw
+    # # src: https://github.com/ohmyzsh/ohmyzsh/issues/5068
+    # zle-line-pre-redraw() {
+    #     (( BUFFERLINES == 1 + ${#BUFFER//[^$'\n']} )) || PREDISPLAY=$'\n↪ '
+    # }
+    # zle -N zle-line-pre-redraw
 
     # PROMPT='%F{green}%n@%m%f:%B%F{blue}$(__path_prompt)%f%b'
-    PROMPT='%(?.%F{green}.%F{red})❯%f '
-    # PROMPT="%F{green}%n@%m%f:%B%F{blue}%1~%f%b"
-    PROMPT="$PROMPT"'$(__fastgit_prompt)'
-    PROMPT="$PROMPT %B%F{blue}%1~%f%b "
+    # PROMPT='%(?.%F{green}.%F{red})❯%f '
+    PROMPT="%F{green}%n@%m%f:%B%F{blue}%1~%f%b"
+    PROMPT="$PROMPT"'%F{magenta}$(__fastgit_prompt)%f %% '
+    # PROMPT="$PROMPT %B%F{blue}%1~%f%b "
     export PROMPT
+
+    # PROMPT='$(__fastgit_prompt)'
+    # PROMPT="$PROMPT %n@%m %1~"
+    # PROMPT="$PROMPT %% "
+    # export PROMPT
 
 
     # # -- WINLINE --------------------------------

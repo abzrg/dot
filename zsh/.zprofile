@@ -7,7 +7,7 @@
     export BROWSER="brave"
     export READER="zathura"
     export PAGER="less"
-    export TERM="xterm-256color"
+    # export TERM="xterm-256color"
 
 # -- ~/ Clean up --
 
