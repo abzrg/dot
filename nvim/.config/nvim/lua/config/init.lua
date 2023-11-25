@@ -2,8 +2,6 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
--- Colorscheme
--- vim.cmd.colorscheme 'vscode'
 
 -- Disable rtp plugins
 

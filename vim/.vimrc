@@ -79,7 +79,7 @@ set shiftwidth=4
 set expandtab
 set smarttab
 
-set list
+" set list
 set listchars=tab:▸\ ,trail:•,nbsp:+
 
 set tags=tags;$HOME

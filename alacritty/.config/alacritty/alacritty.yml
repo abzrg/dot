@@ -21,7 +21,7 @@ env:
   # each instance of Alacritty. If it is not present, alacritty will
   # check the local terminfo database and use `alacritty` if it is
   # available, otherwise `xterm-256color` is used.
-  TERM: alacritty
+  TERM: tmux-256color
 
 window:
   # Window dimensions (changes require restart)
@@ -123,103 +123,51 @@ window:
 #   bold_italic:
 #     family: lucida sans typewriter for powerline
 #     style: Bold Italic
-#   size: 20
-#   glyph_offset:
-#     x: 0
-#     y: 5
-#   offset:
-#    x: 0
-#    y: 8
-
-# # Font configuration
-# font:
-#   normal:
-#     family: literationmono nerd font mono
-#     # style: Medium
-#   bold:
-#     family: literationmono nerd font mono
-#     style: Bold
-#   italic:
-#     family: literationmono nerd font mono
-#     style: Italic
-#   bold_italic:
-#     family: literationmono nerd font mono
-#     style: Bold Italic
-#   size: 18
+#   size: 19
 #   # glyph_offset:
 #   #   x: 0
-#   #   y: 3
-
-# # Font configuration
-# font:
-#   normal:
-#     family: meslolgs nerd font mono
-#     style: Regular
-#   bold:
-#     family: meslolgs nerd font mono
-#     style: Bold
-#   italic:
-#     family: meslolgs nerd font mono
-#     style: Italic
-#   bold_italic:
-#     family: meslolgs nerd font mono
-#     style: Bold Italic
-#   size: 18
-#   # glyph_offset:
-#   #   x: 0
-#   #   y: 3
-
-# # Font configuration
-# font:
-#   normal:
-#     family: hack nerd font mono
-#     style: Regular
-#   bold:
-#     family: hack Nerd Font Mono
-#     style: Bold
-#   italic:
-#     family: hack nerd font Mono
-#     style: Italic
-#   bold_italic:
-#     family: hack nerd font Mono
-#     style: Bold Italic
-#   size: 18
-#   # glyph_offset:
-#   #   x: 0
-#   #   y: -2 
+#   #   y: 5
+#   # offset:
+#   #  x: 0
+#   #  y: 8
 
 # Font configuration
 font:
   normal:
-    family: menlo
+    family: firacode nerd font mono
     style: Regular
   bold:
-    family: menlo
+    family: firacode nerd font mono
     style: Bold
   italic:
-    family: menlo
+    family: firacode nerd font mono
     style: Italic
   bold_italic:
-    family: menlo
+    family: firacode nerd font mono
     style: Bold Italic
-  size: 22
-
+  size: 20
+  # glyph_offset:
+  #   x: 0
+  #   y: -20
+  # offset:
+  #  x: 0
+  #  y: -50
 
 # # Font configuration
 # font:
 #   normal:
-#     family: SF Mono
+#     family: meslolgs nerd font mono
 #     style: Regular
 #   bold:
-#     family: sf mono
+#     family: meslolgs nerd font mono
 #     style: Bold
 #   italic:
-#     family: sf mono
+#     family: meslolgs nerd font mono
 #     style: Italic
 #   bold_italic:
-#     family: sf mono
+#     family: meslolgs nerd font mono
 #     style: Bold Italic
-#   size: 19
+#   size: 18
 #   # glyph_offset:
 #   #   x: 0
 #   #   y: 3
@@ -227,8 +175,63 @@ font:
 # # Font configuration
 # font:
 #   normal:
+#     family: inconsolatalgc nerd font mono
+#     # style: Regular
+#   bold:
+#     family: inconsolatalgc Nerd Font Mono
+#     style: Bold
+#   italic:
+#     family: inconsolatalgc nerd font Mono
+#     style: Italic
+#   bold_italic:
+#     family: inconsolatalgc nerd font Mono
+#     style: Bold Italic
+#   size: 18
+#   glyph_offset:
+#     x: 0
+#     y: 2
+
+# # Font configuration
+# font:
+#   normal:
+#     family: Perfect DOS VGA 437
+#     style: Regular
+#   bold:
+#     family: Perfect DOS VGA 437
+#     style: Bold
+#   italic:
+#     family: Perfect DOS VGA 437
+#     style: Italic
+#   bold_italic:
+#     family: Perfect DOS VGA 437
+#     style: Bold Italic
+#   size: 22
+
+
+# # Font configuration
+# font:
+#   normal:
+#     family: firacode nerd font mono
+#     style: Regular
+#   bold:
+#     family: firacode nerd font mono
+#     style: Regular
+#   italic:
+#     family: firacode nerd font mono
+#     style: Regular
+#   bold_italic:
+#     family: firacode nerd font mono
+#     style: Bold Italic
+#   size: 19
+#   glyph_offset:
+#     x: 0
+#     y: -3
+
+# # Font configuration
+# font:
+#   normal:
 #     family: consolas nf
-#     # style: Medium
+#     # style: Regular
 #   bold:
 #     family: consolas nf
 #     style: Bold
@@ -239,9 +242,12 @@ font:
 #     family: consolas nf
 #     style: Bold Italic
 #   size: 18
+#   # offset:
+#   #  x: 0
+#   #  y: -4
 #   # glyph_offset:
 #   #   x: 0
-#   #   y: 3
+#   #   y: -2
 
   # # # Offset is the extra space around each character. `offset.y` can be thought
   # # # of as modifying the line spacing, and `offset.x` as modifying the letter
@@ -343,42 +349,43 @@ draw_bold_text_with_bright_colors: false
 #     text: "#000000"
 #     cursor: "#dddddd"
 
-# Colors (Gruber Darker)
-colors:
-  # Default colors
-  primary:
-    background: '0x181818'
-    foreground: '0xe4e4ef'
-  # Colors the cursor will use if `custom_cursor_colors` is true
-  # cursor:
-  #   text: '0x000000'
-  #   cursor: '0xf5f5f5'
-  # Normal colors
-  normal:
-    black:   '0x282828'
-    red:     '0xf43841'
-    green:   '0x73c936'
-    yellow:  '0xffdd33'
-    blue:    '0x96a6c8'
-    magenta: '0x9e95c7'
-    cyan:    '0x1fad83'
-    white:   '0xf5f5f5'
-  # Bright colors
-  bright:
-    black:   '0x484848'
-    red:     '0xff4f58'
-    green:   '0x73c936'
-    yellow:  '0xffdd33'
-    blue:    '0x5f627f'
-    magenta: '0x9e95c7'
-    cyan:    '0x1fad83'
-    white:   '0xffffff'
+# # Colors (Gruber Darker)
+# colors:
+#   # Default colors
+#   primary:
+#     background: '0x181818'
+#     foreground: '0xe4e4ef'
+#   # Colors the cursor will use if `custom_cursor_colors` is true
+#   cursor:
+#     text: '0x000000'
+#     cursor: '0xf5f5f5'
+#   # Normal colors
+#   normal:
+#     black:   '0x282828'
+#     red:     '0xf43841'
+#     green:   '0x58a65c'
+#     # green:   '0x73c936'
+#     yellow:  '0xffdd33'
+#     blue:    '0x96a6c8'
+#     magenta: '0x9e95c7'
+#     cyan:    '0x1fad83'
+#     white:   '0xf5f5f5'
+#   # Bright colors
+#   bright:
+#     black:   '0x484848'
+#     red:     '0xff4f58'
+#     green:   '0x58a65c'
+#     yellow:  '0xffdd33'
+#     blue:    '0x5f627f'
+#     magenta: '0x9e95c7'
+#     cyan:    '0x1fad83'
+#     white:   '0xffffff'
 
 # # Kitty
 # colors:
 #   # Default colors
 #   primary:
-#     foreground: '#ffffff'
+#     foreground: '#00ff00'
 #     background: '#000000'
 #   # Normal colors
 #   normal:
@@ -483,8 +490,8 @@ schemes:
       white: '#eee8d5'
       yellow: '#b58900'
     primary:
-      background: '#002b36'
-      foreground: '#839496'
+      background: '#001419'
+      foreground: '#9eabac'
     selection:
       background: '#073642'
       text: '#93a1a1'
@@ -804,8 +811,135 @@ schemes:
 
 
 
-# #HERE
-# colors: *Kitty
+# HERE
+# colors: *solarized_dark
+
+
+# # TokyoNight Alacritty Colors
+# colors:
+#   # Default colors
+#   primary:
+#     background: '0x1a1b26'
+#     foreground: '0xc0caf5'
+#   # Normal colors
+#   normal:
+#     black:   '0x15161e'
+#     red:     '0xf7768e'
+#     green:   '0x9ece6a'
+#     yellow:  '0xe0af68'
+#     blue:    '0x7aa2f7'
+#     magenta: '0xbb9af7'
+#     cyan:    '0x7dcfff'
+#     white:   '0xa9b1d6'
+#   # Bright colors
+#   bright:
+#     black:   '0x414868'
+#     red:     '0xf7768e'
+#     green:   '0x9ece6a'
+#     yellow:  '0xe0af68'
+#     blue:    '0x7aa2f7'
+#     magenta: '0xbb9af7'
+#     cyan:    '0x7dcfff'
+#     white:   '0xc0caf5'
+#   indexed_colors:
+#     - { index: 16, color: '0xff9e64' }
+#     - { index: 17, color: '0xdb4b4b' }
+
+# # TokyoNight Alacritty Colors
+# colors:
+#   # Default colors
+#   primary:
+#     background: '0x222436'
+#     foreground: '0xc8d3f5'
+#   # Normal colors
+#   normal:
+#     black:   '0x1b1d2b'
+#     red:     '0xff757f'
+#     green:   '0xc3e88d'
+#     yellow:  '0xffc777'
+#     blue:    '0x82aaff'
+#     magenta: '0xc099ff'
+#     cyan:    '0x86e1fc'
+#     white:   '0x828bb8'
+#   # Bright colors
+#   bright:
+#     black:   '0x444a73'
+#     red:     '0xff757f'
+#     green:   '0xc3e88d'
+#     yellow:  '0xffc777'
+#     blue:    '0x82aaff'
+#     magenta: '0xc099ff'
+#     cyan:    '0x86e1fc'
+#     white:   '0xc8d3f5'
+#   indexed_colors:
+#     - { index: 16, color: '0xff966c' }
+#     - { index: 17, color: '0xc53b53' }
+
+# # TokyoNight Alacritty Colors
+# colors:
+#   # Default colors
+#   primary:
+#     background: '0x24283b'
+#     foreground: '0xc0caf5'
+#   # Normal colors
+#   normal:
+#     black:   '0x1d202f'
+#     red:     '0xf7768e'
+#     green:   '0x9ece6a'
+#     yellow:  '0xe0af68'
+#     blue:    '0x7aa2f7'
+#     magenta: '0xbb9af7'
+#     cyan:    '0x7dcfff'
+#     white:   '0xa9b1d6'
+#   # Bright colors
+#   bright:
+#     black:   '0x414868'
+#     red:     '0xf7768e'
+#     green:   '0x9ece6a'
+#     yellow:  '0xe0af68'
+#     blue:    '0x7aa2f7'
+#     magenta: '0xbb9af7'
+#     cyan:    '0x7dcfff'
+#     white:   '0xc0caf5'
+#   indexed_colors:
+#     - { index: 16, color: '0xff9e64' }
+#     - { index: 17, color: '0xdb4b4b' }
+
+
+
+# # Base16 Classic Dark - alacritty color config
+# # Jason Heeris (http://heeris.id.au)
+# colors:
+#   # Default colors
+#   primary:
+#     background: '0x151515'
+#     foreground: '0xd0d0d0'
+#   # Colors the cursor will use if `custom_cursor_colors` is true
+#   cursor:
+#     text: '0x151515'
+#     cursor: '0xd0d0d0'
+#   # Normal colors
+#   normal:
+#     black:   '0x151515'
+#     red:     '0xac4142'
+#     green:   '0x90a959'
+#     yellow:  '0xf4bf75'
+#     blue:    '0x6a9fb5'
+#     magenta: '0xaa759f'
+#     cyan:    '0x75b5aa'
+#     white:   '0xd0d0d0'
+#   # Bright colors
+#   bright:
+#     black:   '0x505050'
+#     red:     '0xd28445'
+#     green:   '0x202020'
+#     yellow:  '0x303030'
+#     blue:    '0xb0b0b0'
+#     magenta: '0xe0e0e0'
+#     cyan:    '0x8f5536'
+#     white:   '0xf5f5f5'
+# draw_bold_text_with_bright_colors: false
+
 
 # import:
 #   - ~/.config/alacritty/catppuccin/catppuccin-mocha.yml
@@ -829,7 +963,7 @@ schemes:
 #     text: '#ffffff'
 #   normal:
 #     black: '#000000'
-#     blue: '#0000bb'
+#     blue: '#3333bb'
 #     cyan: '#00bbbb'
 #     green: '#00bb00'
 #     magenta: '#bb00bb'
@@ -1095,7 +1229,7 @@ cursor:
     #   - Off: Disable blinking by default
     #   - On: Enable blinking by default
     #   - Always: Force the cursor to always blink
-    blinking: Always
+    blinking: Never
 
   # Vi mode cursor style
   #

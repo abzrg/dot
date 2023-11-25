@@ -8,7 +8,6 @@ if vim.fn.executable("black") == 1 and vim.fn.executable("isort") then
       -- First write the file
       vim.cmd("write")
 
-      print("hello?")
       -- Set the formatter and formatter command
       local formatter = "black"
       local format_cmd = formatter .. " " .. vim.fn.expand("%")
@@ -25,8 +24,6 @@ if vim.fn.executable("black") == 1 and vim.fn.executable("isort") then
 
       -- Re-read buffer after changes
       vim.cmd("silent! edit!")
-
-      print("hello??")
 
       -- Inform user how it did went
       if format_status == 1 then

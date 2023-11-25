@@ -1,6 +1,7 @@
 #!/bin/sh
 
-# -- saftey first --
+# -- Saftey first --
+
 alias \
     cp='cp -iv'                                                                \
     mv='mv -iv'                                                                \
@@ -8,16 +9,17 @@ alias \
     ln='ln -iv'
 
 
-# -- colorize commands --
+# -- Colorize commands --
+
 alias \
     grep='grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}'            \
     egrep='egrep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}'          \
     fgrep='fgrep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}'          \
     diff='diff'                                                                \
 
-alias ls='ls -CF --color=auto'
 
-# -- list files --
+# -- List files --
+
 if command -v exa >/dev/null
 then
     # alias exa='exa'
@@ -44,35 +46,30 @@ else
 fi
 
 
-# -- long commands --
+# -- Long commands --
+
 alias \
     o='open'                                                                   \
     t='tmux'                                                                   \
     f='find . -name'                                                           \
-    h='history'                                                                \
     g='git'                                                                    \
-    gst='git st'                                                               \
     bc='bc -ql'                                                                \
     df='df -h'                                                                 \
-    nv='neovide'                                                               \
     n='newsboat'                                                               \
     ka='killall'                                                               \
     type='type -a'                                                             \
+    which='which -a'                                                           \
     mkd='mkdir -pv'                                                            \
     free='free -m'                                                             \
-    chbin='chmod 755'                                                          \
     rcp='rsync -avh --progress'                                                \
-    chreg='chmod 644'                                                          \
     wget='wget --hsts-file ~/.cache/wget-hsts'                                 \
     myip='curl http://myip.dnsomatic.com && echo '''                           \
-    w3m='w3m -cols 80'                                                         \
     sz='source $HOME/.zshrc'                                                   \
-    ec="emacsclient -nc -F \"'(fullscreen . maximized)\""                      \
     pydoc='python -m pydoc'                                                    \
-    edit="echo -ne '\e[2 q' && command emacs -nw"                              \
-    # emacs="echo -ne '\e[?1004h'; emacs"                                        \
 
-# -- navigate to common directories --
+
+# -- Navigate to common directories --
+
 alias \
     cd..='cd ..'                                                               \
     cf="cd ${XDG_CONFIG_HOME:-$HOME/.config}"                                  \
@@ -84,19 +81,23 @@ alias \
     vid="cd ${XDG_VIDEOS_DIR:-$HOME/Movies}"                                   \
 
 
-# -- open config files faster --
+# -- Open config files faster --
+
 alias \
     cfz="$EDITOR $HOME/.zshrc"                                                 \
     cfzp="$EDITOR $HOME/.zprofile"                                             \
     cft="$EDITOR $HOME/.tmux.conf"                                             \
     cfa="$EDITOR ${HOME}/.zsh-aliases"                                         \
-    cff="$EDITOR ${HOME}/.zsh-functions"                                       \
+    cfzf="$EDITOR ${HOME}/.zsh-functions"                                      \
+    cfzP="$EDITOR ${HOME}/.zsh-prompt"                                         \
     cfA="$EDITOR ${XDG_CONFIG_HOME:-$HOME/.config}/alacritty/alacritty.yml"    \
     cfk="$EDITOR ${XDG_CONFIG_HOME:-$HOME/.config}/kitty/kitty.conf"           \
     cftor="$EDITOR $HOMEBREW_PREFIX/etc/tor/torrc"                             \
+    cfv="$EDITOR -c 'cd %:h' ${XDG_CONFIG_HOME:-$HOME/.config}/nvim/init.lua"  \
 
 
-# Oops vim
+# -- Oops vim --
+
 alias \
     :e=$EDITOR                                                                 \
     :qa=exit                                                                   \
@@ -117,158 +118,81 @@ alias \
     else
         alias -g C="|xclip -sel clip"
     fi
-
-    # Mnemonic: "[D]iff"
-    alias -g D="|diff"
-
-    # Mnemonic: "[G]rep"
-    alias -g G="|grep"
-
-    # Mnemonic: "[H]ead"
-    alias -g H="|head"
-
-    # Pretty-print JSON.
-    # Mnemonic: "[J]SON"
-    alias -g J="|python3 -m json"
-
-    # Mnemonic: "[L]ess"
-    alias -g L="|& less"
-
-    # Mnemonic: "[L]ess"
-    alias -g VV="|& nvim -"
-
-    # Mnemonic: "[R]eset"
-    alias -g R=";clear;test -n "$TMUX" && tmux clear-history;"
-
-    # Mnemonic: "[W]c"
-    alias -g WC='| wc -l'
+    alias -g D="|diff"                                            # Mnemonic: "[D]iff"
+    alias -g G="|grep"                                            # Mnemonic: "[G]rep"
+    alias -g H="|head"                                            # Mnemonic: "[H]ead"
+    alias -g J="|python3 -m json"                                 # Mnemonic: "[J]SON"
+    alias -g L="|& less"                                          # Mnemonic: "[L]ess"
+    alias -g VV="|& nvim -"                                       # Mnemonic: "[L]ess"
+    alias -g R=";clear;test -n "$TMUX" && tmux clear-history;"    # Mnemonic: "[R]eset"
+    alias -g WC='| wc -l'                                         # Mnemonic: "[W]c"
 
 
 # -- misc. --
 
-    # problem of kitty with ssh
-    [ "$TERM" = "xterm-kitty" ] && alias ssh="kitty +kitten ssh"
+    # -- use `\vim` or `command vim` to get the real vim.
+    command -v nvim >/dev/null && alias v=nvim vimdiff="nvim -d"
 
-    # use `\vim` or `command vim` to get the real vim.
-    command -v nvim >/dev/null && alias                                        \
-        nvim=nvim                                                               \
-        vimdiff="nvim -d"                                                      \
-
-    # youtube-dl / yt-dlp
-      # aria2c
-        # yt="yt-dlp --add-metadata -ci \
-        # --external-downloader aria2c  \
-        # --external-downloader-args '-c -x 5 -k 2M'"                            \
-    alias \
-        yt="yt-dlp --add-metadata -ci"
-        yta="yt -x -f bestaudio/best --audio-format opus"                      \
-        ytb="yt -f bestvideo+bestaudio"                                        \
-        yt7="yt -f 'bestvideo[height<=?720]+bestaudio/best' "                  \
-        yts="yt-dlp --all-subs --skip-download"                                \
-        ytas="yt-dlp --skip-download --write-auto-sub --convert-subs=srt"      \
-        yt7pl="yt7 -o '%(playlist_index)s-%(title)s.%(ext)s' --yes-playlist"   \
-        ytbpl="ytb -o '%(playlist_index)s-%(title)s.%(ext)s' --yes-playlist"
-
+    # -- yt-dlp
     alias ytdl="yt-dlp \
         --no-warning \
         --proxy socks5://127.0.0.1:9050/ \
         --add-metadata -ci \
         -f 'bestvideo[height<=?720]+bestaudio/best'"
-
     alias ytdlpl="ytdl -o '%(playlist_index)s-%(title)s-%(id)s.%(ext)s' --yes-playlist"
-
     alias yta="yt-dlp \
         --proxy socks5://127.0.0.1:9050/ \
         --add-metadata -ci \
         -x -f bestaudio/best --audio-format opus"
-
     alias ytdlsub='ytdl --skip-download --write-auto-sub --convert-subs=srt'
     alias ytdlplsub='ytdlpl --skip-download --write-auto-sub --convert-subs=srt'
 
-    # # python
-    # alias python3=/opt/homebrew/opt/python@3.10/libexec/bin/python
-
-    # openfoam
+    # -- openfoam
     alias of22="source /Volumes/OpenFOAM/OpenFOAM-v2206/etc/bashrc"
     alias of="of22"
     alias fe41="source ~/OpenFOAM/foam-extend-4.1/etc/bashrc 2>&1"
     alias fe51="source ~/foam/foam-extend-5.1/etc/bashrc"
     alias fo=fe51
 
-    # vim and neovim config
-    alias cfv="$EDITOR -c 'cd %:h' ${XDG_CONFIG_HOME:-$HOME/.config}/nvim/init.lua"
-
-    # ascii table
+    # -- ascii table
     alias ascii='man ascii | grep -m 1 -A 63 --color=never Oct | less'
 
-    # special regex
+    # -- special regex
     alias reg_mac='echo ^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$'
     alias reg_git_hash='echo \b[0-9a-f]{5,40}\b'
 
-    # Pretty print the path
+    # -- Pretty print the path
     alias path='echo $PATH | tr -s ":" "\n"'
 
-    # NIT remote
-    [ -e $HOME/.hpc.nit ] && source $HOME/.hpc.nit
+    # # -- BNUT remote
+    # [ -e $HOME/.hpc.nit ] && source $HOME/.hpc.nit
 
-    # common lisp interpreter
-    if command -v rlwrap >/dev/null && command -v sbcl >/dev/null; then
-        alias   sbcl='rlwrap sbcl'
-    fi
-
-    # added by sumneko_lua
-    alias luamake=/Users/ali/.local/src/lua-language-server/3rd/luamake/luamake
-
-    # fix cursor shape for some programs
-    # (I like these programs to have box shape cursor)
-    alias w3m="echo -ne '\e[2 q' && w3m"
-    alias lynx="echo -ne '\e[2 q' && lynx -vikeys"
-    alias vim="echo -ne '\e[2 q' && vim"
-    alias vi="echo -ne '\e[2 q' && command vim"
-    alias docker="echo -ne '\e[2 q' && command docker"
-    alias lua="echo -ne '\e[2 q' && lua && echo -ne '\e[6 q'"
-    # alias python="echo -ne '\e[2 q' && python"
-    # alias python3="echo -ne '\e[2 q' && python"
-    alias eq="echo -ne '\e[2 q' && emacs -Q -nw -l ~/.eq"
-    alias edit="emacsclient -nc -F \"'(fullscreen . maximized)\""
-    alias mksh="echo -ne '\e[2 q' && mksh"
-
-    # on macos use gmake instead of make
-    # [ `uname -s` = "Darwin" ] && alias make=gmake
-
-    # ubuntu18 docker
-    alias u18='docker start -v $HOME/.local/share/docker-share/ubuntu18:/home/user  '
-
-    # hugo server with nocache
+    # -- hugo server with nocache
     alias hss='hugo server --noHTTPCache --disableFastRender'
 
-    # use macos version of locate
-    alias locate=/usr/bin/locate
+    # -- Curious problem of updatedb in macos
+    if [ `uname -s` = "Darwin" ]; then
+        # -- use macos version of locate
+        alias locate=/usr/bin/locate
 
-    # nvim = v
-    alias v=nvim
+        # -- wierd updatedb macos in macos
+        alias updatedb='PATH=/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin  sudo /usr/libexec/locate.updatedb'
 
-    alias gmsh="gmsh -fontsize 17"
+        # -- amd64 ubuntu docker for assembly and the like
+        alias asm='docker start --interactive --attach angry_bhabha'
 
-    alias py=python
-
-    # alias pip='pip --disable-pip-version-check'
-
-    # Curious problem of updatedb in macos
-    alias updatedb='PATH=/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin  sudo /usr/libexec/locate.updatedb'
-
-    alias tree='tree -CF -I "__pycache__" --gitignore'
-
-    # inverted mpv
-    alias impv='mpv --vf=sub,lavfi="negate"'
-    function ampv() {
-        command mpv --quiet --force-window=no "$@"
-    }
+        # -- ubuntu18 docker
+        alias u18='docker start -v $HOME/.local/share/docker-share/ubuntu18:/home/user  '
+    fi
 
 
-    # amd64 ubuntu docker for assembly and the like
-    alias asm='docker start --interactive --attach angry_bhabha'
+# -- Correction --
 
-    # curl through socks proxy
-    alias curlsocks="curl --proxy socks5://127.0.0.1:9050"
-
+    # exceptions to auto-correction
+    alias bundle='nocorrect bundle'
+    alias cabal='nocorrect cabal'
+    alias man='nocorrect man'
+    alias mkdir='nocorrect mkdir'
+    alias mv='nocorrect mv'
+    alias stack='nocorrect stack'
+    alias sudo='nocorrect sudo'

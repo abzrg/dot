@@ -55,3 +55,7 @@
 [submodule "vim/.vim/pack/ali/start/vim-foam"]
 	path = vim/.vim/pack/ali/start/vim-foam
 	url = https://github.com/lervag/vim-foam
+[submodule "zsh/.zsh/plugins/zsh-async"]
+	path = zsh/.zsh/plugins/zsh-async
+	url = git@github.com:mafredri/zsh-async
+	branch = v1.8.6

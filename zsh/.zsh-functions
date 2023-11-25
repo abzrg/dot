@@ -48,33 +48,30 @@
     # src: Greg Hurrel
     # (https://github.com/wincent/wincent/blob/master/aspects/dotfiles/files/.zsh/functions)
     function serve() {
-      if command -v python3 &> /dev/null; then
         python3 -m http.server "$@"
-      else
-        python -m SimpleHTTPServer "$@" || python -m http.server "$@"
-      fi
     }
 
 
 # -- subtree --
-    # Print a pruned version of a tree.
-    #
-    # Examples:
-    #
-    #   # Print all "*.js" files in src:
-    #   subtree '*.js' src
-    #
-    #   # Print all "*.js" files in the current directory:
-    #   subtree '*.js'
-    #
-    #   # Print all "*.js" and "*.ts" files in current directory:
-    #   subtree '*.js|*.ts'
-    #
-    # src: Greg Hurrel
-    # (https://github.com/wincent/wincent/blob/master/aspects/dotfiles/files/.zsh/functions)
-    function subtree() {
-      tree -a --prune -P "$@"
-    }
+
+    # # Print a pruned version of a tree.
+    # #
+    # # Examples:
+    # #
+    # #   # Print all "*.js" files in src:
+    # #   subtree '*.js' src
+    # #
+    # #   # Print all "*.js" files in the current directory:
+    # #   subtree '*.js'
+    # #
+    # #   # Print all "*.js" and "*.ts" files in current directory:
+    # #   subtree '*.js|*.ts'
+    # #
+    # # src: Greg Hurrel
+    # # (https://github.com/wincent/wincent/blob/master/aspects/dotfiles/files/.zsh/functions)
+    # function subtree() {
+    #   tree -a --prune -P "$@"
+    # }
 
 
 # -- dictionary (sdcv) --
@@ -93,49 +90,43 @@
 
 # -- extract everything --
 
-    # src: derek taylor
-    ex() {
-        # -- ARCHIVE EXTRACTION
-        # usage: ex <file>
-        if [ -f $1 ] ; then
-            case $1 in
-                *.tar.bz2)   tar xjf $1   ;;
-                *.tar.gz)    tar xzf $1   ;;
-                *.bz2)       bunzip2 $1   ;;
-                *.rar)       unrar x $1   ;;
-                *.gz)        gunzip $1    ;;
-                *.tar)       tar xf $1    ;;
-                *.tbz2)      tar xjf $1   ;;
-                *.tgz)       tar xzf $1   ;;
-                *.zip)       unzip $1     ;;
-                *.Z)         uncompress $1;;
-                *.7z)        7z x $1      ;;
-                *.deb)       ar x $1      ;;
-                *.tar.xz)    tar xf $1    ;;
-                *.tar.zst)   unzstd $1    ;;
-                *)           echo "'$1' cannot be extracted via ex()" ;;
-            esac
-        else
-            echo "'$1' is not a valid file"
-        fi
-    }
+    # # src: derek taylor
+    # ex() {
+    #     # -- ARCHIVE EXTRACTION
+    #     # usage: ex <file>
+    #     if [ -f $1 ] ; then
+    #         case $1 in
+    #             *.tar.bz2)   tar xjf $1   ;;
+    #             *.tar.gz)    tar xzf $1   ;;
+    #             *.bz2)       bunzip2 $1   ;;
+    #             *.rar)       unrar x $1   ;;
+    #             *.gz)        gunzip $1    ;;
+    #             *.tar)       tar xf $1    ;;
+    #             *.tbz2)      tar xjf $1   ;;
+    #             *.tgz)       tar xzf $1   ;;
+    #             *.zip)       unzip $1     ;;
+    #             *.Z)         uncompress $1;;
+    #             *.7z)        7z x $1      ;;
+    #             *.deb)       ar x $1      ;;
+    #             *.tar.xz)    tar xf $1    ;;
+    #             *.tar.zst)   unzstd $1    ;;
+    #             *)           echo "'$1' cannot be extracted via ex()" ;;
+    #         esac
+    #     else
+    #         echo "'$1' is not a valid file"
+    #     fi
+    # }
 
 
 # -- cdjob --
 
-    # go to the directory of a background job
-    # src: https://unix.stackexchange.com/a/82217/419393
-    cdjob () {
-        pid=$(jobs -p $1);
-        d=$(readlink /proc/$pid/cwd);
-        cd "$d"
-    }
-
-
-# -- sci-hub downloader --
-
-    shdl() { curl -O "https://sci-hub.se"$(curl -s https://sci-hub.se/"$@" | grep location.href | grep -o '/.*pdf' | sed -e 's#//#/#') ;}
-    shdl-backup() { curl -O $(curl -s https://sci-hub.se/"$@" | grep location.href | grep -o http.*pdf) ;}
+    # # go to the directory of a background job
+    # # src: https://unix.stackexchange.com/a/82217/419393
+    # cdjob () {
+    #     pid=$(jobs -p $1);
+    #     d=$(readlink /proc/$pid/cwd);
+    #     cd "$d"
+    # }
 
 
 # -- Create a directory and take me there --
@@ -143,57 +134,10 @@
     take() { mkdir -p $1 && cd $1 ;}
 
 
-# -- better man page
-
-    # man() {
-    #     MANCMD=gman
-    #     # set the width of the manpage
-    #     MANWIDTH=100
-    #
-    #     # if terminal width is smaller than manwidth then use that width
-    #     # src: archwiki (https://wiki.archlinux.org/title/man_page#Page_width)
-    #     local width=$(tput cols)
-    #     [ "$width" -gt "$MANWIDTH" ] && width=$MANWIDTH
-    #
-    #     # change the cursor shape if by chance it is a pipe
-    #     echo -ne '\e[2 q'
-    #
-    #     # issue with gcc on macos (no man page for gcc!)
-    #     if [ `uname -s` = "Darwin" ] && [ "$1" = "gcc" ];then
-    #         env MANWIDTH=$width command $MANCMD gcc-11
-    #     else
-    #         env MANWIDTH=$width command $MANCMD "$@" 2>/dev/null
-    #     fi
-    # }
-    #
-
-# -- pip serach is broken
-
-    # if command -v poetry >/dev/null; then
-    #     function pip() {
-    #         if [ "$1" = "search" ]; then
-    #             shift
-    #             command poetry search "$@"
-    #         else
-    #             /opt/homebrew/opt/python@3.10/libexec/bin/pip "$@"
-    #         fi
-    #     }
-    # fi
-
-# -- convert
-
-    # ConvertTo-Mp4 .\someFile.mkv
-    function mkv2Mp4() {
-        video="$1"
-        videobase=${video%%.mkv}
-        ffmpeg -i "$video" -vcodec copy -acodec aac "${videobase}.mp4"
-    }
-
-
 # -- fzf search for projects
 
     function proj() {
-        cd "$(fd '[_a-zA-Z-]' ~/git/ --type directory --max-depth=2 | fzf)"
+        cd "$(fd '[_a-zA-Z-]' $HOME/git/ --type directory --max-depth=2 | fzf)"
     }
     bindkey -s '\ep' 'proj\r'
 
@@ -201,62 +145,46 @@
 # -- find pdf files
 
     function fpdf() {
-        pdf="$(find $HOME/Documents $HOME/Desktop/books -type f -iname '*.pdf'  2>/dev/null | fzf-tmux --keep-right)"
-        test -n "${pdf}" && ( mupdf-gl 1>/dev/null 2>&1 "${pdf}" & )
+        # no space should be in the path
+        paths="$HOME/Documents $HOME/books $HOME/Documents/books"
+        existing_paths=""
+        for dir in $paths; do
+            existing_paths="$existing_paths $dir"
+        done
+        pdf="$(find $existing_paths -type f -iname '*.pdf'  2>/dev/null | fzf-tmux --keep-right)"
+        test -n "${pdf}" && open "${pdf}"
     }
-
-
-# -- find files using fzf and open them in vim
-
-    function e() {
-        file=$(fzf)
-        [ -n "${file}" ] && $EDITOR "${file}"
-    }
-
-
-# -- find directory using fzf in the curren directory
-
-    function zd() {
-        dir="$PWD"
-        [ -n "$1" ] && dir="${1}"
-        cd "$(find "${dir}" -type d 2>/dev/null | fzf)"
-    }
-
-
-# -- faster sdl man page
-
-function sdlman() {
-    choice="$(< ~/.sdl_manpages fzf)"
-    page="$(echo $choice | awk '{print $2}')"
-    section="$(echo $choice | awk '{print $1}')"
-    man -S "${section}" "$page"
-}
 
 
 # -- on/off socksproxy
 
-function proxy() {
-    [ $# != 1 ] && printf "Usage: proxy <on or off>.\n" && return
-    if [ $1 = "on" ]; then
-        printf "Turning proxy on.\n"
-        networksetup -setsocksfirewallproxystate Wi-Fi on
-    elif [ $1 = "off" ]; then
-        printf "Turning proxy off.\n"
-        networksetup -setsocksfirewallproxystate Wi-Fi off
-    else
-        printf "Usage: proxy <on or off>.\n" && return
+    if [ `uname -s` = "Darwin" ]; then
+        function proxy() {
+            [ $# != 1 ] && printf "Usage: proxy <on or off>.\n" && return
+            if [ $1 = "on" ]; then
+                printf "Turning proxy on.\n"
+                networksetup -setsocksfirewallproxystate Wi-Fi on
+            elif [ $1 = "off" ]; then
+                printf "Turning proxy off.\n"
+                networksetup -setsocksfirewallproxystate Wi-Fi off
+            else
+                printf "Usage: proxy <on or off>.\n" && return
+            fi
+        }
     fi
-}
 
 
 # -- source/load virtual env
 
-function vact() {
-    [ $# -eq 0 ] && local path_to_venv="$PWD"
+    function vact() {
+        [ $# -eq 0 ] && local path_to_venv="$PWD"
+        [ $# -eq 1 ] && local path_to_venv="$1"
+        [ $# -gt 1 ] && printf "Wrong number of arguments\n"
+        source "$path_to_venv"/venv/bin/activate
+    }
 
-    [ $# -eq 1 ] && local path_to_venv="$1"
 
-    [ $# -gt 1 ] && printf "Wrong number of arguments\n"
+# -- reset shell
 
-    source "$path_to_venv"/venv/bin/activate
-}
+    # fix the change of cursor via reset
+    reset() { echo -ne '\e[2 q' && command reset ;}

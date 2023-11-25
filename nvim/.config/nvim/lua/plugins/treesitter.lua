@@ -8,6 +8,14 @@ return {
   },
 
   config = function()
+    -- context_commentstring nvim-treesitter module is deprecated, use
+    -- require('ts_context_commentstring').setup {} and set
+    -- vim.g.skip_ts_context_commentstring_module = true to speed up loading
+    -- instead. stack traceback:
+
+    require('ts_context_commentstring').setup {}
+    vim.g.skip_ts_context_commentstring_module = true
+
     require('nvim-treesitter.configs').setup {
       ensure_installed = { 'c', 'cpp', 'lua', 'python', 'comment', 'go', 'rust', 'vimdoc', 'vim', 'bash' },
 
@@ -34,7 +42,7 @@ return {
           'wbr', 'menuitem', 'option' },
       },
 
-      context_commentstring = { enable = true, },
+      -- context_commentstring = { enable = true, }, -- deprecated
 
       incremental_selection = {
         enable = true,

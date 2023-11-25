@@ -1,4 +1,4 @@
-vim.cmd.colorscheme "*classic*"
+vim.cmd.colorscheme 'vscode'
 
 -- [ Line Numbers ] --------------------------
 
@@ -137,12 +137,16 @@ vim.opt_local.fileformat  = "unix"
 -- vim.opt.foldmethod      = 'indent'
 vim.opt.inccommand  = "split" -- live preview of :s results
 vim.opt.mouse       = "a" -- enable mouse
-vim.opt.shell       = "zsh"
 vim.opt.shortmess   = "filnxtToOc"
 vim.opt.signcolumn  = "yes"
 vim.opt.virtualedit = "block" -- allow cursor to move where there is no text in visual block mode
 vim.opt.spellcapcheck = '' -- don't check for capital letters at start of sentence
 
+if vim.loop.os_uname().sysname == "Darwin" then
+vim.opt.shell       = "zsh"
+else
+  vim.opt.shell     = "bash"
+end
 
 vim.opt.clipboard:append("unnamedplus")
 vim.opt.isfname:remove("=") -- Avoid recognizing = as part of file name

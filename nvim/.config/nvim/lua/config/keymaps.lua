@@ -194,3 +194,5 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.keymap.set('n', 'gtt', [[<cmd>:s/\v<(.)(\w*)/\u\1\L\2/g | nohlsearch<cr>]], { noremap = true })
 
 vim.keymap.set("n", '<leader>n', ":set manager", { noremap = true, silent = true })
+
+vim.keymap.set('n', '<leader><leader>', "<cmd>b#<cr>")
