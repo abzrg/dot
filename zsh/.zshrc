@@ -27,7 +27,7 @@
     setopt COMPLETEINWORD           # if unset, the cursor is set to the end of the word if completion is started. Otherwise it stays there and completion is done from both ends.
     setopt LIST_TYPES               # when listing files that are possible completions, show the type of each file with a trailing identifying mark.
     setopt CORRECT                  # [default] command auto-correction
-    setopt CORRECTALL               # [default] argument auto-correction
+    # setopt CORRECTALL               # [default] argument auto-correction
 
     # -- cd & pushd
     setopt PUSHD_IGNORE_DUPS        # don't push multiple copies of same dir onto stack
@@ -308,3 +308,6 @@
 
     # -- zoxide
     eval "$(zoxide init zsh)"
+
+    # -- fzf
+    [ `uname -s` = "Linux" ] && . "$HOME/.fzf.zsh"

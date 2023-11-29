@@ -74,11 +74,14 @@ alias \
     cd..='cd ..'                                                               \
     cf="cd ${XDG_CONFIG_HOME:-$HOME/.config}"                                  \
     dl="cd ${XDG_DOWNLOAD_DIR:-$HOME/Downloads}"                               \
-    dt="cd ${XDG_DATA_HOME:-$HOME/.local/share}"                               \
-    bin="cd $HOME/.local/bin"                                                  \
     doc="cd ${XDG_DOCUMENTS_DIR:-$HOME/Documents}"                             \
-    pic="cd ${XDG_PICTURES_DIR:-$HOME/Pictures}"                               \
-    vid="cd ${XDG_VIDEOS_DIR:-$HOME/Movies}"                                   \
+    pic="cd ${XDG_PICTURES_DIR:-$HOME/Pictures}"
+
+if [ `uname -s` = "Darwin" ]; then
+    aliasvid="cd ${XDG_VIDEOS_DIR:-$HOME/Movies}"
+else
+    aliasvid="cd ${XDG_VIDEOS_DIR:-$HOME/Videos}"
+fi
 
 
 # -- Open config files faster --
@@ -94,16 +97,6 @@ alias \
     cfk="$EDITOR ${XDG_CONFIG_HOME:-$HOME/.config}/kitty/kitty.conf"           \
     cftor="$EDITOR $HOMEBREW_PREFIX/etc/tor/torrc"                             \
     cfv="$EDITOR -c 'cd %:h' ${XDG_CONFIG_HOME:-$HOME/.config}/nvim/init.lua"  \
-
-
-# -- Oops vim --
-
-alias \
-    :e=$EDITOR                                                                 \
-    :qa=exit                                                                   \
-    :sp='test -n "$TMUX" && tmux split-window'                                 \
-    :vs='test -n "$TMUX" && tmux split-window -h'                              \
-    :wq=exit
 
 
 # -- Global aliases --

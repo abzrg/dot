@@ -20,7 +20,7 @@
 
 # -- fzf settings --
 
-    export FZF_DEFAULT_COMMAND='fd -t f -t l -H' # Including hidden files in search
+    # export FZF_DEFAULT_COMMAND='fd -t f -t l -H' # Including hidden files in search
     export FZF_DEFAULT_OPTS="--layout=reverse --height 40% --preview-window=border-sharp"
     export CHEAT_USE_FZF=true
     # allow less to view non-text files
