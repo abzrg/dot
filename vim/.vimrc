@@ -29,6 +29,7 @@ Plug 'tpope/vim-dispatch'
 Plug 'airblade/vim-gitgutter'
 Plug 'machakann/vim-highlightedyank'
 Plug 'fatih/vim-go'
+Plug 'lervag/vimtex'
 call plug#end()
 
 " " -- color
