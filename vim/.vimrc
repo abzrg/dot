@@ -4,6 +4,33 @@ filetype detect
 
 let mapleader = " "
 
+let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+call plug#begin()
+Plug 'junegunn/vim-easy-align'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-endwise'
+Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-rsi'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
+Plug 'tpope/vim-sleuth'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+Plug 'cohama/lexima.vim'
+Plug 'farmergreg/vim-lastplace'
+Plug 'tpope/vim-dispatch'
+Plug 'airblade/vim-gitgutter'
+Plug 'machakann/vim-highlightedyank'
+Plug 'fatih/vim-go'
+call plug#end()
+
 " " -- color
 " set notermguicolors
 " " hi Visual ctermbg=13 ctermfg=darkgray
