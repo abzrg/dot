@@ -3,7 +3,7 @@
 $include /etc/inputrc
 
 # emacs, vi
-set editing-mode vi
+set editing-mode emacs
 
 $if mode=vi
     # mapping i to enter insert mode and jj to get back to normal mode
@@ -75,4 +75,5 @@ set keyseq-timeout 0
 # Magic space
 $if Bash
   Space: magic-space
+  set colored-stats on
 $endif
