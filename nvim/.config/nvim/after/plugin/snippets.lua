@@ -1,0 +1,21 @@
+-- local ls = require "luasnip"
+-- local s = ls.snippet
+-- local t = ls.text_node
+-- local i = ls.insert_node
+--
+--
+-- -- addsnippets("filetype", {table of snippets})
+-- ls.add_snippets("tex", {
+--   -- s("snippet-name", {snippet-body})
+--   s("gbb", {
+--     t('\\left( '),
+--     i(1),
+--     t(' \\right)')
+--   }),
+--
+--   s("gii", {
+--     t('\\('),
+--     i(1),
+--     t('\\)')
+--   })
+-- })
