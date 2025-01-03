@@ -38,7 +38,7 @@ window-width = 1000
 
 # --- [ Misc. ] -------------------------------------------------------------------------
 
-command = /opt/homebrew/bin/tmux new -A
+# command = /opt/homebrew/bin/tmux new -A
 shell-integration = zsh
 shell-integration-features = sudo,title,no-cursor
 
