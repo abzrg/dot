@@ -4,7 +4,6 @@ vim.bo.shiftwidth = 2
 vim.opt_local.wrap = true
 vim.opt_local.number = false
 vim.opt_local.relativenumber = false
-vim.opt_local.signcolumn = "no"
 
 vim.g.markdown_fenced_languages = { 'html', 'python', 'vim', 'cpp', 'c', 'sh' }
 
