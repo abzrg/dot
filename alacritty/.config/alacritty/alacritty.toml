@@ -1,0 +1,9 @@
+[general]
+live_config_reload = true
+import = [
+    "~/.config/alacritty/fonts.toml",
+    "~/.config/alacritty/colors.toml",
+    "~/.config/alacritty/hints.toml",
+    "~/.config/alacritty/keybindings.toml",
+    "~/.config/alacritty/misc.toml",
+]

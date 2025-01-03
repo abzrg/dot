@@ -1,0 +1,22 @@
+[env]
+TERM = "tmux-256color"
+
+[mouse]
+hide_when_typing = true
+
+[window]
+# decorations = "None"
+dynamic_padding = true
+dynamic_title = true
+startup_mode = "Maximized"
+# option_as_alt = "Both"
+# opacity               = 0.90
+# blur                  = true
+padding = { x = 1, y = 1 }
+
+[scrolling]
+history = 0
+
+[cursor]
+blink_interval = 500
+style = { shape = "Block" }

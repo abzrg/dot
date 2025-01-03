@@ -1,0 +1,10 @@
+[font]
+size = 20.5
+
+# size = 20.5
+# normal = { family = "meslolgs nerd font mono", style = "Regular" }
+# bold = { family = "meslolgs nerd font mono", style = "Bold" }
+# bold_italic = { family = "meslolgs nerd font mono", style = "Bold Italic" }
+# italic = { family = "meslolgs nerd font mono", style = "Italic" }
+# glyph_offset = { x = 0, y = -2 }
+# offset = { x = 0, y = -4 }
