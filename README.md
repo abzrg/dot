@@ -1,8 +1,8 @@
-# dot (files)
+# Dotfiles
 
 ## Update all MacOS software
 
-```
+```sh
 softwareupdate --install --all
 ```
 
@@ -24,17 +24,18 @@ PATH=/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin  sudo /usr/libe
 ```
 finally to use locate you should use the macos version of locate, located in `/usr/bin/locate`
 
-# Disable font smoothing (make alacritty less bold)
+## Disable font smoothing (make alacritty less bold)
 
 Run the following
-```
+
+```sh
 defaults -currentHost write -g AppleFontSmoothing -int 0
 ```
+
 and then restart the machine.
 
 
 ## Android file transfer
-
 
 ```sh
 brew install whoozle-android-file-transfer
@@ -46,10 +47,11 @@ brew install whoozle-android-file-transfer
 ```sh
 # src: https://superuser.com/a/1537888
 
+brew unlink parallel
+brew install moreutils
 brew unlink moreutils
 brew install parallel
 brew link --overwrite moreutils
 brew unlink parallel
 brew link --overwrite parallel
 ```
-
