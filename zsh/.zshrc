@@ -189,3 +189,5 @@ async_init
 # source <(fzf --zsh)
 
 eval "$(zoxide init zsh)"
+
+yearprogress
