@@ -2,7 +2,8 @@
 
 # src: ThePrimeagen
 
-selected=`cat ~/.tmux-cht-languages ~/.tmux-cht-command | fzf`
+selected=`cat ~/.tmux-cht-languages ~/.tmux-cht-command | fzf --bind enter:accept-or-print-query`
+
 if [[ -z $selected ]]; then
     exit 0
 fi
