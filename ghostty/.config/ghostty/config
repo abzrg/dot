@@ -1,0 +1,84 @@
+# --- [ Theme ] -------------------------------------------------------------------------
+
+# theme = "xcodedarkhc"
+# theme = "rose-pine"
+theme = NvimDark
+cursor-invert-fg-bg = true
+
+# --- [ Font ] --------------------------------------------------------------------------
+
+font-family = "menlo"
+# font-variation = wght=400
+font-size = 19
+font-thicken = false
+
+# --- [ Window ] ------------------------------------------------------------------------
+
+window-theme = auto
+window-colorspace = "display-p3"
+window-step-resize = true
+resize-overlay = never
+
+# adjust-cell-height = 35%
+# adjust-cell-width  = 0
+
+# Padding
+# window-padding-x =
+# window-padding-y =
+
+window-padding-balance = true
+window-padding-color = extend
+
+# Open maximized
+window-height = 1000
+window-width = 1000
+
+# background-opacity = 0.95
+# background-blur-radius = 20
+
+# --- [ Misc. ] -------------------------------------------------------------------------
+
+command = /opt/homebrew/bin/tmux new -A
+shell-integration = zsh
+shell-integration-features = sudo,title,no-cursor
+
+mouse-hide-while-typing = true
+confirm-close-surface = false
+quit-after-last-window-closed = false
+link-url = true
+
+# --- [ Keybinds ] ----------------------------------------------------------------------
+
+# keybind = clear
+# keybind = super+backspace=text:\x17
+keybind = ctrl+backspace=text:\x17
+keybind = super+backspace=text:\x15
+keybind = alt+backspace=text:\x1b\x7f
+keybind = super+delete=text:\x0b
+keybind = super+comma=ignore
+
+# emacs emacs emacs!
+keybind = super+d=esc:d
+keybind = super+f=esc:f
+keybind = super+b=esc:b
+keybind = super+a=esc:a
+keybind = super+e=esc:e
+
+keybind = super+h=esc:h
+keybind = super+l=esc:l
+keybind = super+k=esc:k
+keybind = super+j=esc:j
+keybind = super+w=esc:w
+keybind = super+shift+w=close_window
+keybind = super+n=ignore
+keybind = super+shift+n=new_window
+keybind = super+period=esc:.
+
+keybind = super+period=esc:period
+keybind = super+period=esc:.
+
+keybind = super+semicolon=ignore
+
+macos-option-as-alt = left
+
+# vim: ft=toml
