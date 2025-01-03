@@ -1,27 +1,13 @@
-# -- fzf notes
+# Make Alt-backspace less liberal version of Ctrl-w
+backward-kill-dir () {
+    local WORDCHARS=${WORDCHARS/\/}
+    zle backward-kill-word
+    zle -f kill
+}
+zle -N backward-kill-dir
+bindkey '^[^?' backward-kill-dir
 
-    # fzf-dotfiles-widget() {
-    #     _file="$(find ~/.dot/ -not \( -wholename "./.git" -prune \) -type f 2>/dev/null | fzf)"
-    #     [ -z "$_file" ] && zle reset-prompt || nvim $_file
-    #     # echo -ne '\e[6 q'
-    #     zle reset-prompt
-    # }
-    # zle     -N   fzf-dotfiles-widget
-    # bindkey '\et' fzf-dotfiles-widget
-
-
-# -- Make Alt-backspace less liberal version of Ctrl-w
-
-    backward-kill-dir () {
-        local WORDCHARS=${WORDCHARS/\/}
-        zle backward-kill-word
-        zle -f kill
-    }
-    zle -N backward-kill-dir
-    bindkey '^[^?' backward-kill-dir
-
-
-# manage jobs
+# Manage jobs (C-z toggle)
 fg-widget() {
   if [[ $#BUFFER -eq 0 ]]; then
     if jobs %- >/dev/null 2>&1; then
@@ -39,20 +25,3 @@ zle -N fg-widget
 bindkey -M emacs "^Z" fg-widget
 bindkey -M vicmd "^Z" fg-widget
 bindkey -M viins "^Z" fg-widget
-
-
-# -- Google content of clipboard
-
-    google_clipboard() {
-        # store the content of the clipboard
-        if [ $(uname -s) = Darwin ]; then
-            local clipboard_cmd="pbpaste"
-        else
-            local clipboard_cmd="xclip -sel clip -o"
-        fi
-        local clipboard_content="$($clipboard_cmd | tr ' ' '+')"
-        open -a 'Brave Browser' "https://www.google.com/search?q=${clipboard_content}"
-        zle reset-prompt
-    }
-    zle     -N   google_clipboard
-    bindkey '\es' google_clipboard

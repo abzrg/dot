@@ -1,190 +1,649 @@
 #!/bin/sh
 
-# -- git wrapper
+# -- Git ----------------------------------------------------------------------
 
-    # a git wrapper to implement the idea of getting back to the root of the project
-    # src: Greg Hurrel's video on functions
-    # (https://www.youtube.com/watch?v=C5aRtq-Rtbg)
-    #
-    #   git root            # changes to repo root
-    #   git root COMMAND    # runs arbitrary command from repo root (eg. git root ls)
-    function git() {
-        if [ "$1" = "root" ]; then
-            shift
-            local ROOT="$(command git rev-parse --show-toplevel 2>/dev/null || echo -n .)"
-            if [ $# -eq 0 ]; then
-                cd "$ROOT"
-            else
-                # jump quickly, do sth and get back (happening in a subshell so I
-                # stay wherever I was before)
-                ( cd "$ROOT" && eval "$@" )
-            fi
-        else
-            command git "$@"
-        fi
-    }
-
-
-# -- efficient scratch space --
-
-    # src: Greg Hurrel's video on functions
-    # (https://www.youtube.com/watch?v=C5aRtq-Rtbg)
-    function scratch() {
-        local SCRATCH=$(mktemp -d)
-        echo "Spawning subshell in scratch directory:"
-        echo "  $SCRATCH"
-        (cd $SCRATCH; zsh)
-        echo "Removing scratch directory"
-        rm -rf "$SCRATCH"
-    }
-
-
-# -- http server --
-
-    # Usage: serve [--directory DIRECTORY] [PORT]
-    #
-    # Defaults to port 8000, current directory (ie. will use index.html if present).
-    #
-    # src: Greg Hurrel
-    # (https://github.com/wincent/wincent/blob/master/aspects/dotfiles/files/.zsh/functions)
-    function serve() {
-        python3 -m http.server "$@"
-    }
-
-
-# -- subtree --
-
-    # # Print a pruned version of a tree.
-    # #
-    # # Examples:
-    # #
-    # #   # Print all "*.js" files in src:
-    # #   subtree '*.js' src
-    # #
-    # #   # Print all "*.js" files in the current directory:
-    # #   subtree '*.js'
-    # #
-    # #   # Print all "*.js" and "*.ts" files in current directory:
-    # #   subtree '*.js|*.ts'
-    # #
-    # # src: Greg Hurrel
-    # # (https://github.com/wincent/wincent/blob/master/aspects/dotfiles/files/.zsh/functions)
-    # function subtree() {
-    #   tree -a --prune -P "$@"
-    # }
-
-
-# -- dictionary (sdcv) --
-
-    # Data in ~/.local/share/stardict/dic/
-    d() {
-        [ $(tput cols) -lt 80 ] && local width=$(tput cols)
-        sdcv -n --utf8-output --color "$@" 2>&1 \
-            | sed 's/<br>/\n/g' \
-            | sed 's/<BR>/\n/g' \
-            | sed 's/|/\n/g' \
-            | sed -e 's/<[^>]*>//g' \
-            | fold -s -w ${width:-80} | \less -FRX
-    }
-
-
-# -- extract everything --
-
-    # # src: derek taylor
-    # ex() {
-    #     # -- ARCHIVE EXTRACTION
-    #     # usage: ex <file>
-    #     if [ -f $1 ] ; then
-    #         case $1 in
-    #             *.tar.bz2)   tar xjf $1   ;;
-    #             *.tar.gz)    tar xzf $1   ;;
-    #             *.bz2)       bunzip2 $1   ;;
-    #             *.rar)       unrar x $1   ;;
-    #             *.gz)        gunzip $1    ;;
-    #             *.tar)       tar xf $1    ;;
-    #             *.tbz2)      tar xjf $1   ;;
-    #             *.tgz)       tar xzf $1   ;;
-    #             *.zip)       unzip $1     ;;
-    #             *.Z)         uncompress $1;;
-    #             *.7z)        7z x $1      ;;
-    #             *.deb)       ar x $1      ;;
-    #             *.tar.xz)    tar xf $1    ;;
-    #             *.tar.zst)   unzstd $1    ;;
-    #             *)           echo "'$1' cannot be extracted via ex()" ;;
-    #         esac
-    #     else
-    #         echo "'$1' is not a valid file"
-    #     fi
-    # }
-
-
-# -- cdjob --
-
-    # # go to the directory of a background job
-    # # src: https://unix.stackexchange.com/a/82217/419393
-    # cdjob () {
-    #     pid=$(jobs -p $1);
-    #     d=$(readlink /proc/$pid/cwd);
-    #     cd "$d"
-    # }
-
-
-# -- Create a directory and take me there --
-
-    take() { mkdir -p $1 && cd $1 ;}
-
-
-# -- fzf search for projects
-
-    function proj() {
-        cd "$(fd '[_a-zA-Z-]' $HOME/git/ --type directory --max-depth=2 | fzf)"
-    }
-    bindkey -s '\ep' 'proj\r'
-
-
-# -- find pdf files
-
-    function fpdf() {
-        # no space should be in the path
-        paths="$HOME/Documents $HOME/books $HOME/Documents/books"
-        existing_paths=""
-        for dir in $paths; do
-            existing_paths="$existing_paths $dir"
-        done
-        pdf="$(find $existing_paths -type f -iname '*.pdf'  2>/dev/null | fzf-tmux --keep-right)"
-        test -n "${pdf}" && open "${pdf}"
-    }
-
-
-# -- on/off socksproxy
-
-    if [ `uname -s` = "Darwin" ]; then
-        function proxy() {
-            [ $# != 1 ] && printf "Usage: proxy <on or off>.\n" && return
-            if [ $1 = "on" ]; then
-                printf "Turning proxy on.\n"
-                networksetup -setsocksfirewallproxystate Wi-Fi on
-            elif [ $1 = "off" ]; then
-                printf "Turning proxy off.\n"
-                networksetup -setsocksfirewallproxystate Wi-Fi off
-            else
-                printf "Usage: proxy <on or off>.\n" && return
-            fi
-        }
+# `git` wrapper:
+#
+#     - `git` with no arguments = `git status`; run `git help` to show what
+#       vanilla `git` without arguments would normally show.
+#     - `git root` = `cd` to repo root.
+#     - `ROOT=$(git root)` = no args and stdout is not a tty; prints the root.
+#     - `git root ARG...` = evals `ARG...` from the root (eg. `git root ls`).
+#     - `git ARG...` = behaves just like normal `git` command.
+#
+# src: gh/wincent/wincent
+function git() {
+  if [ $# -eq 0 ]; then
+    command git status
+  elif [ "$1" = root ]; then
+    shift
+    local ROOT
+    if [ "$(command git rev-parse --is-inside-git-dir 2> /dev/null)" = true ]; then
+      if [ "$(command git rev-parse --is-bare-repository)" = true ]; then
+        ROOT="$(command git rev-parse --absolute-git-dir)"
+      else
+        # Note: This is a good-enough, rough heuristic, which ignores
+        # the possibility that GIT_DIR might be outside of the worktree;
+        # see:
+        # https://stackoverflow.com/a/38852055/2103996
+        ROOT="$(command git rev-parse --git-dir)/.."
+      fi
+    else
+      # Git 2.13.0 and above:
+      ROOT="$(command git rev-parse --show-superproject-working-tree 2> /dev/null)"
+      if [ -z "$ROOT" ]; then
+        ROOT="$(command git rev-parse --show-toplevel 2> /dev/null)"
+      fi
     fi
+    if [ -z "$ROOT" ]; then
+      ROOT="$PWD"
+    fi
+    if [ $# -eq 0 ]; then
+      if [ -t 1 ]; then
+        cd "$ROOT"
+      else
+        echo "$ROOT"
+      fi
+    else
+      (cd "$ROOT" && eval "$@")
+    fi
+  else
+    command git "$@"
+  fi
+}
+
+# -- Web tools
+
+# Usage: serve [--directory DIRECTORY] [PORT]
+#
+# Defaults to port 8000, current directory (ie. will use index.html if present).
+#
+# src: gh/wincent/wincent
+# (https://github.com/wincent/wincent/blob/master/aspects/dotfiles/files/.zsh/functions)
+function serve() {
+  python3 -m http.server "$@"
+}
+
+# Print headers, following redirects.
+# Based on: https://stackoverflow.com/a/10060342/2103996
+# src: gh/wincent/wincent
+function headers() {
+  emulate -L zsh
+
+  if [ $# -ne 1 ]; then
+    echo "error: a host argument is required"
+    return 1
+  fi
+
+  local REMOTE=$1
+
+  curl -sSL -D - "$REMOTE" -o /dev/null
+}
+
+# -- Tmux ---------------------------------------------------------------------
+
+# Tmux wrapper
+# reads .tmux (executable scripts) in root of each project and spawn a new tmux
+# session based upon that.
+# src: gh/wincent/wincent
+function tmux() {
+  emulate -L zsh
+
+  local ENV_OVERRIDES=()
+
+  # Make sure even pre-existing tmux sessions use the latest SSH_AUTH_SOCK.
+  # Inspired by: https://gist.github.com/lann/6771001
+  if [ -r "$SSH_AUTH_SOCK" -a ! -L "$SSH_AUTH_SOCK" ]; then
+    ln -sf "$SSH_AUTH_SOCK" "$HOME/.ssh/ssh_auth_sock"
+    ENV_OVERRIDES+=(SSH_AUTH_SOCK="$HOME/.ssh/ssh_auth_sock")
+  fi
+
+  # Same for KITTY_LISTEN_ON (although note, "unix:" prefix must be stripped).
+  local KITTY_SOCK=${KITTY_LISTEN_ON##unix:}
+  if [ -r "$KITTY_SOCK" -a ! -L "$KITTY_SOCK" ]; then
+    ln -sf "$KITTY_SOCK" "$HOME/.config/kitty/kitty.sock"
+    ENV_OVERRIDES+=(KITTY_LISTEN_ON="unix:$HOME/.config/kitty/kitty.sock")
+  fi
+
+  # If provided with args, pass them through.
+  if [[ -n "$@" ]]; then
+    env "${ENV_OVERRIDES[@]}" tmux "$@"
+    return
+  fi
+
+  # Check for .tmux file (poor man's Tmuxinator).
+  if [ -x .tmux ]; then
+    # Prompt the first time we see a given .tmux file before running it.
+    local DIGEST="$(openssl sha512 .tmux)"
+    if ! grep -q "$DIGEST" ~/..tmux.digests 2> /dev/null; then
+      cat .tmux
+      read -k 1 -r \
+        'REPLY?Trust (and run) this .tmux file? (t = trust, otherwise = skip) '
+      echo
+      if [[ $REPLY =~ ^[Tt]$ ]]; then
+        echo "$DIGEST" >> ~/..tmux.digests
+        env "${ENV_OVERRIDES[@]}" ./.tmux
+        return
+      fi
+    else
+      env "${ENV_OVERRIDES[@]}" ./.tmux
+      return
+    fi
+  fi
+
+  # Attach to existing session, or create one, based on current directory.
+  local SESSION_NAME=$(basename "${$(pwd)//[.:]/_}")
+  env "${ENV_OVERRIDES[@]}" tmux new -A -s "$SESSION_NAME"
+}
 
 
-# -- source/load virtual env
+# -- Dictionary tools ---------------------------------------------------------
 
-    function vact() {
-        [ $# -eq 0 ] && local path_to_venv="$PWD"
-        [ $# -eq 1 ] && local path_to_venv="$1"
-        [ $# -gt 1 ] && printf "Wrong number of arguments\n"
-        source "$path_to_venv"/venv/bin/activate
-    }
+# sdcv: Commandline dictionary
+# Dictionaries are located in ~/.local/share/stardict/dic/
+# brew install sdcv
+# src: Arch Wiki
+function def() {
+  [ $(tput cols) -lt 80 ] && local width=$(tput cols)
+  sdcv -n --utf8-output --color "$@" 2>&1 \
+  | sed 's/<br>/\n/g' \
+  | sed 's/<BR>/\n/g' \
+  | sed 's/|/\n/g' \
+  | sed -e 's/<[^>]*>//g' \
+  | fold -s -w ${width:-80} | \less -FRX
+}
+
+# MacOS's dictionary?
+# pip install dictionarytools or something
+# Usage: dict (A-;)
+function dict() {
+  vact ~/opt/py/3.12
+  word="`fzf </usr/share/dict/words`"
+  test -n "$word" && dict.py "$word" | less -R
+  deactivate
+}
+bindkey -s '\e;' 'dict\r'
 
 
-# -- reset shell
+# -- Bibliography tools -------------------------------------------------------
 
-    # fix the change of cursor via reset
-    reset() { echo -ne '\e[2 q' && command reset ;}
+# Get bibtex citation from DOI (grabs bibtex citation from crossref.org)
+# src: (Connor McDaniel) https://youtu.be/nO4T8JDNYG0
+# Usage: doi2bib <doi>
+function doi2bib() {
+  bibdir="${2:-.}"
+  bibpath="${bibdir}/bib.bib"
+  curl --silent "https://api.crossref.org/works/$1/transform/application/x-bibtex"
+}
+
+# Grabs DOI from a pdf file
+# brew install pdftools/poppler
+# src: (Connor McDaniel) https://youtu.be/nO4T8JDNYG0
+# Usage: getdoi /path/to/pdf/file
+function getdoi() {
+  pdftotext -q "$1" - | grep -P -i "doi(:|.org)"
+}
+
+# Get bibtex citation using pubmed id
+# src: (Connor McDaniel) https://youtu.be/nO4T8JDNYG0
+# brew install bibutils
+# Usage: pmid2bib <pmid)
+function pmid2bib() {
+  curl -s "https://www.ncbi.nlm.nih.gov/pubmed/$1?report=xml&format=raw" \
+  | sed -e 's/&gt;/>/g' -e 's/&lt;/</g' | med2xml | xml2bib -nb -b
+}
+
+# Formats the bib files
+# brew install biber
+# src: ? (tex.stachexchange)
+# Usage: bibfmt <citation.bib>
+function bibfmt() {
+  biber --quiet --tool --output_align --output_indent=2 --output_fieldcase=lower "$1" --output-file "$1"
+  \rm "$1".blg
+}
+
+
+# -- VIM stuff ----------------------------------------------------------------
+
+# Vim Query (if arg provided, shows a list of all files with that query string)
+# Usage: vq [query]
+function vq() {
+  file="$(find . -type f | fzf --reverse --multi --query $1)"
+  test -n "$file" && nvim $_
+}
+
+
+# -- Misc. --------------------------------------------------------------------
+
+# List fonts
+# Usage: lsfont
+lsfont() {
+  fc-list | fzf --reverse --multi --delimiter ':' --with-nth='-2..-1'
+}
+
+# Man pages
+# Usage: m (A-m)
+m() {
+  man `fzf < ~/.manpages`
+}
+bindkey -s '\em' 'm\r'
+
+# Read man pages in pdf files
+# Usage: manpdf
+manpdf() {
+  man -t `fzf < ~/.manpages` | ps2pdf - - | open -fa Skim
+}
+
+# Get python .gitignore
+# Usage: pygitignore
+pygitignore() {
+  download=0
+  if [ -e .gitignore ]; then
+      echo ".gitignore already exists."
+  else
+      curl -s https://raw.githubusercontent.com/github/gitignore/main/Python.gitignore > .gitignore
+  fi
+}
+
+# Reset shell
+# Also fixes the change of cursor via reset
+# Usage: reset
+reset() {
+  echo -ne '\e[2 q' && command reset
+}
+
+# Play (only audio of) media files in cli (using mpv)
+# Usage: play <file>
+play() {
+  mpv --no-config --really-quiet --keep-open=no --force-window=no --no-resume-playback "$1"
+}
+
+# Source/load virtual env (nemonics: Virtualenv ACTivate)
+# Usage: vact /path/to/venv/dir/
+vact() {
+  [ $# -eq 0 ] && local path_to_venv="$PWD"
+  [ $# -gt 1 ] && printf "Wrong number of arguments\n"
+  [ $# -eq 1 ] && local path_to_venv="$1"
+  source "$path_to_venv"/bin/activate
+}
+
+# Go to the directory of a background job
+# src: https://unix.stackexchange.com/a/82217/419393
+# Usage: cdjob
+function cdjob () {
+  pid=$(jobs -p $1);
+  d=$(readlink /proc/$pid/cwd);
+  cd "$d"
+}
+
+# Create a directory and take me into it
+# Usage: take <dir>
+function take() {
+  mkdir -p $1 && cd $1
+}
+
+# Search for projects
+# Usage: proj (Alt-p)
+function proj() {
+  cd "$(find $HOME/git/projects $HOME/git/software -maxdepth 1 -type d | fzf)"
+}
+bindkey -s '\ep' 'proj\r'
+
+# # Find pdf files
+# # Usage: fpdf
+# function fpdf() {
+#   pdf="$(find \
+#     $HOME/Documents $HOME/books $HOME/archived/uni/ \
+#     -type f -iname '*.pdf' 2>/dev/null \
+#   | fzf --delimiter '/' --with-nth='-1')"
+#   test -n "${pdf}" && open "${pdf}"
+# }
+
+
+# Find pdf files
+# Usage: fpdf
+function fpdf() {
+  pdf="$(find \
+    ~/Documents/books ~/Documents/sci $fpdf_dirs \
+    -mindepth 1 -maxdepth 1 -type f -iname '*.pdf' 2>/dev/null \
+  | fzf --delimiter '/' --with-nth='-1')"
+  test -n "${pdf}" && open "${pdf}"
+}
+
+
+# Archive Extraction
+# src: Derek Taylor
+# Usage: ex <file>
+ex() {
+  if [ -f $1 ] ; then
+    case $1 in
+      *.tar.bz2)   tar xjf $1   ;;
+      *.tar.gz)    tar xzf $1   ;;
+      *.bz2)       bunzip2 $1   ;;
+      *.rar)       unrar x $1   ;;
+      *.gz)        gunzip $1    ;;
+      *.tar)       tar xf $1    ;;
+      *.tbz2)      tar xjf $1   ;;
+      *.tgz)       tar xzf $1   ;;
+      *.zip)       unzip $1     ;;
+      *.Z)         uncompress $1;;
+      *.7z)        7z x $1      ;;
+      *.deb)       ar x $1      ;;
+      *.tar.xz)    tar xf $1    ;;
+      *.tar.zst)   unzstd $1    ;;
+      *)           echo "'$1' cannot be extracted via ex()" ;;
+    esac
+  else
+    echo "'$1' is not a valid file"
+  fi
+}
+
+# Print all of history
+# This is a function because Zsh aliases can't take arguments.
+function history() {
+  emulate -L zsh
+  fc -l 1
+}
+
+# Print a pruned version of a tree.
+#
+# Examples:
+#
+#   # Print all "*.js" files in src:
+#   subtree '*.js' src
+#
+#   # Print all "*.js" files in the current directory:
+#   subtree '*.js'
+#
+#   # Print all "*.js" and "*.ts" files in current directory:
+#   subtree '*.js|*.ts'
+#
+# src: gh/wincent/wincent
+# (https://github.com/wincent/wincent/blob/master/aspects/dotfiles/files/.zsh/functions)
+function subtree() {
+  tree -a --prune -P "$@"
+}
+
+# fd - "find directory"
+# src: gh/wincent/wincent
+# Inspired by: https://github.com/junegunn/fzf/wiki/examples#changing-directory
+# Usage: fd
+function fd() {
+  local DIR
+  DIR=$(find . -depth \
+    -not -iwholename 'build' \
+    -not -iwholename '*.git*' \
+    -not -iwholename '*__pycache__*' \
+    -type d  2>/dev/null \
+  | fzf \
+    --no-multi \
+    --preview='test -n "{}" && tree -C {} | head -n 50' -q "$*" \
+    --preview-window=70%,border-double,top \
+    --prompt "> ") \
+  && cd "$DIR"
+}
+bindkey -s '' 'fd\r'
+
+
+# fh - "find [in] history"
+# src: gh/wincent/wincent
+# Inspired by: https://github.com/junegunn/fzf/wiki/examples#command-history
+# Usage: fh
+function fh() {
+  print -z $(fc -l 1 | fzf --no-multi --tac --no-sort -q "$*" --prompt "> " | sed 's/ *[0-9]*\*\{0,1\} *//')
+}
+
+# Efficient scratch space
+# src: gh/wincent/wincent
+# (https://www.youtube.com/watch?v=C5aRtq-Rtbg)
+function scratch() {
+  local SCRATCH=$(mktemp -d)
+  echo "Spawning subshell in scratch directory:"
+  echo "  $SCRATCH"
+  (cd $SCRATCH; zsh)
+  echo "Removing scratch directory"
+  rm -rf "$SCRATCH"
+}
+
+
+# -- OpenFOAM -----------------------------------------------------------------
+
+function tuts() {
+  [ -z $FOAM_TUTORIALS ] && {
+    echo "OpenFOAM environment is not loaded."
+    return 1
+  }
+  find $FOAM_TUTORIALS/* -maxdepth 3 -mindepth 2 -type d  \
+  | fzf                                                   \
+    --preview='test -n {} && tree --gitignore -L 2 -C {}' \
+    --preview-window=right:70%:border-double              \
+    --delimiter '/' --with-nth 7..9
+}
+
+function cdtut() {
+  local tut="$(tuts)"
+  cd "$tut"
+}
+
+# src: https://www.cfdengine.com/newsletter/173/
+#
+# Modifications to the original version:
+# 
+function gtfo() {
+  # At this point sk sucks in terms of speed for large queries -> fzf ✓
+
+  test -z "$WM_PROJECT_DIR" \
+  && { echo "OpenFOAM environment is not loaded." && return 1 ;}
+
+  ( cd $FOAM_TUTORIALS || return 1 # Assert
+
+    # [ 1st version: grep ]
+    # ggrep                                                                  \
+    #   --no-messages                                                        \
+    #   --line-buffered --line-number --color=never                          \
+    #   --binary-files=without-match ''                                      \
+    #   --recursive                                                          \
+    #   --exclude={'*.m4','*.inp','*.sh','*.py','*plot*','*All*','*Test*'}   \
+    #   --exclude={'*otape17*','*list-worlds*','*.schema','*validation'}     \
+    #   --exclude={'*README*'}                                               \
+    #   --exclude-dir={'*geometry*','*polyMesh*','*dataset*','*triSurface*'} \
+
+    # [ 2nd version: find, xargs, grep ]
+    # find . -type f                                                   \
+    #   -not \( -path '*.m4*' -o -path "*.csv" \)                      \
+    #   -not \( -path '*geometry*' -prune -o -path "dataset" -prune \) \
+    #   -type f -print0                                                \
+
+    # 3rd version (high cpu usage)
+    # find . -type f                                \
+    #   -not \(                                     \
+    #       -path "*polyMesh*" -prune               \
+    #       -o -path '*triSurface*' -prune          \
+    #       -o -path '*geometry*' -prune            \
+    #       -o -path "*dataset*" -prune             \
+    #       -o -path '*validation*' -prune          \
+    #       -o -path "*All*"                        \
+    #       -o -path '*.sh'                         \
+    #       -o -path "*.py"                         \
+    #       -o -path '*README*'                     \
+    #       -o -path '*.m4*'                        \
+    #       -o -path "*plot*"                       \
+    #       -o -path "*list-worlds*"                \
+    #       -o -path "*.schema"                     \
+    #       -o -path "*.csv"                        \
+    #       -o -path '*otape17*'                    \
+    #       -o -path "*Test*"                       \
+    #   \) -type f -print0                          \
+    # | xargs -0 --max-procs 0  --no-run-if-empty   \
+    #     ggrep --line-buffered --line-number       \
+    #     --binary-files=without-match --color ""   \
+
+    ggrep                                                                  \
+      --no-messages                                                        \
+      --line-buffered --line-number --color=never                          \
+      --binary-files=without-match ''                                      \
+      --recursive                                                          \
+      --exclude={'*.m4','*.inp','*.sh','*.py','*plot*','*All*','*Test*'}   \
+      --exclude={'*otape17*','*list-worlds*','*.schema','*validation'}     \
+      --exclude={'*README*'}                                               \
+      --exclude-dir={'*geometry*','*polyMesh*','*dataset*','*triSurface*'} \
+    | fzf --ansi                                    \
+      --query "$1"                                  \
+      --delimiter ':' --nth=3                       \
+      --preview '                                   \
+          test -n {} && zless {1}                   \
+          | nl -ba                                  \
+          | perl -pe "s/"{2}"/>/g if "{2}" .. "{2}' \
+      --preview-window 'up:70%:+{2}-/3'
+  )
+}
+
+# # Take a Peek at an OpenFOAM Library/Application
+# #
+# # Usage: `foampeek [lib/app name query] [file name query]`
+# # 
+# # Firstly, it prompts you to select a library (in `$FOAM_SRC`) or an application
+# # (in `$FOAM_APP`), and finally, it lists all the files in that lib/app for you
+# # to select.
+# #
+# # Two optional arguments can be passed as query for:
+# # 1. name of the lib/app
+# # 2. name of the file in that lib/app
+# #
+# # You can select more than one file to view in the editor (See the
+# # key bindings bellow).
+# #
+# # By default, it will look for the `EDITOR` environment
+# # variable. You can set this environment variable in your shell config (either
+# # in `.profile`, `.bash_profile`, `.zprofile`, `.bashrc`, or `.zshrc`) to your
+# # favroite editor.
+# # 
+# # Bindings:
+# # - Tab: select the current item
+# # - Shift-Tab: de-select the current item
+# # - C-A: select all
+# # - C-D: de-select all
+# # - C-T: toggle selecting/de-selecting all
+# # 
+# # Examples:
+# # 1. `$ foampeek`
+# # 2. `$ foampeek icof createfie`
+# # 2. `$ foampeek lagrang spheredrag `
+# # 2. `$ foampeek 'lagrang intermed' spheredrag `
+# # 3. `$ foampeek meshtofoam`
+# #
+# # TODO:
+# # 1. -I: add custom project directories
+# # 2. -U|--user: also search in user directory as well (will search for src and application in user dir)
+# # 3. config file?
+# # 4. cache result of find command for list of all files in a database like file and add daily item to cronjob to update
+# function foampeek() {
+#   test -z $WM_PROJECT_DIR && { echo "OpenFOAM env is not loaded." && return 1 ;}
+#
+#   # Parse arguments
+#   while [ $# -gt 0 ]; do
+#     case $1 in
+#       -l | --lib)
+#         shift
+#         lib_name="$1"
+#         ;;
+#       -a | --app)
+#         shift
+#         app_name="$1"
+#         ;;
+#       *)
+#         if [ $# -gt 2 ]; then
+#           printf "%s%s%s\n" "Wrong number of arguments. " \
+#                           "Two extra optional args was needed, " \
+#                           "but $(($# - 2)) extra args are provided."
+#           return 1
+#         fi
+#         lib_name="$1"
+#         app_name="$2"
+#         break
+#         ;;
+#     esac
+#   done
+#
+#   # Select the library or application
+#   # Any directory that has a `Make` folder in it counts.
+#   # src: path to the library/application
+#   dir=$(                                                       \
+#       find $FOAM_SRC $FOAM_APP -path "*Make"                   \
+#       | sed -e 's#Make$##'                                     \
+#       | sk --query "$1"                                        \
+#           --delimiter '/' --with-nth '6..'                     \
+#           --preview 'tree --gitignore -I lnInclude -L 2 -C {}' \
+#           --preview-window 'up:70%:border')
+#
+#   # In case user cancels operations at this point by pressing Escape
+#   test -z $dir && return 0
+#
+#
+#   # Select file or files in the selected code.
+#   #
+#   # To get LSP (clangd) detecting the project setup, I need to cd into the
+#   # `$dir`'s directory. Thus, a subshell is spawned to preserve the old working
+#   # directory.
+#   ( cd $dir
+#
+#     # --delimiter '/' --with-nth='6..'
+#     #  /home/user/OpenFOAM/OpenFOAM-x/src/... 
+#     #  12    3    4        5          6   7
+#     files=$( \
+#         find $dir -type f -not \( \
+#             -path "*.cache*" -o \
+#             -path "*.json*" -o \
+#             -path "*.vscode*" -o \
+#             -path "*.git*" -o \
+#             -path "*$WM_OPTIONS" \
+#           \) \
+#       | sk --multi --query "$2"                                            \
+#           --delimiter '/' --with-nth='6..' --nth='-1'                      \
+#           --bind 'ctrl-a:select-all,ctrl-d:deselect-all,ctrl-t:toggle-all' \
+#           --preview 'test -n {} && nl -ba {}' --preview-window 'up:75%'    \
+#           --header='CTRL-A: select all; CTRL-D: de-select-all; CTRL-T: toggle')
+#
+#     # Edit in the Editor
+#     test -z $files || {
+#       case $EDITOR in
+#         vim | nvim)
+#           opts='-R'  # Read-Only mode
+#           ;;
+#         *)
+#           # "TODO: Other editor configs"
+#           opts=""
+#           ;;
+#       esac
+#
+#       $EDITOR $opts $files
+#     }
+#   )
+# }
+
+
+
+# emacs() {
+#     open -a Emacs.app "$@"
+# }
+
+# Then use y instead of yazi to start, and press q to quit, you'll see the CWD changed. Sometimes,
+# you don't want to change, press Q to quit.
+function lf() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+	yazi "$@" --cwd-file="$tmp"
+	if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+		builtin cd -- "$cwd"
+	fi
+	rm -f -- "$tmp"
+}
+
+
+killemacs () {
+  ps aux | grep -v grep | grep Emacs.app | awk '{print $2}' | gxargs -r kill -9
+}
+
+function vpninfo() {
+  http_proxy=http://127.0.0.1:8081 curl --silent ipinfo.io/"$(curl -s ifconfig.me)"
+  printf "\n"
+}
