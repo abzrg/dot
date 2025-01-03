@@ -7,10 +7,3 @@ setlocal wrap
 let markdown_fenced_languages = [ 'html', 'python', 'vim', 'cpp', 'c', 'sh' ]
 
 let b:surround_{char2nr('c')} = "```\r```"
-
-
-
-augroup MarkdownCodeblockSyntaxHighlighting
-autocmd!
-autocmd BufEnter,BufReadPost,BufRead *.md edit
-augroup END

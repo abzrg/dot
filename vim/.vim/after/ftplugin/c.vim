@@ -1,6 +1,6 @@
 " nnoremap <leader>= :w <bar>call system("clang-format -style=file -i " . expand('%')) <bar> silent! edit<CR>
 
-" setlocal commentstring=//\ %s
+setlocal commentstring=//\ %s
 " setlocal noexpandtab
 " setlocal ts=8 sw=8
 
