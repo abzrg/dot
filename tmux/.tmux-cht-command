@@ -69,3 +69,8 @@ parallel
 virtualenv
 mypy
 gh
+telnet
+convert
+transmission-cli
+date
+pass
