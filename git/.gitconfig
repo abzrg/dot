@@ -1,4 +1,16 @@
+[core]
+	compression = 0
+	autocrlf = input
+	; pager = less -FRSX
+	editor = nvim
+	excludesFile = ~/.gitignore
+
+[init]
+	; templatedir = ~/.git_template
+	defaultBranch = main
+
 [alias]
+	wt = worktree
 	cf = !git config --global --edit
 
 	amend = commit --amend -v
@@ -8,33 +20,40 @@
 	co = checkout
 	cb = checkout -b
 	b = branch
-    cur = branch --show-current
+	cur = branch --show-current
 
 	di = diff
+	d0 = diff --unified=0
 	dc = diff --cached
+	dc0 = diff --cached --unified=0
 	both = diff HEAD
+	dw = diff --color-words="[^[:space:]]|([[:alnum:]]|UTF_8_GUARD)+"
 
 	grepc = grep --cached --break --heading
 
+	ff = merge --ff-only
 	noff = merge --no-ff
 	pom = push origin master
 	st = status -sb
-	stat  = status --untracked-files=no
+	stat = status --untracked-files=no
 
 	# Like git whatchanged
-	what  = log --raw --no-merges
+	what = log --raw --no-merges
 
+	# Beautiful log
 	l = log --simplify-merges --graph --pretty="tformat:%C(yellow)%h%Creset\\ %Cgreen(%ar)%Creset\\ %C(blue)<%an>%Creset\\ %C(red)%d%Creset\\ %s"
+	# Smart Log
+	sl = log --graph --pretty=format:'%C(auto)%h%Creset%C(auto)%d%Creset %s %C(magenta bold)(%cr)%Creset %C(cyan)<%aN>%Creset' --all --simplify-by-decoration
 	summary = log --abbrev-commit --pretty=oneline --author="Ali.Bozorgzadeh" --since=last.mon --reverse
 
 	clone = clone --progress --verbose
 
 	# pretty print git objects
 	cat = cat-file -p
-
-    ls = ls-files
+	ls = ls-files
 	# print the contents of the staging area or index
 	index = ls-files -s
+	ls-ignored = ls-files --others --directory --no-empty-directory
 
 	; ctags = !.git/hooks/ctags
 	abbrev = !sh -c 'git rev-parse --short ${1-`echo HEAD`}' -
@@ -43,7 +62,6 @@
 	# src: https://stackoverflow.com/a/8408640/13041067
 	dupes = !"git ls-tree -r HEAD | cut -c 13- | sort | uniq -D -w 40"
 
-	ff = merge --ff-only
 	fixup = !sh -c 'git commit --fixup=$1 ${@:2}' -
 
 	# Show just the HEAD commit message (no indent) and nothing else
@@ -64,21 +82,20 @@
 	# requires Git 1.6.2 or later
 	rollback = !sh -c 'git reset --merge HEAD~${1-1}' -
 
-	# "smartlog", although it's not that smart.
-	# Equivalent to `git graph --all --simplify-by-decoration.
-	sl = log --graph --pretty=format:'%C(auto)%h%Creset%C(auto)%d%Creset %s %C(magenta bold)(%cr)%Creset %C(cyan)<%aN>%Creset' --all --simplify-by-decoration
-
 	staged = diff --cached
 
+	# All ignored and untracked files are also stashed and then cleanedup with `git clean`.
+	stashall = stash --all
 
 [user]
 	name = Ali Bozorgzadeh
 	email = 61201050+abzrg@users.noreply.github.com
 
-
 [github]
-	user = reverseila
+	user = abzrg
 
+[column]
+	ui = auto
 
 [color]
 	branch = auto
@@ -89,111 +106,95 @@
 	ui = true
 	grep = auto
 
-
 [color "diff-highlight"]
 	oldHighlight = red bold 238
 	newHighlight = green bold 238
-
 
 [color "status"]
 	added = green
 	changed = red
 	untracked = blue
 
-
-[http]
-	# problem with cloning large repos
-	postBuffer = 524288000
-
-
-[core]
-	compression = 0
-	autocrlf = input
-	; pager = less -FRSX
-	editor = nvim
-	excludesFile = ~/.gitignore
-
-
-[init]
-	; templatedir = ~/.git_template
-	defaultBranch = master
-
 ; [interactive]
 ;	singlekey = true
+;	diffFilter = diff-highlight
 
+[pager]
+	show-branch = true
+	; status = true
 
 [help]
 	autocorrect = 10
 
-
-[diff]
-	tool = vimdiff
-
+[rebase]
+	autosquash = true
 
 [merge]
 	summary = true
 	tool = fugitive
-	conflictStyle = diff3 #?
+	# Adds a middle section, which is the code at the closest common parent in the commit tree
+	conflictStyle = diff3
 	log = 1000 #?
-
 
 [mergetool "fugitive"]
 	cmd = nvim -f -c \"Gdiff\" \"$MERGED\"
 	keepBackup = false
 
-
-; [pull]
-	; rebase = true
-
+[pull]
+	rebase = true
 
 ; [push]
 ;	default = tracking
 
-
-[rebase]
-	autosquash = true
-
 [branch]
 	autosetupmerge = always
 	autosetuprebase = local
-
+	sort = -committerdate  # show the branches that contain the latest commits first
 
 # ignored by Git older than 1.8.2
 [diff]
 	algorithm = histogram
-
 	# Added in Git 2.9.0 (experimental): more readable diffs.
 	compactionHeuristic = true
 
+[difftool]
+	prompt = true
+[diff]
+	tool = nvimdiff
+[difftool "nvimdiff"]
+	cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
 
 [grep]
 	lineNumber = true
-
 	# requires Git built with PCRE support; ie:
 	#   brew install git --with-pcre (on OS X)
 	patternType = perl
 
-
-[help]
-	autocorrect = 0
-
-
-; [interactive]
-; 	diffFilter = diff-highlight
-
-
 [log]
 	decorate = short
 
-
-[pager] #?
-	show-branch = true
-	; status = true
-
-
-; [rebase]
-; 	autosquash = true
-
-
 [status]
 	submodulesummary = true
+
+# Signing commits with SSH
+[gpg]
+	format = ssh
+
+[commit]
+	gpgsign = true
+
+[gpg "ssh"]
+	allowedSignersFile = ~/.ssh/allowed_signers
+
+# Use ssh when cloning from GitHub
+[url "git@github.com:"]
+	insteadOf = "https://github.com/"
+
+[http]
+	# problem with cloning large repos
+	postBuffer = 524288000
+
+[include]
+	path = ~/.gitconfig_private
+
+# vim: noet ts=8 sw=8
