@@ -2,6 +2,8 @@ return {
   { 'tpope/vim-surround' },
   -- { 'tpope/vim-endwise' },  --- No, No, No, Noooo, God, ..., Noooooooooooooooooh
   -- + 'enuch' or whatever it is called too creates the problem with blink while pressing <cr>
+  { 'tpope/vim-speeddating' },
+  { 'tpope/vim-sleuth' },
   { 'tpope/vim-repeat' },
   { 'tpope/vim-unimpaired' },
   { 'tpope/vim-rsi' },
@@ -16,7 +18,6 @@ return {
       require('remember')
     end
   },
-
   {
     'tommason14/lammps.vim'
   },
