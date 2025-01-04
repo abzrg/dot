@@ -120,6 +120,7 @@ PROMPT=\
 '${SSH_TTY:+%F{cyan\}%n@%m%f }'\
 '${vcs_info_msg_0_}'\
 '%F{cyan}%1~%f'\
-' $(__shlvl_prompt) '
+$'\n'\
+'$(__shlvl_prompt) '
 
 RPROMPT="%(?..%F{#554444}(%?%))"
