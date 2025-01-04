@@ -1,3 +1,5 @@
+vim.opt_local.commentstring = "// %s"
+
 -- Auto indent for c/c++ files (private: will be deindented)
 --    source: https://stackoverflow.com/a/7623017/13041067
 -- vim.opt.cindent         = true
