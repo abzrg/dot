@@ -87,6 +87,7 @@ bindkey -M menuselect 'down' vi-up-line-or-history
 bindkey -M menuselect 'up' vi-forward-char
 bindkey -M menuselect 'right' vi-down-line-or-history
 
+precmd() { echo -ne '\e[2 q' ;}
 # function zle-keymap-select () {
 #  case $KEYMAP in
 #      vicmd) echo -ne '\e[2 q';;      # block
