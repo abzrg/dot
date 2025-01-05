@@ -107,5 +107,5 @@ vim.opt.suffixesadd     = {
 -- vim.wo.colorcolumn =
 
 local textwidth         = 90
-vim.opt_local.textwidth = textwidth
+vim.opt.textwidth       = textwidth
 vim.wo.colorcolumn      = tostring(textwidth)
