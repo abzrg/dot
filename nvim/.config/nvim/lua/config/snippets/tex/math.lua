@@ -75,16 +75,16 @@ return
   --   {condition = tex.in_mathzone}
   -- ),
   -- EULER'S NUMBER SUPERSCRIPT SHORTCUT (use exp when it becomes cumbersome to use e)
-  s({trig = '([^%a])ee', regTrig = true, wordTrig = false, snippetType="autosnippet"},
-    fmta(
-      "<>e^{<>}",
-      {
-        f( function(_, snip) return snip.captures[1] end ),
-        d(1, get_visual)
-      }
-    ),
-    {condition = tex.in_mathzone}
-  ),
+  -- s({trig = '([^%a])ee', regTrig = true, wordTrig = false, snippetType="autosnippet"},
+  --   fmta(
+  --     "<>e^{<>}",
+  --     {
+  --       f( function(_, snip) return snip.captures[1] end ),
+  --       d(1, get_visual)
+  --     }
+  --   ),
+  --   {condition = tex.in_mathzone}
+  -- ),
   -- ZERO SUBSCRIPT SHORTCUT
   s({trig = '([%a%)%]%}])00', regTrig = true, wordTrig = false, snippetType="autosnippet"},
     fmta(

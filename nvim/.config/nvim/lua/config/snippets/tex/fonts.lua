@@ -100,6 +100,16 @@ return
       }
     )
   ),
+  -- TENSOR i.e. \bm{\mathsfit}
+  s({ trig = "([^%a])mbt", regTrig = true, wordTrig = false, snippetType = "autosnippet" },
+    fmta(
+      "<>\\mbt{<>}",
+      {
+        f(function(_, snip) return snip.captures[1] end),
+        d(1, get_visual),
+      }
+    )
+  ),
   -- REGULAR TEXT i.e. \text (in math environments)
   s({ trig = "([^%a])tee", regTrig = true, wordTrig = false, snippetType = "autosnippet" },
     fmta(
