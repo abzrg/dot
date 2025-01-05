@@ -34,6 +34,39 @@ return {
     --- Server configs
     ---
 
+    -- (La)tex
+    lspconfig.texlab.setup {
+      capabilities = capabilities,
+      cmd = { "texlab" },
+      filetypes = { "plaintex", "tex", "bib" },
+      settings = {
+        texlab = {
+          auxDirectory = ".",
+          bibtexFormatter = "texlab",
+          build = {
+            args = { "-pdf", "-dvi-", "-interaction=nonstopmode", "-synctex=1", "%f" },
+            executable = "latexmk",
+            forwardSearchAfter = false,
+            onSave = false
+          },
+          chktex = {
+            onEdit = false,
+            onOpenAndSave = false
+          },
+          diagnosticsDelay = 300,
+          formatterLineLength = 80,
+          forwardSearch = {
+            args = {}
+          },
+          latexFormatter = "latexindent",
+          latexindent = {
+            modifyLineBreaks = false
+          }
+        }
+      },
+      single_file_support = true
+    }
+
     -- Lua
     lspconfig.lua_ls.setup { capabilities = capabilities }
 
