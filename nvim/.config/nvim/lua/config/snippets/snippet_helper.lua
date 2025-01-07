@@ -1,5 +1,3 @@
-print("hello from snip")
-
 local M = {}
 
 local ls = require("luasnip")
