@@ -251,7 +251,16 @@ return {
           show_on_insert_on_trigger_character = false,
         },
 
-        accept = { auto_brackets = { enabled = true } },
+        accept = {
+          auto_brackets = {
+            enabled = true,
+            kind_resolution = {
+              enabled = true,
+              -- Disable kind auto_brackets for latex files
+              blocked_filetypes = { 'tex' },
+            },
+          },
+        },
       },
 
       sources = {
