@@ -109,3 +109,11 @@ vim.opt.suffixesadd     = {
 local textwidth         = 90
 vim.opt.textwidth       = textwidth
 vim.wo.colorcolumn      = tostring(textwidth)
+
+-- Editor Config
+-- Put `max_line_length` to use
+---@diagnostic disable-next-line: duplicate-set-field
+require('editorconfig').properties.max_line_length = function(bufnr, val, _)
+  vim.opt_local.colorcolumn = val
+  vim.b[bufnr].textwidth = tonumber(val)
+end
