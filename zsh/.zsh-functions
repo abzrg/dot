@@ -647,3 +647,49 @@ function vpninfo() {
   http_proxy=http://127.0.0.1:8081 curl --silent ipinfo.io/"$(curl -s ifconfig.me)"
   printf "\n"
 }
+
+# Random hisotry event for today from Wikipedia
+update_wikidates () {
+  [ -d ~/.wikidates ] || mkdir ~/.wikidates
+  for day in {1..365}; do
+    date=$(LC_ALL=en_US.utf8 date -d "now +$day days" +%B_%d)
+    echo $day/365: $date
+
+    w3m -dump "http://en.wikipedia.org/wiki/$date" \
+      | awk '/^Events$/,/^Births$/' \
+      | tail -n +3 | head -n -2 \
+      | sed -E \
+            -e "/\[edit\]$/d" \
+            -e "/^[[:space:]]*[0-9]{4}[–-][0-9]{4}[[:space:]]*$/d" \
+            -e "/^[[:space:]]*[0-9]{4}[–-][a-zA-Z]+[[:space:]]*$/d" \
+            -e "/^[[:space:]]*[Pp]re-[0-9]{4}[[:space:]]*$/d" \
+      | tr -d '\n' \
+      | sed -E -e "s/^[ \t]*//" -e "s/[[:space:]][[:space:]]+/ /g" \
+      | sed "s/•/\n•/g" \
+      | sed -E -e "s/[[:space:]]+$//" \
+      | sed -E 's/\^\[[0-9][0-9]?[0-9]?\]//g' \
+      | tail -n +2 \
+      > ~/.wikidates/$date
+    printf "\n" >> ~/.wikidates/$date
+  done
+
+  echo $day/366: February_29
+  w3m -dump "http://en.wikipedia.org/wiki/February_29" \
+    | awk '/^Events$/,/^Births$/' \
+    | tail -n +3 | head -n -2 \
+    | sed -E \
+          -e "/\[edit\]$/d" \
+          -e "/^[[:space:]]*[0-9]{4}[–-][0-9]{4}[[:space:]]*$/d" \
+          -e "/^[[:space:]]*[0-9]{4}[–-][a-zA-Z]+[[:space:]]*$/d" \
+          -e "/^[[:space:]]*[Pp]re-[0-9]{4}[[:space:]]*$/d" \
+    | tr -d '\n' \
+    | sed -E -e "s/^[ \t]*//" -e "s/[[:space:]][[:space:]]+/ /g" \
+    | sed "s/•/\n•/g" \
+    | sed -E -e "s/[[:space:]]+$//" \
+    | sed -E 's/\^\[[0-9][0-9]?[0-9]?\]//g' \
+    | tail -n +2 \
+    > ~/.wikidates/February_29
+  printf "\n" >> ~/.wikidates/February_29
+}
+
+cat ~/.wikidates/$(LC_ALL=en_US.utf8 date +%B_%d) | shuf -n 1
