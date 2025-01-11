@@ -1,0 +1,38 @@
+#!/bin/bash -e
+
+download_github_file() {
+    local github_url="$1"
+
+    # Check if the URL contains "github.com" and "/blob/"
+    if [[ "$github_url" != *"github.com"* || "$github_url" != *"/blob/"* ]]; then
+        echo "Invalid GitHub URL. Ensure it's a file URL with '/blob/'."
+        exit 1
+    fi
+
+    # Convert the GitHub URL to the raw URL
+    local raw_url=$(echo "$github_url" | sed 's|github.com|raw.githubusercontent.com|' | sed 's|/blob/|/|')
+
+    # Extract the filename from the URL
+    local filename=$(basename "$raw_url")
+
+    # Download the file using curl or wget
+    echo "Downloading file from: $raw_url"
+    if command -v curl > /dev/null; then
+        curl -o "$filename" "$raw_url"
+    elif command -v wget > /dev/null; then
+        wget -O "$filename" "$raw_url"
+    else
+        echo "Error: Neither 'curl' nor 'wget' is installed."
+        exit 1
+    fi
+
+    if [[ -f "$filename" ]]; then
+        echo "File downloaded and saved as: $filename"
+    else
+        echo "Failed to download the file."
+        exit 1
+    fi
+}
+
+github_url="$1"
+download_github_file "$github_url"
