@@ -102,3 +102,6 @@ export GTEST_COLOR=1
 
 # python startup file
 export PYTHONSTARTUP=~/.pystartup
+
+# Python 3.13 environment as the base environment without prompt
+VIRTUAL_ENV_DISABLE_PROMPT=1 source ~/opt/py/3.13/bin/activate
