@@ -143,8 +143,9 @@
 [pull]
 	rebase = true
 
-; [push]
-;	default = tracking
+[push]
+	# Only push the current branch (only if tracking is set up)
+	default = tracking
 
 [branch]
 	autosetupmerge = always
