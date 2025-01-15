@@ -1,0 +1,80 @@
+#!/usr/bin/env python3
+
+"""
+IPA from cambridge online dictionary
+"""
+
+import sys
+import requests
+from bs4 import BeautifulSoup
+
+word = sys.argv[1]
+url = f"https://dictionary.cambridge.org/dictionary/english/{word}"
+
+# Set the custom user-agent
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.6) Gecko/20070725 Firefox/2.0.0.6'
+}
+
+try:
+    # Fetch the HTML content from the URL with custom headers
+    response = requests.get(url, headers=headers, timeout=10)
+    response.raise_for_status()  # Raise an exception for HTTP errors
+    html_content = response.text
+
+    # Parse the HTML
+    soup = BeautifulSoup(html_content, 'html.parser')
+
+    # Find the specific span with the given class
+    target_span = soup.find('span', {'class': 'ipa dipa lpr-2 lpl-1'})
+
+    # Get the text content, excluding HTML tags
+    if target_span:
+        plain_text = target_span.get_text()
+        print(f"/{plain_text}/")
+    else:
+        print("Target span not found")
+
+except requests.exceptions.HTTPError as http_err:
+    print(f"HTTP error occurred: {http_err}")
+except requests.exceptions.ConnectionError as conn_err:
+    print(f"Connection error occurred: {conn_err}")
+except requests.exceptions.Timeout as timeout_err:
+    print(f"Timeout error occurred: {timeout_err}")
+except requests.exceptions.RequestException as req_err:
+    print(f"An error occurred: {req_err}")
+
+
+# ARCHIVED SHELL SCRIPT (cambridge pronunciations needs advanced regex)
+# ---------------------
+
+# #!/bin/sh -e
+#
+# query="$(echo $1 | tr ' ' '+')"
+#
+# # # --- Google (Oxford)
+# # # sometimes google blocks repetitive requests!
+# # gl="us" # parameter defines the country to use for the Google search
+# # hl="en" # Parameter defines the language to use for the Google search
+# #
+# # ipa=`curl \
+# #     --silent \
+# #     --user-agent 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.6) Gecko/20070725 Firefox/2.0.0.6' \
+# #     'https://www.google.com/search?q='"$query"'+definition&ie=UTF-8&gl='"$gl"'hl='"$hl" \
+# # | grep -o '>/.*/<' \
+# # | sed -E -e 's/(<|>)//g'`
+#
+# # --- Cambridge
+# ipa=`curl \
+#     --silent \
+#     --location \
+#     --user-agent "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.6) Gecko/20070725 Firefox/2.0.0.6" \
+#     "https://dictionary.cambridge.org/dictionary/english/$query" \
+# | perl -0777 -nle '
+#     while (/(?<=\<span class="ipa dipa lpr-2 lpl-1"\>)(.*?)(?=\<)/gs) {
+#         print "$1\n";
+#     }' \
+# | head -2 | tail -1`
+#
+#
+# echo /$ipa/

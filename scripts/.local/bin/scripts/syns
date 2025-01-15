@@ -1,0 +1,100 @@
+#!/usr/bin/env python3
+
+"""
+Synonyms from google (Oxford) dictionary
+"""
+
+import sys
+import requests
+from bs4 import BeautifulSoup
+
+def remove_from_pattern_to_end(input_string, pattern):
+    # Split the string based on the pattern
+    parts = input_string.split(pattern)
+    # Take the first part
+    result = parts[0]
+    return result
+
+def fetch_google_search_results(query: str):
+    url = f"https://www.google.com/search?q={query.replace(' ', '+')}"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+    }
+    response = requests.get(url, headers=headers)
+    if response.status_code == 200:
+        return remove_from_pattern_to_end(response.text, "Opposite:")
+    else:
+        print("Failed to fetch search results.")
+        return None
+
+def extract_synonyms(query: str):
+    syns: list[str] = []
+    html_content = fetch_google_search_results(query)
+    if html_content:
+        soup = BeautifulSoup(html_content, 'html.parser')
+        # Find all divs with role="listitem"
+        list_items = soup.find_all('div', attrs={'role': 'listitem'})
+        for item in list_items:
+            # Find divs inside each list item
+            similars = item.find_all('div') #, attrs={'role': 'button'}
+            for similar in similars:
+                # Find all span elements inside each similar
+                spans = similar.find_all('span', class_=None)
+                for span in spans:
+                    syns.append(str(span.text))
+    if len(syns) == 0:
+        print()
+    else:
+        print(", ".join([syn for syn in syns]))
+
+
+# Example usage
+word = sys.argv[1].replace(' ', '-')
+extract_synonyms(word)
+
+
+# ARCHIVED SHELL SCRIPT
+#
+# #!/bin/sh -e
+#
+# # Maximum number (if any) of synonyms
+# numSyn=10
+#
+# query="$(echo $1 | tr ' ' '+')"
+#
+# spellcheck() {
+#     if `echo "$1" | aspell pipe --master=en_US --extra-dicts=en_GB | grep --quiet '\&'`; then
+#         (exit 1)
+#     else
+#         (exit 0)
+#     fi
+# }
+#
+# getpage() {
+#     curl 'https://www.google.com/search?q='"$1"'+define' \
+#         --silent \
+#         --location  \
+#         -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36'
+# }
+#
+#
+# # Spell check before proceeding
+# echo "$1" | aspell pipe --master=en_US --extra-dicts=en_GB | grep --quiet '\&' \
+# && {
+#     echo "the word has misspell";  exit 1
+# }
+#
+# # Make a temporary file
+# page=`mktemp`
+# # Make sure to remove the tmp file on exit, or when interrupted () or terminated (kill)
+# trap "rm -f $page" EXIT INT TERM
+#
+# getpage "$query" > "$page"
+#
+# # If there's no similar don't bother continuing
+# <"$page" grep -q 'Similar:' || { 1>&2 echo "There is no synonym for '$query'." && exit 1 ;}
+#
+# <"$page" perl -pe 's/.*?Similar://' \
+# | perl -pe 's/Opposite:.*//' \
+# | perl -nle 'print $1 while /\<span>([\w\s-]+?)\<\/span>/g' \
+# | head -"$numSyn"
