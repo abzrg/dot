@@ -34,7 +34,7 @@ Plug 'lifepillar/vim-mucomplete'
 call plug#end()
 
 " options
-set termguicolors
+set notermguicolors
 set bg=dark
 set mouse=a
 set clipboard=unnamed,unnamedplus
@@ -51,7 +51,7 @@ set autoread
 set noswapfile
 set nobackup
 set mouse=a
-set cursorline
+set nocursorline
 set nowrap
 set breakindent
 set virtualedit=block
@@ -185,7 +185,7 @@ vmap <silent> <SPACE> <NOP>
 
 nnoremap - :e %:h<CR>
 
-nnoremap <leader>? :!$HOME/.local/bin/vimdic.sh <C-r><C-w><CR>g
+nnoremap <leader>? :!$HOME/.local/bin/scripts/vimdic.sh <C-r><C-w><CR>g
 
 nnoremap <leader>M :Make<cr>
 nnoremap <leader>mm :set makeprg=
