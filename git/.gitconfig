@@ -22,12 +22,12 @@
 	b = branch
 	cur = branch --show-current
 
-	di = diff
-	d0 = diff --unified=0
-	dc = diff --cached
-	dc0 = diff --cached --unified=0
-	both = diff HEAD
-	dw = diff --color-words="[^[:space:]]|([[:alnum:]]|UTF_8_GUARD)+"
+	d = diff --ws-error-highlight=all
+	d0 = d --unified=0
+	dc = d --cached
+	dc0 = d --cached --unified=0
+	both = d HEAD
+	dw = d --color-words="[^[:space:]]|([[:alnum:]]|UTF_8_GUARD)+"
 
 	grepc = grep --cached --break --heading
 
