@@ -31,6 +31,13 @@ if [ $(uname -s) = "Darwin" ]
 then
     eval "$(/opt/homebrew/bin/brew shellenv)"
 
+    # Ruby
+    if [ -d "/opt/homebrew/opt/ruby/bin" ]; then
+        export PATH=/opt/homebrew/opt/ruby/bin:$PATH
+        export PATH=`gem environment gemdir`/bin:$PATH
+    fi
+
+    # C
     export LD_LIBRARY_PATH=/opt/homebrew/lib/:$LD_LIBRARY_PATH
     export CPATH="/opt/homebrew/include:$CPATH"
     export LIBRARY_PATH="/opt/homebrew/lib:$LIBRARY_PATH"
