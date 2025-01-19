@@ -35,7 +35,7 @@ function __shlvl_prompt()
 
 # abbreviated path
 function __path_prompt() {
-    if [ "$PWD" == "$HOME" ]; then 
+    if [ "$PWD" == "$HOME" ]; then
         printf "~"
     else
         printf ${${:-${(j:/:)${(M)${(s:/:)${(D)PWD:h}}#(|.)[^.]}}/${PWD:t}}//~/\~}
