@@ -127,6 +127,9 @@
 	autocorrect = 10
 
 [rebase]
+	; Always pass --autosquash to rebase --interactive
+	; autosquash recognizes the commit messages that start with 'fixup!' or 'squash!'
+	; and rearranges the commits in the todo list automatically.
 	autosquash = true
 
 [merge]
