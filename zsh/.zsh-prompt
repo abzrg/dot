@@ -14,7 +14,7 @@ if [[ "$TERM" == (Eterm*|alacritty*|aterm*|gnome*|konsole*|kterm*|putty*|rxvt*|s
 fi
 
 # shlvl
-__PROMPT_SUFFIX="%%"
+__PROMPT_SUFFIX="➜"  # %%
 function __shlvl_prompt()
 {
     if [ -z $TMUX ]
@@ -121,6 +121,6 @@ PROMPT=\
 '${vcs_info_msg_0_}'\
 '%F{cyan}%1~%f'\
 $'\n'\
-'$(__shlvl_prompt) '
+'%(?.%F{green}.%F{red})$(__shlvl_prompt)%f '
 
 RPROMPT="%(?..%F{#554444}(%?%))"
