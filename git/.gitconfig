@@ -22,6 +22,9 @@
 	b = branch
 	cur = branch --show-current
 
+	; --ws-error-highlight=all: show some invisible chars (e.g. trailing white spaces)
+	; Note that it does not show the differnce between spaces and tabs. In that case
+	; one should use 'git diff | cat -A'
 	d = diff --ws-error-highlight=all
 	d0 = d --unified=0
 	dc = d --cached
