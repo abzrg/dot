@@ -209,6 +209,7 @@ return {
       },
 
       snippets = {
+        preset = 'luasnip',
         expand = function(snippet) require('luasnip').lsp_expand(snippet) end,
         active = function(filter)
           if filter and filter.direction then
@@ -224,7 +225,7 @@ return {
         keyword = { range = 'full', },
 
         -- Insert completion item on selection, don't select by default
-        list = { selection = 'auto_insert' },
+        list = { selection = { auto_insert = true } },
 
         -- Show documentation when selecting a completion item
         documentation = {
@@ -264,7 +265,7 @@ return {
       },
 
       sources = {
-        default = { 'lsp', 'path', 'luasnip', 'buffer' },
+        default = { 'lsp', 'path', 'snippets', 'buffer' },
 
         providers = {
           buffer = {
