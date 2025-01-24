@@ -11,6 +11,10 @@ return {
         pickers = {
           find_files = {
             theme = "ivy"
+          },
+
+          live_grep = {
+            theme = "ivy"
           }
         },
         extensions = {
@@ -36,6 +40,10 @@ return {
           cwd = vim.fs.joinpath(vim.fn.stdpath("data"), "lazy")
         }
       end)
+
+      -- Grep (rg)
+      vim.keymap.set('n', '<leader>rg', "<Cmd>Telescope live_grep<CR>",
+        { silent = true, noremap = true })
 
       -- require "config.telescope.multigrep".setup()
     end
