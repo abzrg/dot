@@ -34,6 +34,29 @@ return {
     --- Server configs
     ---
 
+    -- HTML
+    capabilities.textDocument.completion.completionItem.snippetSupport = true
+    lspconfig.html.setup {
+      capabilities = capabilities,
+      cmd = { "vscode-html-language-server", "--stdio" },
+      filetypes = { "html", "templ", },
+      init_options = {
+        configurationSection = { "html", "css", "javascript" },
+        embeddedLanguages = {
+          css = true,
+          javascript = true
+        },
+        provideFormatter = true
+      },
+      settings = {},
+      single_file_support = true
+    }
+
+    -- CSS
+    require 'lspconfig'.cssls.setup {
+      capabilities = capabilities,
+    }
+
     -- (La)tex
     lspconfig.texlab.setup {
       capabilities = capabilities,
