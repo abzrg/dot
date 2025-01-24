@@ -1,0 +1,13 @@
+#!/bin/sh -e
+
+# Lists all the commits in the log and returns the hash of the selected commit
+
+main() {
+    git log --oneline --graph --color=always "$@" \
+    | nl \
+    | fzf --ansi --track --no-sort --layout=reverse-list \
+    | awk '{print $3}'
+}
+
+main "$@"
+
