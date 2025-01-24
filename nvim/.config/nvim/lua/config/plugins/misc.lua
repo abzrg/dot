@@ -21,4 +21,14 @@ return {
   {
     'tommason14/lammps.vim'
   },
+  {
+    'rhysd/committia.vim',
+    lazy = true,
+    ft = "gitcommit",
+    config = function()
+      vim.g.committia_min_window_width = 90
+      vim.g.committia_edit_window_width = 50
+      vim.g.committia_status_window_min_height = 100
+    end
+  }
 }
