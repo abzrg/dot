@@ -34,6 +34,11 @@ return {
         }
       end)
 
+      -- Edit (d)otfiles
+      vim.keymap.set("n", "<space>ed", function()
+        require('telescope.builtin').git_files { cwd = vim.fn.expand("~/.dot") }
+      end)
+
       -- Edit (p)lugin files
       vim.keymap.set("n", "<space>ep", function()
         require('telescope.builtin').find_files {
