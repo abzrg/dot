@@ -165,9 +165,9 @@ return {
             diagnosticMode = "openFilesOnly",
             useLibraryCodeForTypes = true,
             inlayHints = {
-              functionReturnTypes = true,
-              genericTypes = true,
-              callArgumentNames = true,
+              functionReturnTypes = false,
+              genericTypes = false,
+              callArgumentNames = false,
               variableTypes = false,
             },
           },
