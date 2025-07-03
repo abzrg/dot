@@ -9,6 +9,22 @@
 
 set -e;
 
+
+function GET_WEEK_NUMBER() {
+    # Get the current week number (n) using ISO 8601 (Monday as first day, Week 1 contains
+    # January 4)
+    current_week=$(gdate +%V)
+
+    # Total weeks in a year for ISO 8601 are always 52 or 53
+    total_weeks=53
+    if [[ $(gdate -d "12/31" +%V) -eq 1 ]]; then
+        total_weeks=52
+    fi
+
+    # Print the week information
+    printf "$current_week/$total_weeks"
+}
+
 function GET_TOTAL_DAYS_IN_YEAR {
     local CURRENT_YEAR
     CURRENT_YEAR=$(date +%Y);
@@ -71,9 +87,10 @@ function BANNER() {
 
 function MAIN {
     # BANNER "Year Progress"
-    echo -e "Current Date:        $(date +'%b %d %Y')"
-    echo -e "Days Remaining:      $(GET_DAYS_REMAINING)"
-    PRINT_YEAR_PROGRESS;
+    # echo -e "Current Date:     $(date +'%b %d %Y') - 
+    printf  "Week  No.:   %s\n" $(GET_WEEK_NUMBER)
+    printf  "Remaining:   %s (%s%% complete)\n" $(GET_DAYS_REMAINING) $(GET_PERCENTAGE)
+    # PRINT_YEAR_PROGRESS;
 }
 
 MAIN;
