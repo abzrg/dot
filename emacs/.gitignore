@@ -1,0 +1,12 @@
+.emacs.d/.mc-lists.el
+.emacs.d/.savehist
+.emacs.d/.saveplace
+.emacs.d/.smex_save
+.emacs.d/auto-save-list/
+.emacs.d/config.el
+.emacs.d/elpaca/
+.emacs.d/ido.last
+.emacs.d/projectile-bookmarks.eld
+.emacs.d/recentf
+.emacs.d/transient/
+.emacs.d/undo/
