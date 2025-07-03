@@ -1,0 +1,23 @@
+#!/bin/sh -e
+
+# launchd issue with PATH variable
+export PATH="/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+
+# Run only if not already running in other instance
+pgrep mbsync >/dev/null && { echo "mbsync is already running."; exit ;}
+
+date
+echo "Running Mail Sync"
+
+# Sync and fetch mails with remote
+mbsync -aq
+
+# Subsequent re-indexing of the mail directories
+# Index new mails and apply tags (like "unread" and "new")
+notmuch new --quiet
+
+# Check for new unread messages
+COUNT=$(notmuch count tag:unread and tag:new)
+if [ "$COUNT" -ne 0 ]; then
+    osascript -e "display notification \"$COUNT new unread emails\" with title \"Fetch Mail\""
+fi
