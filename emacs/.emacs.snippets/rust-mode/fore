@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: fore ... { ... }
-# key: fore
-# --
-fore ${1:item} in ${2:elements}.iter() {
-    $0
-}
