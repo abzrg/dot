@@ -14,7 +14,8 @@
 # src: gh/wincent/wincent
 function git() {
   if [ $# -eq 0 ]; then
-    command git status
+    printf "On branch '%s'\n" $(command git branch --show-current | sed 's/\n//')
+    command git status -sb
   elif [ "$1" = root ]; then
     shift
     local ROOT
@@ -50,6 +51,13 @@ function git() {
   else
     command git "$@"
   fi
+}
+
+# Worktree cd
+wcd() {
+    wtpath=$(git worktree list | grep -v .bare | fzf --reverse | awk '{print $1}')
+    echo $wtpath
+    [ -n "$wtpath" ] && cd "$wtpath"
 }
 
 # -- Web tools
@@ -153,17 +161,6 @@ function def() {
   | fold -s -w ${width:-80} | \less -FRX
 }
 
-# MacOS's dictionary?
-# pip install dictionarytools or something
-# Usage: dict (A-;)
-function dict() {
-  vact ~/opt/py/3.12
-  word="`fzf </usr/share/dict/words`"
-  test -n "$word" && dict.py "$word" | less -R
-  deactivate
-}
-bindkey -s '\e;' 'dict\r'
-
 
 # -- Bibliography tools -------------------------------------------------------
 
@@ -261,10 +258,31 @@ play() {
 # Source/load virtual env (nemonics: Virtualenv ACTivate)
 # Usage: vact /path/to/venv/dir/
 vact() {
-  [ $# -eq 0 ] && local path_to_venv="$PWD"
-  [ $# -gt 1 ] && printf "Wrong number of arguments\n"
-  [ $# -eq 1 ] && local path_to_venv="$1"
-  source "$path_to_venv"/bin/activate
+  [ $# -gt 1 ] && printf "Wrong number of arguments\n" && return 1
+
+  if [ $# -eq 0 ]; then
+    if [ -d "$PWD/venv" ]; then
+      source "$PWD/venv/bin/activate"
+    elif [ -d "$PWD/.venv" ]; then
+      source "$PWD/.venv/bin/activate"
+    else
+      echo "No virtualenv in the current directory. Please either specify a name or a path of existing virtual env."
+    fi
+    return
+  fi
+
+  local VIRTUALENV_DATA_DIR="${XDG_DATA_HOME=$HOME/.local/share}/python"
+
+  local venv="$1"
+  if [ -d "$venv" ]; then
+    source "$venv"/bin/activate
+  else
+    if [ -d "$VIRTUALENV_DATA_DIR"/"$venv" ]; then
+      source "$VIRTUALENV_DATA_DIR"/"$venv"/bin/activate
+    else
+      echo "Error: No such environment as: $venv"
+    fi
+  fi
 }
 
 # Go to the directory of a background job
@@ -278,14 +296,52 @@ function cdjob () {
 
 # Create a directory and take me into it
 # Usage: take <dir>
+
+# function take() {
+#   mkdir -p "$@" && cd "${@:$#}"
+# }
+
 function take() {
-  mkdir -p $1 && cd $1
+  local changeDir=1
+
+  for arg in "$@"
+  do
+    shift
+    case "$arg" in
+      -n)
+        changeDir=0
+        continue
+        ;;
+    esac
+    set -- "$@" "$arg"
+  done
+
+  if [ $# -lt 1 ]; then
+    echo "take: creates <dir> and moves files into it."
+    echo "Usage: take [-n] <dir> [file1] [file2] ..."
+    echo "       -n: take but don't do the last cd into the directory"
+    return
+  fi
+
+  local dir="$1"
+  mkdir -pv "$dir"
+
+  shift
+  if [ $# -gt 0 ]; then
+    mv -v "$@" "$dir"
+    return
+  fi
+
+  if [ $changeDir -eq 1 ]
+  then
+    cd "$dir"
+  fi
 }
 
 # Search for projects
 # Usage: proj (Alt-p)
 function proj() {
-  cd "$(find $HOME/git/projects $HOME/git/software -maxdepth 1 -type d | fzf)"
+  cd "$(find $HOME/code/projects $HOME/code/software -maxdepth 1 -type d | fzf)"
 }
 bindkey -s '\ep' 'proj\r'
 
@@ -425,83 +481,10 @@ function cdtut() {
   cd "$tut"
 }
 
-# src: https://www.cfdengine.com/newsletter/173/
-#
-# Modifications to the original version:
-# 
-function gtfo() {
-  # At this point sk sucks in terms of speed for large queries -> fzf ✓
-
-  test -z "$WM_PROJECT_DIR" \
-  && { echo "OpenFOAM environment is not loaded." && return 1 ;}
-
-  ( cd $FOAM_TUTORIALS || return 1 # Assert
-
-    # [ 1st version: grep ]
-    # ggrep                                                                  \
-    #   --no-messages                                                        \
-    #   --line-buffered --line-number --color=never                          \
-    #   --binary-files=without-match ''                                      \
-    #   --recursive                                                          \
-    #   --exclude={'*.m4','*.inp','*.sh','*.py','*plot*','*All*','*Test*'}   \
-    #   --exclude={'*otape17*','*list-worlds*','*.schema','*validation'}     \
-    #   --exclude={'*README*'}                                               \
-    #   --exclude-dir={'*geometry*','*polyMesh*','*dataset*','*triSurface*'} \
-
-    # [ 2nd version: find, xargs, grep ]
-    # find . -type f                                                   \
-    #   -not \( -path '*.m4*' -o -path "*.csv" \)                      \
-    #   -not \( -path '*geometry*' -prune -o -path "dataset" -prune \) \
-    #   -type f -print0                                                \
-
-    # 3rd version (high cpu usage)
-    # find . -type f                                \
-    #   -not \(                                     \
-    #       -path "*polyMesh*" -prune               \
-    #       -o -path '*triSurface*' -prune          \
-    #       -o -path '*geometry*' -prune            \
-    #       -o -path "*dataset*" -prune             \
-    #       -o -path '*validation*' -prune          \
-    #       -o -path "*All*"                        \
-    #       -o -path '*.sh'                         \
-    #       -o -path "*.py"                         \
-    #       -o -path '*README*'                     \
-    #       -o -path '*.m4*'                        \
-    #       -o -path "*plot*"                       \
-    #       -o -path "*list-worlds*"                \
-    #       -o -path "*.schema"                     \
-    #       -o -path "*.csv"                        \
-    #       -o -path '*otape17*'                    \
-    #       -o -path "*Test*"                       \
-    #   \) -type f -print0                          \
-    # | xargs -0 --max-procs 0  --no-run-if-empty   \
-    #     ggrep --line-buffered --line-number       \
-    #     --binary-files=without-match --color ""   \
-
-    ggrep                                                                  \
-      --no-messages                                                        \
-      --line-buffered --line-number --color=never                          \
-      --binary-files=without-match ''                                      \
-      --recursive                                                          \
-      --exclude={'*.m4','*.inp','*.sh','*.py','*plot*','*All*','*Test*'}   \
-      --exclude={'*otape17*','*list-worlds*','*.schema','*validation'}     \
-      --exclude={'*README*'}                                               \
-      --exclude-dir={'*geometry*','*polyMesh*','*dataset*','*triSurface*'} \
-    | fzf --ansi                                    \
-      --query "$1"                                  \
-      --delimiter ':' --nth=3                       \
-      --preview '                                   \
-          test -n {} && zless {1}                   \
-          | nl -ba                                  \
-          | perl -pe "s/"{2}"/>/g if "{2}" .. "{2}' \
-      --preview-window 'up:70%:+{2}-/3'
-  )
-}
-
 # # Take a Peek at an OpenFOAM Library/Application
 # #
 # # Usage: `foampeek [lib/app name query] [file name query]`
-# # 
+# #
 # # Firstly, it prompts you to select a library (in `$FOAM_SRC`) or an application
 # # (in `$FOAM_APP`), and finally, it lists all the files in that lib/app for you
 # # to select.
@@ -517,14 +500,14 @@ function gtfo() {
 # # variable. You can set this environment variable in your shell config (either
 # # in `.profile`, `.bash_profile`, `.zprofile`, `.bashrc`, or `.zshrc`) to your
 # # favroite editor.
-# # 
+# #
 # # Bindings:
 # # - Tab: select the current item
 # # - Shift-Tab: de-select the current item
 # # - C-A: select all
 # # - C-D: de-select all
 # # - C-T: toggle selecting/de-selecting all
-# # 
+# #
 # # Examples:
 # # 1. `$ foampeek`
 # # 2. `$ foampeek icof createfie`
@@ -588,7 +571,7 @@ function gtfo() {
 #   ( cd $dir
 #
 #     # --delimiter '/' --with-nth='6..'
-#     #  /home/user/OpenFOAM/OpenFOAM-x/src/... 
+#     #  /home/user/OpenFOAM/OpenFOAM-x/src/...
 #     #  12    3    4        5          6   7
 #     files=$( \
 #         find $dir -type f -not \( \
@@ -630,12 +613,12 @@ function gtfo() {
 # Then use y instead of yazi to start, and press q to quit, you'll see the CWD changed. Sometimes,
 # you don't want to change, press Q to quit.
 function lf() {
-	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
-	yazi "$@" --cwd-file="$tmp"
-	if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-		builtin cd -- "$cwd"
-	fi
-	rm -f -- "$tmp"
+  local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+  yazi "$@" --cwd-file="$tmp"
+  if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+    builtin cd -- "$cwd"
+  fi
+  rm -f -- "$tmp"
 }
 
 
@@ -692,4 +675,208 @@ update_wikidates () {
   printf "\n" >> ~/.wikidates/February_29
 }
 
-cat ~/.wikidates/$(LC_ALL=en_US.utf8 date +%B_%d) | shuf -n 1
+# cat ~/.wikidates/$(LC_ALL=en_US.utf8 date +%B_%d) | shuf -n 1
+
+
+# Fix the problem with the conflict between gnu-parallell and moreutils
+__fix_parallel_moreutil_conflict() {
+  brew unlink moreutils
+  brew install parallel
+  brew link --overwrite moreutils
+  brew unlink parallel
+  brew link --overwrite parallel
+}
+
+vhich(){
+  $EDITOR "`which $1`"
+}
+
+
+td() {
+  awk '/^----/ {c++} c==1 && /^\+/' ~/..plann
+}
+
+
+mpich() {
+    local mpich_prefix="$HOME/opt/mpich/mpich-4.3.0"
+    export PATH="$mpich_prefix/bin:$PATH"
+    export MANPATH="$mpich_prefix/share/man/:$MANPATH"
+    export DYLD_LIBRARY_PATH="$HOME/.local/lib:$DYLD_LIBRARY_PATH"
+    export CC="mpicc"
+    export CXX="mpic++"
+    export LDLIBS="-lmpi $LDLIBS"
+    export LDFLAGS="-L$mpich_prefix/lib $LDFLAGS"
+    export CFLAGS="-I$mpich_prefix/include -Wall -Wextra $CFLAGS"
+    export CXXFLAGS="-I$mpich_prefix/include -Wall -Wextra $CXXFLAGS"
+    printf "Enabled mpich-4.3.0 from %s\n" $mpich_prefix
+}
+
+
+
+# function ytdl() {
+#   local archive_file="yt-dlp_playlist_archive.txt"
+#   local opts='--cookies ~/.yt-dlp-yt-cookies.txt --no-warning --ignore-errors --embed-metadata --continue --retries inf --retry-sleep 5 --sleep-interval 3'
+#   # --proxy socks5://127.0.0.1:9050/ \
+#   local opts_quality="-f bestvideo[height<=?720]+bestaudio/best"
+#
+#   for arg in "$@"
+#   do
+#     # Remove arg
+#     shift
+#
+#     case "$arg" in
+#       -pl|-playlist)
+#         opts="$opts -o '%(playlist_index)s-%(title)s-%(id)s.%(ext)s' --yes-playlist"
+#         continue
+#         ;;
+#       -480p)
+#         opts_quality="-f 'bestvideo[height<=?480]+bestaudio/best'"
+#         continue
+#         ;;
+#       -1080p)
+#         opts_quality="-f 'bestvideo[height<=?1080]+bestaudio/best'"
+#         continue
+#         ;;
+#       -sony)
+#         opts_quality="-f 'bestvideo[ext=mp4][height<=?720]+bestaudio[ext=mp3]/best[ext=mp4]/best'"
+#         continue
+#         ;;
+#       -sub|-subtitle)
+#         opts="$opts --skip-download --write-sub --write-auto-subs --sub-lang 'en'"
+#         continue
+#         ;;
+#       -embed)
+#         opts="$opts --embed-subs --embed-thumbnail --embed-metadata --embed-chapters"
+#         continue
+#         ;;
+#       -srt)
+#         opts="$opts --skip-download --write-sub --write-auto-subs --sub-lang 'en' --convert-subs=srt"
+#         continue
+#         ;;
+#       -audio|-au|-music|-mu)
+#         opts="$opts --extract-audio"
+#         # 
+#         opts_quality="-f 'bestaudio/best'"
+#         continue
+#         ;;
+#       -ar|-archive)
+#         opts="$opts --download-archive $archive_file"
+#         continue
+#         ;;
+#     esac
+#
+#     # Re-insert arg
+#     set -- "$@" $arg
+#   done
+#
+#   echo
+#   echo yt-dlp `printf '%s %s' $opts $opts_quality` "$@"
+#   echo
+#   yt-dlp $opts $opts_quality
+#
+# }
+
+
+function ytdl() {
+  local archive_file="yt-dlp_playlist_archive.txt"
+
+  local opts=(
+    --cookies ~/.yt-dlp-yt-cookies.txt
+    --no-warning
+    --ignore-errors
+    --embed-metadata
+    --continue
+    --retries inf
+    --retry-sleep 5
+    --sleep-interval 3
+  )
+
+  local opts_quality=(-f 'bestvideo[height<=?720]+bestaudio/best')
+  local positional_args=()
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -pl|-playlist)
+        opts+=(
+          -o '%(playlist_index)s-%(title)s-%(id)s.%(ext)s'
+          --yes-playlist
+        )
+        ;;
+      -480p)
+        opts_quality=(-f 'bestvideo[height<=?480]+bestaudio/best')
+        ;;
+      -1080p)
+        opts_quality=(-f 'bestvideo[height<=?1080]+bestaudio/best')
+        ;;
+      -sony)
+        opts_quality=(-f 'bestvideo[ext=mp4][height<=?720]+bestaudio[ext=mp3]/best[ext=mp4]/best')
+        ;;
+      -sub|-subtitle)
+        opts+=(
+          --skip-download
+          --write-sub
+          --write-auto-subs
+          --sub-lang en
+        )
+        ;;
+      -embed)
+        opts+=(
+          --embed-subs
+          --embed-thumbnail
+          --embed-metadata
+          --embed-chapters
+        )
+        ;;
+      -srt)
+        opts+=(
+          --skip-download
+          --write-sub
+          --write-auto-subs
+          --sub-lang en
+          --convert-subs srt
+        )
+        ;;
+      -audio|-au|-music|-mu)
+        opts+=(
+          --extract-audio
+          --audio-format opus
+          --audio-quality 0
+        )
+        opts_quality=(-f 'bestaudio/best')
+        ;;
+      -ar|-archive)
+        opts+=("--download-archive" "$archive_file")
+        ;;
+      *)
+        positional_args+=("$1")
+        ;;
+    esac
+    shift
+  done
+
+  echo
+  echo yt-dlp "${opts[@]}" "${opts_quality[@]}" "${positional_args[@]}"
+  echo
+  yt-dlp "${opts[@]}" "${opts_quality[@]}" "${positional_args[@]}"
+}
+
+# Enable completion if using zsh
+compdef _ytdl yt-dlp
+compdef _ytdl yt-dlp
+
+# # yt-dlp
+# # alias ytdl="yt-dlp --cookies-from-browser brave \
+# alias ytdl="yt-dlp --sleep-interval 3 --cookies ~/.yt-dlp-yt-cookies.txt --no-warning --add-metadata -ci --retries inf --retry-sleep 5 -f 'bestvideo[height<=?720]+bestaudio/best'"
+# compdef ytdl=yt-dlp
+#
+# alias ytdlpl="ytdl -o '%(playlist_index)s-%(title)s-%(id)s.%(ext)s' --yes-playlist --download-archive archive.txt"
+# _ytdlpl() { setopt ALIASES; _yt-dlp "$@"; }; compdef _ytdlpl ytdlpl
+#
+# alias ytdlpl480p="ytdl480p -o '%(playlist_index)s-%(title)s-%(id)s.%(ext)s' --yes-playlist \
+#               --download-archive archive.txt"
+#
+# alias yta="yt-dlp --cookies ~/.yt-dlp-yt-cookies.txt --add-metadata -ci -x "
+# alias ytdlsub='ytdl --skip-download --write-sub --write-auto-subs --sub-lang "en" \
+#                --convert-subs=srt'
+# alias ytdlplsub='--yes-playlist --skip-download --write-sub --write-auto-subs --sub-lang "en" --convert-subs=srt'
+# # to embed sub: --embed-subs --sub-langs "en.*"

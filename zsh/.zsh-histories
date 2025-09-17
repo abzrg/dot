@@ -1,0 +1,5 @@
+HISTSIZE=20000000
+SAVEHIST=10000000
+HISTFILE=$HOME/.cache/zsh/history
+HISTDUP=erase
+hISTORY_IGNORE='([bf]g *|cd ..|l[alsh]#( *)#|less *)'

@@ -1,0 +1,53 @@
+# - Options are case-insensitive and underscores are ignored.
+# - To negate/invert an option:
+#       unsetopt notify
+#   or  setopt nonotify
+#   or  setopt no_notify
+
+
+
+setopt pushd_ignore_dups
+setopt pushd_silent
+setopt auto_cd
+setopt auto_pushd
+setopt pushd_ignore_dups
+
+setopt no_rm_star_silent
+setopt extendedglob
+setopt glob_dots
+setopt clobber
+
+setopt checkjobs
+setopt notify
+setopt long_list_jobs
+setopt auto_resume
+#setopt print_exit_value
+setopt no_bg_nice
+
+setopt no_flow_control
+setopt interactive_comments
+setopt prompt_cr
+setopt short_loops
+setopt print_eight_bit
+
+setopt inc_append_history
+setopt hist_save_no_dups
+setopt hist_find_no_dups
+setopt hist_expire_dups_first
+setopt hist_ignore_all_dups
+setopt hist_ignore_dups
+setopt hist_ignore_space
+setopt hist_reduce_blanks
+setopt hist_no_store
+setopt extended_history
+#setopt share_history
+
+# Immediately list the candidates (and not select them) on the first tab
+setopt no_list_ambiguous
+setopt complete_aliases
+setopt complete_in_word
+setopt no_nomatch
+setopt list_packed
+setopt no_beep
+setopt list_types
+setopt no_menu_complete

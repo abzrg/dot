@@ -1,135 +1,110 @@
 #!/bin/sh
 
-alias o='open'; compdef o=open
-alias g='git'; compdef g=git
-alias gst='git st'
+# Reoload config (source zshrc)
+alias sz='source $HOME/.zshrc'
 
-# nvim
-command -v nvim >/dev/null && alias v=nvim vimdiff="nvim -d"
+# Global aliases
+alias -g R=";clear;test -n "$TMUX" && tmux clear-history;"    # Mnemonic: "[R]eset"
+alias -g L="|& less"                                          # Mnemonic: "[L]ess"
+alias -g WC='| wc -l'                                         # Mnemonic: "[W]c"
+alias -g HL='--help | less'                                   # Mnemonic: "[H]elp [L]ess"
+alias -g HG='--help 2>&1 | grep'                              # Mnemonic: "[H]elp [G]rep"
+
+alias o='open'
+compdef o=open
+
+alias g='git'
+compdef g=git
+
+alias \
+    v=nvim \
+    vimdiff="nvim -d"
 compdef v=nvim
 
-# emacs
-alias ec='emacsclient'
-alias edit="ec --alternate-editor='' -nc -F \"'(fullscreen . maximized)\""
-alias e="edit -nc"
+alias \
+    edit="emacsclient --alternate-editor='' -nc -F \"'(fullscreen . maximized)\"" \
+    e="edit"
 
+alias \
+    ls='ls --group-directories-first -GCF --color=auto' \
+    l='ls' \
+    sl=ls \
+    ll='ls -lhtr' \
+    la='ls -A'
+
+# More verbosity
 alias \
     cp='cp -iv' \
     mv='mv -iv' \
-    rm='rm -v'  \
+    rm='rm -v' \
     ln='ln -iv'
 
+# Sensible defaults
 alias \
-    grep='ggrep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}'   \
-    egrep='gegrep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}' \
-    fgrep='gfgrep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}' \
-    diff='diff'                                                        \
+    df='df -h' \
+    type='type -a' \
+    which='which -a' \
+    mkd='mkdir -pv' \
+    grep='ggrep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}'
 
-alias eza='eza --icons'
-alias \
-    ls='eza -bgh -sname --group-directories-first -F' \
-    l='eza -bgh -sname --group-directories-first -F'  \
-    la='ls -a'                                        \
-    ll='ls -l --git'                                  \
-    sl='ls'                                           \
-    llt='ls --long --tree --level=3'
-
-alias \
-    df='df -h'                                             \
-    type='type -a'                                         \
-    which='which -a'                                       \
-    mkd='mkdir -pv'                                        \
-    rcp='rsync -avh --progress'                            \
-    wget='wget --hsts-file ~/.cache/wget-hsts'             \
-    rwget='wget -c --read-timeout=5 --timeout=5 --tries=0' \
-    sz='source $HOME/.zshrc'                               \
-    pydoc='python -m pydoc'                                \
-    f=find                                                 \
-    t=tmux
-
+# Change directory easily
 alias \
     cd..='cd ..'                                   \
-    ...='cd ../../'                                \
-    ....='cd ../../../'                            \
-    .....='cd ../../../../'                        \
-    cf="cd ${XDG_CONFIG_HOME:-$HOME/.config}"      \
     dl="cd ${XDG_DOWNLOAD_DIR:-$HOME/Downloads}"   \
     doc="cd ${XDG_DOCUMENTS_DIR:-$HOME/Documents}" \
-
-if [ `uname -s` = "Darwin" ]; then
-    alias vid="cd ${XDG_VIDEOS_DIR:-$HOME/Movies}"
-else
-    alias vid="cd ${XDG_VIDEOS_DIR:-$HOME/Videos}"
-fi
-
-alias \
-    cfz="$EDITOR $HOME/.zshrc"                                                \
-    cfzp="$EDITOR $HOME/.zprofile"                                            \
-    cft="$EDITOR $HOME/.tmux.conf"                                            \
-    cfa="$EDITOR ${HOME}/.zsh-aliases"                                        \
-    cfzf="$EDITOR ${HOME}/.zsh-functions"                                     \
-    cfzP="$EDITOR ${HOME}/.zsh-prompt"                                        \
-    cfA="$EDITOR ${XDG_CONFIG_HOME:-$HOME/.config}/alacritty/alacritty.toml"  \
-    cfk="$EDITOR ${XDG_CONFIG_HOME:-$HOME/.config}/kitty/kitty.conf"          \
-    cftor="$EDITOR $HOMEBREW_PREFIX/etc/tor/torrc"                            \
-    cfv="$EDITOR -c 'cd %:h' ${XDG_CONFIG_HOME:-$HOME/.config}/nvim/init.lua" \
-    cfg="$EDITOR ${XDG_CONFIG_HOME:-$HOME/.config}/ghostty/config"
+    vid="cd ${XDG_VIDEOS_DIR:-$HOME/Movies}"
 
 # Directory stack navigation
 alias d='dirs -v'
 for index ({1..9}) alias "$index"="cd +${index}"; unset index
 
-# Global aliases
-alias -g L="|& less"                                          # Mnemonic: "[L]ess"
-alias -g R=";clear;test -n "$TMUX" && tmux clear-history;"    # Mnemonic: "[R]eset"
-alias -g WC='| wc -l'                                         # Mnemonic: "[W]c"
-alias -g HL='--help | less'
+# OpenFOAM
+alias of2412="source ~/OpenFOAM/OpenFOAM-v2412/etc/bashrc"
+alias of2312='source ~/OpenFOAM/OpenFOAM-v2312/etc/bashrc'
+alias of9="source ~/OpenFOAM/OpenFOAM-9/etc/bashrc"
 
-# yt-dlp
-# --proxy socks5://127.0.0.1:9050/ \
-alias ytdl="yt-dlp --cookies ~/.yt-dlp-yt-cookies.txt \
-            --no-warning --add-metadata -ci --retries inf --retry-sleep 5 \
-            -f 'bestvideo[height<=?720]+bestaudio/best'"
-_ytdl() { setopt ALIASES; _yt-dlp "$@"; }; compdef _ytdl ytdl
+# Paraview
+paraview () {
+    local _paraviews=(/Applications/[Pp][Aa][Rr][Aa][Vv][Ii][Ee][Ww]*.app)
+    $_paraviews/Contents/MacOS/paraview "$@"
+}
+alias paraFoam="touch foam.foam && paraview foam.foam"
 
-alias ytdlpl="ytdl -o '%(playlist_index)s-%(title)s-%(id)s.%(ext)s' --yes-playlist \
-              --download-archive archive.txt"
-_ytdlpl() { setopt ALIASES; _yt-dlp "$@"; }; compdef _ytdlpl ytdlpl
-
-alias yta="yt-dlp --add-metadata -ci -x -f bestaudio/best --audio-format opus"
-alias ytdlsub='ytdl --skip-download --write-sub --write-auto-subs --sub-lang "en" \
-               --convert-subs=srt'
-alias ytdlplsub='ytdl -o '%(playlist_index)s-%(title)s-%(id)s.%(ext)s' --yes-playlist \
-                 --skip-download --write-sub --write-auto-subs --sub-lang "en" \
-                 --convert-subs=srt'
-alias ytdlsony="yt-dlp --no-warning --add-metadata -ci \
-                -f 'bestvideo[ext=mp4][height<=?720]+bestaudio[ext=mp3]/best[ext=mp4]/best'"
-# to embed sub: --embed-subs --sub-langs "en.*"
-
-alias path='echo $PATH | tr -s ":" "\n"'
-
-# [ -e $HOME/.hpc.nit ] && source $HOME/.hpc.nit
-
-if [ `uname -s` = "Darwin" ]; then
-    alias locate=/usr/bin/locate
-    alias updatedb='PATH=/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin \
-                    sudo /usr/libexec/locate.updatedb'
-    alias asm='docker start --interactive --attach angry_bhabha'
-    alias u18='docker start -v $HOME/.local/share/docker-share/ubuntu18:/home/user'
-fi
-
-alias vpn="export https_proxy=http://localhost:8081 http_proxy=http://localhost:8081"
-alias unvpn="unset http_proxy https_proxy"
-
-alias fo="source ~/OpenFOAM/OpenFOAM-v2312/etc/bashrc"
-alias of="source ~/OpenFOAM/OpenFOAM-v2312/etc/bashrc"
+# Other CAD
 alias ovito='/Applications/Ovito.app/Contents/MacOS/ovito'
 alias freecad='/Applications/FreeCAD.app/Contents/MacOS/FreeCAD'
 
-alias more=zmore
-alias lF='command lf'
+# MISC.
+alias rcp='rsync -avh --progress'
+alias wget='wget --hsts-file ~/.cache/wget-hsts'
+alias rwget='wget -c --read-timeout=5 --timeout=5 --tries=0'
+alias pydoc='python -m pydoc'
+alias path='echo $PATH | tr -s ":" "\n"'
+alias vpn="export https_proxy=http://localhost:8081 http_proxy=http://localhost:8081"
+alias vtor="export https_proxy=http://localhost:9080 http_proxy=http://localhost:9080"
+alias unvpn="unset http_proxy https_proxy"
 alias more='less -Xe'
 alias calc='python -i -c "from math import *; import os; print(\"WELCOME TO CALC\")"'
 alias pp='python -i -c "from pprint import pprint"'
 alias hss='hugo server --noHTTPCache --disableFastRender'
 alias pg='ping google.com'
+alias yamlcheck='python -c "import sys, yaml as y; y.safe_load(open(sys.argv[1]))"'
+alias jsoncheck='jq "." >/dev/null <'
+alias p=python
+alias mlkit='vact ~/opt/mlkit/mlkit-3.10/'
+alias va=vact
+alias brew='HOMEBREW_NO_VERIFY_ATTESTATIONS=1 command brew'
+alias n=neomutt
+alias news=newsboat
+alias torlog='tail -f /opt/homebrew/var/log/tor.log'
+alias bat='bat -pn'
+
+# [ -e $HOME/.hpc.nit ] && source $HOME/.hpc.nit
+
+# if [ `uname -s` = "Darwin" ]; then
+#     alias locate=/usr/bin/locate
+#     alias updatedb='PATH=/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin \
+#                     sudo /usr/libexec/locate.updatedb'
+#     alias asm='docker start --interactive --attach angry_bhabha'
+#     alias u18='docker start -v $HOME/.local/share/docker-share/ubuntu18:/home/user'
+# fi
