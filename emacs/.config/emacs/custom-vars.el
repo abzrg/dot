@@ -5,7 +5,11 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("d8b8c09a745470f6c088dce5df19ade98894f4ced69ce32d53aded94d512826d"
+   '("f1c8202c772d1de83eda4765fe21429a528a4fb350a28394d3705fe9678ed1f9"
+     "deb645f30fd25191b6e8d0f397cc1dd172a352f22094747be2ff527394cc9f57"
+     "adb567dc2208b9e95ce3bc1930bf0e84a3eced91e674b4c35777e54650a60763"
+     "79b922b0d10d379c8d0e8db0f05f0eec98ed4a50cb7e199c97b0369d19e89d49"
+     "d8b8c09a745470f6c088dce5df19ade98894f4ced69ce32d53aded94d512826d"
      "9777774c632c27aafcd20e969626f87177e3d3ff526badd4bec90b33ed3ab73b"
      "99768190047342cd4a93fa9b60a9998130cdbffcb76d0f63b092c9853ac580f1"
      "6e997b82088ff71241308f9f8d01b1ce47e864a2a0577986e278dca0b5e0e54f"
@@ -21,9 +25,12 @@
      "09276f492e8e604d9a0821ef82f27ce58b831f90f49f986b4d93a006c12dbcdb"
      "09b833239444ac3230f591e35e3c28a4d78f1556b107bafe0eb32b5977204d93" default))
  '(package-selected-packages
-   '(base16-theme benchmark-init edit-indirect edit-redirect magit markdown-mode
-                  multiple-cursors naysayer-theme no-littering quick-sdcv
-                  undo-fu visual-fill-column vundo zenburn-theme)))
+   '(acme-theme benchmark-init cmake-mode dockerfile-mode edit-indirect
+                edit-redirect gnuplot imenu-list magit markdown-mode
+                multiple-cursors naysayer-theme no-littering plan9-theme
+                sqlite-mode-extras sqlite3 undo-fu visual-fill-column vundo
+                zenburn-theme))
+ '(safe-local-variable-values '((gnuplot-basic-offset . 4))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

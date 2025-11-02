@@ -7,10 +7,6 @@
 (setq gc-cons-threshold (* 50 1000 1000))
 ;; --------------------------------------
 
-;; PAGER for sdcv
-;; temporary (does it work?)
-(setenv "SDCV_PAGER" "html2text")
-
 (setq debug-on-error t)
 
 (require 'package)
@@ -35,8 +31,8 @@
 (add-to-list 'default-frame-alist '(undecorated . t))
 
 ;; Font
-(defvar rc/font-name "SauceCodePro Nerd Font" "The default font family name.")
-(defvar rc/font-size "20" "The default font family size.")
+(defvar rc/font-name "Noto sans mono" "The default font family name.")
+(defvar rc/font-size "19" "The default font family size.")
 (setq rc/font (concat rc/font-name "-" rc/font-size))
 (set-face-attribute 'default nil :font rc/font)
 (add-to-list 'default-frame-alist `(font . ,rc/font))
@@ -46,7 +42,10 @@
   :ensure nil
   :config
   (setq modus-themes-mixed-fonts t)
-  (load-theme 'modus-vivendi t))
+  ; (load-theme 'modus-vivendi t)
+  (load-theme 'zenburn t)
+
+  )
 
 ;; Don't show the splash screen
 (setq inhibit-startup-message t)
@@ -75,13 +74,11 @@
 ;; Open in foreground
 (select-frame-set-input-focus (selected-frame))
 
-;; Set the text width (fill column)
-(setq-default fill-column 80)
-
 ;; I'd rather type less
 (setq confirm-kill-emacs 'y-or-n-p)
 (defalias 'yes-or-no-p 'y-or-n-p)
 (setopt use-short-answers t)
+(setq vc-follow-symlinks t)
 
 (set-frame-parameter (selected-frame) 'alpha-background 95)
 
@@ -89,6 +86,22 @@
 
 
 ;; --- Keybindings ------------------------------------------------------------
+
+;;;; the region is replaced when a character is inserted or deleted (e.g., with
+;; backspace).
+(delete-selection-mode 1)
+
+;;;; Backward delete (and not kill) word
+;; source: https://jblevins.org/log/clipboard
+(defun backward-delete-word (arg)
+  "Delete characters backward until encountering the beginning of a word.
+With argument ARG, do this that many times."
+  (interactive "p")
+  (delete-region (point) (progn (backward-word arg) (point))))
+
+(global-set-key (kbd "C-M-<backspace>") 'backward-kill-word)
+(global-set-key (kbd "M-<backspace>") 'backward-delete-word)
+
 
 ;; Do not indent the current line when RET is pressed. Instead only indent the
 ;; next line
@@ -157,11 +170,6 @@ This command does the inverse of `fill-paragraph'."
   :hook ((prog-mode . electric-pair-mode)
          (org-mode  . electric-pair-mode))
   :config
-
-  (with-eval-after-load 'cc-mode
-    (when (boundp 'c-mode-base-map)
-      (define-key c-mode-base-map (kbd "RET") #'electric-indent-just-newline)))
-
   (with-eval-after-load 'elec-pair
     (when (boundp 'electric-pair-mode-map)
       (define-key electric-pair-mode-map "," 'self-insert-command)
@@ -206,12 +214,20 @@ This command does the inverse of `fill-paragraph'."
   ;; Use spaces instead of tabs for indentation
   (setq-default indent-tabs-mode nil)
 
+  ;; Adds a newline to the end of any file that doesn't have one, just
+  ;; after it visits the file.
+  (setq require-final-newline t)
+
   ;; Insert newline at the end of the file
   (setq require-final-newline t)
 
   (setq ring-bell-function 'ignore)
   (setq scroll-preserve-screen-position t)
   ;;(setq scroll-conservatively 0)
+
+  ;; Set the text width (fill column)
+  (setq-default fill-column 80)
+  (add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
 
   ;; File path completion
   (global-set-key (kbd "C-x /") 'comint-dynamic-complete-filename))
@@ -225,28 +241,43 @@ This command does the inverse of `fill-paragraph'."
               ("C-;" . recompile))
   :config
   ;; C/C++-mode indentation
-  (c-set-offset 'comment-intro 0)
+  (c-set-offset 'innamespace '-)
+
+  (add-hook 'c++-mode-hook
+            (lambda ()
+              ;; Enable electric-indent
+              (setq electric-indent-inhibit nil)))
+
   (setq-default c-basic-offset 4
                 c-default-style '((java-mode . "java")
                                   (awk-mode . "awk")
                                   (c-mode . "k&r")
-                                  (c++-mode . "bsd"))))
+                                  (c++-mode . "bsd")))
 
+  ;; Align (line-up) closing parenthesis with the start of the opening
+  ;; file.
+  (add-to-list
+   'c-offsets-alist '(arglist-close . c-lineup-close-paren))
+  (setq cperl-indent-parens-as-block t)
+  (setq perl-indent-parens-as-block t))
+
+;;;; [whitespace]
 ;;;; Negative space highlight
 ;;;; courtesy of prot (https://protesilaos.com/emacs/dotemacs)
 (use-package whitespace
   :ensure nil
   :bind (("C-c z" . delete-trailing-whitespace)
          ("C-x x w" . whitespace-mode))
+  :hook ((prog-mode . whitespace-mode))
   :config
   ;; NOTE 2023-08-14: This is experimental.  I am not sure I like it.
   (setq whitespace-style
         '(face
           tabs
-          spaces
+          ;; spaces
           newline
           tab-mark
-          ;; space-mark
+          ;;space-mark
           ;;newline-mark
           trailing
           missing-newline-at-eof
@@ -255,10 +286,20 @@ This command does the inverse of `fill-paragraph'."
           space-before-tab::tab
           space-before-tab::space)))
 
+;;;; [flyspell]
 ;;;; https://200ok.ch/posts/2020-08-22_setting_up_spell_checking_with_multiple_dictionaries.html
+
+;; ;; src: https://emacs.stackexchange.com/a/78613
+;; (defun rc/fix-ispell-contraction ()
+;;   "Fixes contractions (e.g. shouldn't) aren't not being checked properly.
+;; See https://github.com/casouri/lunarymacs/blob/master/star/checker.el#L44-L49."
+;;   (add-to-list 'ispell-dictionary-alist
+;;                '("en_GB" "[[:alpha:]]" "[^[:alpha:]]" "[']"
+;;                  nil ("-d" "en_GB") nil utf-8)))
+
 (use-package flyspell
   :ensure nil
-  :if (executable-find "aspell")
+  ;; :if (executable-find "aspell")
   :hook
   ((org-mode markdown-mode text-mode) . flyspell-mode)
   :bind
@@ -274,7 +315,7 @@ This command does the inverse of `fill-paragraph'."
                    (flyspell-mode 'toggle))))
   :config
   (setq flyspell-issue-message-flag nil)
-  (setq flyspell-issue-welcome-flag nil)
+  (setq ispell-dictionary "en_GB")
   ;; In addition to "brew install hunspell" download dicts to
   ;; ~/Library/Spelling/
   ;; https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/en_GB.aff
@@ -283,15 +324,16 @@ This command does the inverse of `fill-paragraph'."
   ;; https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/en_US.aff
   ;; https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/en_US.dic
   ;; https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/hyph_en_US.dic
-  (with-eval-after-load "ispell"
-    (setenv "LANG" "en_US.UTF-8")
-    (setq ispell-program-name "hunspell")
-    (setq ispell-dictionary "en_GB,en_US")
-    (ispell-set-spellchecker-params)
-    (ispell-hunspell-add-multi-dic "en_GB,en_US")
-    (setq ispell-personal-dictionary "~/.hunspell_personal"))
-  (unless (file-exists-p ispell-personal-dictionary)
-    (write-region "" nil ispell-personal-dictionary nil 0)))
+  ;; (with-eval-after-load "ispell"
+  ;;   (setenv "LANG" "en_US.UTF-8")
+  ;;   (setq ispell-program-name "hunspell")
+  ;;   (setq ispell-dictionary "en_GB,en_US")
+  ;;   (ispell-set-spellchecker-params)
+  ;;   (ispell-hunspell-add-multi-dic "en_GB,en_US")
+  ;;   (setq ispell-personal-dictionary "~/.hunspell_personal"))
+  ;; (unless (file-exists-p ispell-personal-dictionary)
+  ;;   (write-region "" nil ispell-personal-dictionary nil 0)))
+)
 
 ;;;; Plain text (text-mode)
 ;;;; courtesy of prot
@@ -387,7 +429,7 @@ This command does the inverse of `fill-paragraph'."
   ;; (dired-listing-switches
   ;;  "-goah --group-directories-first --time-style=long-iso")
   (setq dired-listing-switches
-        "-aGFhlv --group-directories-first --time-style=long-iso")
+        "-aGFhlvt --group-directories-first --time-style=long-iso")
 
   ;; TODO(abzrg): comment
   (setq dired-dwim-target t)
@@ -405,6 +447,44 @@ This command does the inverse of `fill-paragraph'."
            ("C-c c" . org-capture)
            ("C-c C-w" . org-refile))
   :config
+  ;;; export settings
+
+  (with-eval-after-load 'ox-latex
+    ;; No default ugly red box from hyperref
+    (add-to-list
+     'org-latex-default-packages-alist
+     "\\PassOptionsToPackage{hyperref}{hidelinks}")
+
+    ;; Add memoir document class
+    (add-to-list 'org-latex-classes
+                 '("memoir"
+                   "\\documentclass{memoir}"
+                   ("\\chapter{%s}" . "\\chapter*{%s}")
+                   ("\\section{%s}" . "\\section*{%s}")
+                   ("\\subsection{%s}" . "\\subsection*{%s}")
+                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+
+    ;; Add scrbook document class
+    (add-to-list 'org-latex-classes
+                 '("koma-book"
+                   "\\documentclass{scrbook}"
+                   ("\\part{%s}" . "\\part{%s}")
+                   ("\\chapter{%s}" . "\\chapter{%s}")
+                   ("\\section{%s}" . "\\section*{%s}")
+                   ("\\subsection{%s}" . "\\subsection*{%s}")
+                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                   ("\\paragraph{%s}" . "\\paragraph*{%s}")))
+
+    ;; Add scrartcl document class
+    (add-to-list 'org-latex-classes
+                 '("koma-article"
+                   "\\documentclass{scrartcl}"
+                   ("\\section{%s}" . "\\section*{%s}")
+                   ("\\subsection{%s}" . "\\subsection*{%s}")
+                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                   ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                   ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+
   ;; Start folded
   (setq org-startup-folded t)
   ;; Don't split the line at the cursor position. Go to the end of the line
@@ -433,67 +513,67 @@ This command does the inverse of `fill-paragraph'."
 
   ;; Todo keywords
   (setq org-todo-keywords
-   '((sequence
-      "TODO(t)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELLED(c@/!)")))
+        '((sequence
+           "TODO(t)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELLED(c@/!)")))
 
   ;; Use the date at point when capturing from agendas
   (setq org-capture-use-agenda-date t)
 
   (setq org-capture-templates
-   '(
-     ("t" "TODO Item"
-      entry (file "~/org/todos.org")
-      "* TODO [#B] %? %^g\n"
-      :empty-lines 0)
+        '(
+          ("t" "TODO Item"
+           entry (file "~/org/todos.org")
+           "* TODO [#B] %? %^g\n"
+           :empty-lines 0)
 
-     ("j" "Journal Entry"
-      entry (file+datetree "~/org/journal.org")
-      "* %?"
-      :empty-lines 1)
+          ("j" "Journal Entry"
+           entry (file+datetree "~/org/journal.org")
+           "* %?"
+           :empty-lines 1)
 
-     ("m" "Meeting"
-      entry (file+datetree "~/org/meetings.org")
-      "* %? :meeting:%^g \n** Attendees\n - \n** Notes\n** Action Items\n*** TODO [#A] "
-      :tree-type week
-      :clock-in t
-      :clock-resume t
-      :empty-lines 0)
+          ("m" "Meeting"
+           entry (file+datetree "~/org/meetings.org")
+           "* %? :meeting:%^g \n** Attendees\n - \n** Notes\n** Action Items\n*** TODO [#A] "
+           :tree-type week
+           :clock-in t
+           :clock-resume t
+           :empty-lines 0)
 
-     ("n" "Note"
-      entry (file+headline "~/org/notes.org" "Random Notes")
-      "** %?"
-      :empty-lines 0)
-     ))
+          ("n" "Note"
+           entry (file+headline "~/org/notes.org" "Random Notes")
+           "** %?"
+           :empty-lines 0)
+          ))
 
   (setq org-tag-alist
-   '(;; Places
-     (:startgroup . nil)
-     ("@home" . ?h)
-     ("@work" . ?w)
-     (:endgroup . nil)
+        '(;; Places
+          (:startgroup . nil)
+          ("@home" . ?h)
+          ("@work" . ?w)
+          (:endgroup . nil)
 
-     ;; Device
-     (:startgroup . nil)
-     ("@computer" . ?C)
-     ("@phone" . ?P)
-     (:endgroup . nil)
+          ;; Device
+          (:startgroup . nil)
+          ("@computer" . ?C)
+          ("@phone" . ?P)
+          (:endgroup . nil)
 
-     ;; Activities
-     (:startgroup . nil)
-     ("@programming" . ?p)
-     ("@email" . ?e)
-     ("@calls" . ?a)
-     ("@chore" . ?c)
-     ("@errands" . ?r)
-     ("@study" . ?s)
-     ("@reading" . ?R)
-     (:endgroup . nil)
+          ;; Activities
+          (:startgroup . nil)
+          ("@programming" . ?p)
+          ("@email" . ?e)
+          ("@calls" . ?a)
+          ("@chore" . ?c)
+          ("@errands" . ?r)
+          ("@study" . ?s)
+          ("@reading" . ?R)
+          (:endgroup . nil)
 
-     ;; Git & GitHub
-     (:startgroup . nil)
-     ("@issue" . ?I)
-     ("@pr" . ?M)                       ; [M]: [M]erge request
-     (:endgroup . nil))))
+          ;; Git & GitHub
+          (:startgroup . nil)
+          ("@issue" . ?I)
+          ("@pr" . ?M)                       ; [M]: [M]erge request
+          (:endgroup . nil))))
 
 ;;;; [ido]
 ;; https://www.masteringemacs.org/article/introduction-to-ido-mode
@@ -538,7 +618,6 @@ This command does the inverse of `fill-paragraph'."
 ;;;; [editorconfig]
 (use-package editorconfig
   :ensure nil
-  :defer t
   :config
   (editorconfig-mode 1))
 
@@ -619,22 +698,18 @@ This command does the inverse of `fill-paragraph'."
 ;;         ;; Just save, don't ask before each compilation.
 ;;         TeX-save-query nil))
 
-(use-package quick-sdcv
+(use-package gnuplot
   :ensure t
-  :hook
-  (sdcv-mode . visual-line-mode)
-  :bind (;; To retrieve the word under the cursor and display its definition in
-         ;; a buffer
-         ("M-s d" . quick-sdcv-search-at-point)
-         ;; To prompt the user for a word and display its definition in a
-         ;; buffer
-         ("M-s s" . quick-sdcv-search-input)
-         :map quick-sdcv-mode-map
-         ;; Exit dictionary with q
-         ("q" . kill-buffer-and-window))
-  :custom
-  (quick-sdcv-dictionary-prefix-symbol "►")
-  (quick-sdcv-ellipsis " ▼"))
+  :mode (("\\.gp\\'"      . gnuplot-mode)
+         ("\\.gnuplot\\'" . gnuplot-mode)
+         ("\\.plt\\'"     . gnuplot-mode)
+         ("\\.gpi\\'"     . gnuplot-mode)))
+
+(use-package cmake-mode
+  :ensure t
+  :mode (("\\.cmake\\'"      . cmake-mode)
+         ("CMakeLists\\.txt\\'" . cmake-mode)))
+
 
 ;; -------------
 ;; END OF CONFIG
