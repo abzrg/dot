@@ -32,31 +32,17 @@ if has("autocmd")
 endif
 ]]
 
--- vim.cmd.highlight "@lsp.type.namespace.cpp guifg=#bdb76b"
--- vim.cmd.highlight "cType gui=italic guifg=#4ec9b0"
--- vim.cmd.highlight "cppStructure gui=italic guifg=#b5cea8"
--- vim.cmd.highlight "cStructure gui=italic guifg=#b5cea8"
--- vim.cmd.highlight "@lsp.type.property.cpp guifg=#8DB6DF"
--- vim.cmd.highlight "@lsp.type.method.cpp guifg=#ff8000"
--- vim.cmd.highlight "@lsp.type.function.cpp guifg=#ffd700"
-
-
--- vim.cmd.highlight "@keyword.modifier.cpp gui=italic guifg=#ce9178"
--- vim.cmd.highlight "@constant.builtin.cpp guifg=#f44747"
-
-
 -- vim.opt.foldmethod      = 'expr'
-local treesitter_parsers = require('nvim-treesitter.parsers')
 
-if treesitter_parsers.has_parser "cpp" then
-  local folds_query = [[
-    [
-      (function_definition)
-      (class_specifier)
-    ] @fold
-  ]]
+-- local treesitter_parsers = require('nvim-treesitter.parsers')
+-- if treesitter_parsers.has_parser "cpp" then
+--     local folds_query = [[
+--     [
+--       (function_definition)
+--       (class_specifier)
+--     ] @fold
+--   ]]
+--     require("vim.treesitter.query").set("cpp", "folds", folds_query)
+-- end
 
-  require("vim.treesitter.query").set("cpp", "folds", folds_query)
-end
 
--- vim.keymap.set('i', ';;', '::', { nowait = true, noremap = true, silent = true, buffer = true })

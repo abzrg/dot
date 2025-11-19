@@ -1,0 +1,6 @@
+syntax match PlanDone "\v^\* .*"
+syntax match PlanTodo "\v^\+ .*"
+syntax match PlanTag extend containedin=PlanTodo,PlanDone "\v \zs\&[a-zA-Z_0-9]+\ze"
+syntax match PlanNote "\v^  .*$"
+syntax match PlanLog "\v(^|  )\% .*$"
+syntax match PlanDate "\v^--- [a-zA-Z0-9\/ ]*$"

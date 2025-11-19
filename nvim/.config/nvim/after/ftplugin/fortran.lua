@@ -4,6 +4,6 @@ vim.g.fortran_have_tabs = 1
 vim.g.fortran_more_precise = 1
 vim.g.fortran_do_enddo = 1
 
-vim.opt_local.tabstop = 3
-vim.opt_local.shiftwidth = 3
+vim.opt_local.tabstop = 4
+vim.opt_local.shiftwidth = 4
 vim.opt_local.expandtab = true

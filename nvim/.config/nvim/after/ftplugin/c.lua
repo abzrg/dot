@@ -20,14 +20,13 @@ vim.opt_local.cinoptions = vim.opt_local.cinoptions + { "t0" }
 
 -- vim.opt.foldmethod      = 'expr'
 
-local treesitter_parsers = require('nvim-treesitter.parsers')
-
-if treesitter_parsers.has_parser "c" then
-  local folds_query = [[
-    [
-      (function_definition)
-    ] @fold
-  ]]
-
-  require("vim.treesitter.query").set("c", "folds", folds_query)
-end
+-- local treesitter_parsers = require('nvim-treesitter.parsers')
+-- if treesitter_parsers.has_parser "c" then
+--     local folds_query = [[
+--     [
+--       (function_definition)
+--     ] @fold
+--   ]]
+--
+--     require("vim.treesitter.query").set("c", "folds", folds_query)
+-- end

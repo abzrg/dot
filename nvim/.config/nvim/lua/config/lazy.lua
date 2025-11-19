@@ -13,41 +13,18 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
     os.exit(1)
   end
 end
+vim.opt.rtp:prepend(lazypath)
 
--- Hey! Put lazy into the runtimepath for neovim!
-vim.opt.runtimepath:prepend(lazypath)
-
--- Make sure to setup `mapleader` and `maplocalleader` before
--- loading lazy.nvim so that mappings are correct.
--- This is also a good place to setup other settings (vim.opt)
-vim.g.mapleader = " "
-vim.g.maplocalleader = "\\"
-
--- Setup lazy.nvim
 require("lazy").setup({
   spec = {
-    {
-      "Mofiqul/vscode.nvim",
-      opt = {
-        transparent = true
-      },
-      config = function()
-        require('vscode').setup({
-          style = 'dark',
-          transparent = true,
-          italic_comments = false,
-          underline_links = true,
-          disable_nvimtree_bg = true,
-        })
-        vim.cmd.colorscheme "vscode"
-      end
-    },
-    { import = "config.plugins" },
+    { import = "plugins" },
+  },
+  install = { colorscheme = { "default" } },
+  checker = {
+    -- automatically check for plugin updates
+    enabled = false,
   },
   change_detection = {
-    -- automatically check for config file changes and reload the ui
-    enabled = false,
-    -- get a notification when changes are found
-    notify = false,
+    notify = false, -- get a notification when changes are found
   },
 })
