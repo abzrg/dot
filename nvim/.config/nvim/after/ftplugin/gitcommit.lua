@@ -5,21 +5,21 @@ vim.b.editorconfig = false
 -- This is done because otherwise neovim will overwrite them.
 -- Another way to achieve this is to set up autocommands but this is enough.
 vim.defer_fn(function()
-    vim.opt_local.colorcolumn = "50,72"
+  vim.opt_local.colorcolumn = "50,72"
 
-    -- https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
-    vim.bo.textwidth = 72
-    vim.bo.tabstop = 2
-    vim.bo.shiftwidth = 2
+  -- https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
+  vim.bo.textwidth = 72
+  vim.bo.tabstop = 2
+  vim.bo.shiftwidth = 2
 
-    vim.opt_local.formatoptions = {
-        c = false, -- Auto-wrap comments using 'textwidth'
-        l = true, -- Auto-wrap long lines in insert mode
-        q = false, -- Allow formatting of comments with "gq"
-        t = true, -- Auto-wrap text using 'textwidth'
-        n = true, -- Recognize numbered lists.
-        j = true, -- Remove a comment leader when joining
-    }
+  vim.opt_local.formatoptions = {
+    c = false, -- Auto-wrap comments using 'textwidth'
+    l = true,  -- Auto-wrap long lines in insert mode
+    q = false, -- Allow formatting of comments with "gq"
+    t = true,  -- Auto-wrap text using 'textwidth'
+    n = true,  -- Recognize numbered lists.
+    j = true,  -- Remove a comment leader when joining
+  }
 end, 1)
 
 -- Enable spell checking

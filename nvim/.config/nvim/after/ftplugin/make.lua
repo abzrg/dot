@@ -1,5 +1,3 @@
-
-
 -- https://stackoverflow.com/a/76951708/13041067
 vim.cmd [[
 setlocal isfname+=(,)

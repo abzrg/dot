@@ -12,7 +12,6 @@ setlocal nospell
 nnoremap <silent><buffer> <Tab> :call search('^+ ', "W") <bar> norm zz <cr>
 nnoremap <silent><buffer> <S-Tab> :call search('^+ ', "bW") <bar> norm zz <cr>
 
-
 ""syntax match PlanDone "\v^\* .*"
 ""hi link PlanDone DiffAdd
 "hi PlanDone guifg=#b5cea8

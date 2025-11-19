@@ -9,5 +9,3 @@
 --   ]]
 --     require("vim.treesitter.query").set("python", "folds", folds_query)
 -- end
-
-

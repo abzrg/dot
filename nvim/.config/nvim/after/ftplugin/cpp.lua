@@ -44,5 +44,3 @@ endif
 --   ]]
 --     require("vim.treesitter.query").set("cpp", "folds", folds_query)
 -- end
-
-

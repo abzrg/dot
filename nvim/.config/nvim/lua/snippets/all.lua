@@ -12,14 +12,14 @@ local fmta = require("luasnip.extras.fmt").fmta
 local rep = require("luasnip.extras").rep
 
 return {
-    s({ trig = "ddate", snippetType = "autosnippet", regTrig = true, wordTrig = false, hidden = true }, {
-        f(function()
-            local result = io.popen("date +'%d/%m/%Y %a'"):read("*a")
-            return result:gsub("\n", "") -- Remove trailing newline
-        end, {})
-    }),
+  s({ trig = "ddate", snippetType = "autosnippet", regTrig = true, wordTrig = false, hidden = true }, {
+    f(function()
+      local result = io.popen("date +'%d/%m/%Y %a'"):read("*a")
+      return result:gsub("\n", "")       -- Remove trailing newline
+    end, {})
+  }),
 
-    s("rdate", t(os.date("%Y/%m/%d"))),
-    s("date", t(os.date("%d/%m/%Y"))),
-    s("usdate", t(os.date("%m/%d/%Y"))),
+  s("rdate", t(os.date("%Y/%m/%d"))),
+  s("date", t(os.date("%d/%m/%Y"))),
+  s("usdate", t(os.date("%m/%d/%Y"))),
 }

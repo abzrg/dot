@@ -81,7 +81,7 @@ return
     { condition = line_begin }
   ),
   -- USE A LATEX PACKAGE
-  s({ trig = "pack", snippetType="autosnippet" },
+  s({ trig = "pack", snippetType = "autosnippet" },
     fmta(
       [[
         \usepackage{<>}
@@ -105,7 +105,7 @@ return
     { condition = line_begin }
   ),
   -- LABEL
-  s({ trig = "label", priority=1010 },
+  s({ trig = "label", priority = 1010 },
     fmta(
       [[
       \label{<>}
@@ -116,7 +116,7 @@ return
     )
   ),
   -- HPHANTOM
-  s({ trig = "hphantom", priority=100 },
+  s({ trig = "hphantom", priority = 100 },
     fmta(
       [[
       \hphantom{<>}
@@ -144,7 +144,7 @@ return
     ),
     { condition = line_begin }
   ),
-  s({ trig = "si", dscr="SI Unit" },
+  s({ trig = "si", dscr = "SI Unit" },
     fmta(
       [[\si{<>}]],
       {
@@ -152,7 +152,7 @@ return
       }
     )
   ),
-  s({ trig = "qty", dscr="SI Quantity: Value Unit" },
+  s({ trig = "qty", dscr = "SI Quantity: Value Unit" },
     fmta(
       [[\qty{<>}{<>}]],
       {
@@ -181,7 +181,7 @@ return
     )
   ),
   -- HSPACE
-  s({ trig = "hspace", priority=100 },
+  s({ trig = "hspace", priority = 100 },
     fmta(
       [[\hspace{<>}]],
       {

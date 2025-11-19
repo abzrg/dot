@@ -7,10 +7,8 @@ vim.api.nvim_set_keymap("n", "j", [[v:count ? "j" : "gj"]], { noremap = true, ex
 vim.api.nvim_set_keymap("n", "k", [[v:count ? "k" : "gk"]], { noremap = true, expr = true }) -- Sane line-by-line navigation
 vim.keymap.set("c", "%%", [[expand("%:p:h", opts)]], { expr = true })                        -- Expand %% to current buffer's directory in ex-mode
 
-
 vim.keymap.set("n", "-", "<cmd>e %:h<CR>", opts)            -- Open the current directory
 vim.keymap.set("n", "cd", "<cmd>silent cd %:p:h<CR>", opts) -- Change to directory of the current file
-
 
 vim.keymap.set("n", "<BS>", "<cmd>nohl<CR>", opts)    -- Temporarily remove annoying highlighted search item
 vim.keymap.set("n", "<leader>q", "<cmd>q!<cr>", opts) -- Exit
@@ -61,15 +59,15 @@ vim.keymap.set("n", "<leader>X", "<cmd>!chmod +x %<CR>", { silent = true })
 -- Zap trailing whitespaces
 -- source: wincent
 vim.keymap.set("n", "<leader>zz",
-    function()
-        local pos = vim.fn.getcurpos()
-        local search = vim.fn.getreg("/")
-        vim.cmd([[keepjumps %substitute/\s\+$//e]])
-        vim.fn.setreg("/", search)
-        vim.cmd("nohlsearch")
-        vim.fn.setpos(".", pos)
-    end,
-    opts)
+  function()
+    local pos = vim.fn.getcurpos()
+    local search = vim.fn.getreg("/")
+    vim.cmd([[keepjumps %substitute/\s\+$//e]])
+    vim.fn.setreg("/", search)
+    vim.cmd("nohlsearch")
+    vim.fn.setpos(".", pos)
+  end,
+  opts)
 
 -- Disable annoying space behaviour (moving one character forward with delay)
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
@@ -108,11 +106,11 @@ vim.keymap.set("n", "<leader>M", "<cmd>Start<cr>", { noremap = true, silent = tr
 -- Formatting options only achieved this way
 local spell_error_corrector_keymap_group = vim.api.nvim_create_augroup("FormatOptions", { clear = true })
 vim.api.nvim_create_autocmd("FileType", {
-    pattern = { "tex", "markdown", "text" },
-    callback = function()
-        -- Correcting spelling mistakes on the fly
-        -- src: https://castel.dev/post/lecture-notes-1/
-        vim.keymap.set('i', '<C-l>', '<c-g>u<Esc>[s1z=`]a<c-g>u')
-    end,
-    group = spell_error_corrector_keymap_group
+  pattern = { "tex", "markdown", "text" },
+  callback = function()
+    -- Correcting spelling mistakes on the fly
+    -- src: https://castel.dev/post/lecture-notes-1/
+    vim.keymap.set('i', '<C-l>', '<c-g>u<Esc>[s1z=`]a<c-g>u')
+  end,
+  group = spell_error_corrector_keymap_group
 })

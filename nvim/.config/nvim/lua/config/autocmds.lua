@@ -1,7 +1,6 @@
 local autocmd = vim.api.nvim_create_autocmd
 local augroup = vim.api.nvim_create_augroup
 
-
 -- Highlight yank
 local highlight_yank_group = augroup("HighlightYank", { clear = true })
 autocmd("TextYankPost", {
@@ -12,7 +11,6 @@ autocmd("TextYankPost", {
   group = highlight_yank_group,
 })
 
-
 -- Auto resize splits upon window resize
 local auto_resize_group = augroup("AutoResizeSplit", { clear = true })
 autocmd("vimResized", {
@@ -21,10 +19,9 @@ autocmd("vimResized", {
   group = auto_resize_group,
 })
 
-
 -- Formatting options only achieved this way
 local format_options_group = augroup("FormatOptions", { clear = true })
-autocmd({"FileType"}, {
+autocmd({ "FileType" }, {
   pattern = "*",
   callback = function()
     vim.opt.formatoptions = "jcqnl"

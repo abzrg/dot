@@ -32,12 +32,12 @@ vim.opt.wildignorecase = true
 vim.opt.wildchar       = 9    -- ('<Tab>') character to trigger wildcard expansion
 vim.opt.wildcharm      = 26   -- ('<C-z>') substitue for 'wildchar' in macros
 vim.opt.wildmode       = {    -- shell-like autocomplete to unambigious portion
-    'longest', 'list', 'full'
+  'longest', 'list', 'full'
 }
 vim.opt.wildignore:append({ -- patterns to ingore durng file navigation
-    '*.git/*', '*.tags', 'tags', '*build/*', '*.o', '*.class', '*.egg-info/**',
-    '__pycache__', 'venv', '*venv/**', '*dist/**', '**/.vim/undo/**', '**/.vim/pack/**',
-    '*.cache/*',
+  '*.git/*', '*.tags', 'tags', '*build/*', '*.o', '*.class', '*.egg-info/**',
+  '__pycache__', 'venv', '*venv/**', '*dist/**', '**/.vim/undo/**', '**/.vim/pack/**',
+  '*.cache/*',
 })
 
 vim.opt.undofile       = true
@@ -54,15 +54,15 @@ vim.opt.linebreak      = true
 vim.opt.cmdheight      = 1
 vim.opt.laststatus     = 3
 vim.opt.statusline     = table.concat({
-    "%<%f",      -- file path
-    " %y",       -- filetype
-    " %h%w%m%r", -- help flag, preview flag, modified flag, readonly flag
-    " %=",       -- right align rest
-    "%{% &showcmdloc == 'statusline' ? '%-10.S ' : '' %}",
-    "%{% exists('b:keymap_name') ? '<'..b:keymap_name..'> ' : '' %}",
-    "%{% &busy > 0 ? '◐ ' : '' %}",
-    "%(%{luaeval('(package.loaded[''vim.diagnostic''] and vim.diagnostic.status()) or '''' ')} %)",
-    "%{% &ruler ? ( &rulerformat == '' ? '%-14.(%l,%c%V%) %P' : &rulerformat ) : '' %}",
+  "%<%f",        -- file path
+  " %y",         -- filetype
+  " %h%w%m%r",   -- help flag, preview flag, modified flag, readonly flag
+  " %=",         -- right align rest
+  "%{% &showcmdloc == 'statusline' ? '%-10.S ' : '' %}",
+  "%{% exists('b:keymap_name') ? '<'..b:keymap_name..'> ' : '' %}",
+  "%{% &busy > 0 ? '◐ ' : '' %}",
+  "%(%{luaeval('(package.loaded[''vim.diagnostic''] and vim.diagnostic.status()) or '''' ')} %)",
+  "%{% &ruler ? ( &rulerformat == '' ? '%-14.(%l,%c%V%) %P' : &rulerformat ) : '' %}",
 }, " ")
 
 vim.opt.updatetime     = 200 -- CursorHold interval
@@ -106,16 +106,16 @@ vim.opt.isfname:remove("=") -- Avoid recognizing = as part of file name
 -- vim.opt.iskeyword:append("-") -- treat dash separated words as a word text object
 
 vim.opt.completeopt   = {
-    "menu", "menuone", "noselect"
+  "menu", "menuone", "noselect"
 }
 
 vim.opt.fileencodings = {
-    "utf-8"
+  "utf-8"
 }
 
 vim.opt.suffixesadd   = {
-    ".js", ".es", ".jsx", ".json", ".css", ".less", "sass", ".styl", ".php",
-    ".py", ".md"
+  ".js", ".es", ".jsx", ".json", ".css", ".less", "sass", ".styl", ".php",
+  ".py", ".md"
 }
 
 -- vim.wo.colorcolumn =
@@ -134,12 +134,11 @@ vim.wo.colorcolumn    = "+1"
 -- end
 
 vim.opt.guicursor     = {
-    "n-v-c-sm:block",
-    "i-ci-ve:block",
-    "r-cr-o:hor20",
-    "t:block-blinkon500-blinkoff500-TermCursor"
+  "n-v-c-sm:block",
+  "i-ci-ve:block",
+  "r-cr-o:hor20",
+  "t:block-blinkon500-blinkoff500-TermCursor"
 }
-
 
 if vim.fn.has('nvim-0.12') == 1 then
   vim.o.diffopt = 'internal,filler,closeoff,inline:simple,linematch:40'
